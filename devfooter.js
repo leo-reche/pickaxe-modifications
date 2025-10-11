@@ -2,7 +2,6 @@
 let bgcols = []
 
 function stopButtonOn(handleClick, toggleHover){
-    console.log("Stop-On")
 
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
@@ -25,8 +24,6 @@ function stopButtonOn(handleClick, toggleHover){
 }
 
 function stopButtonOff(handleClick,toggleHover){
-        
-    console.log("Stop-Off")
 
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
@@ -43,7 +40,7 @@ function handleClick(event) {
 
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
-    
+
     event.preventDefault();
     event.stopPropagation();
     stopStream();
@@ -67,8 +64,6 @@ function toggleHover(e) {
 
 
 function stopButtonUpdate(){
-
-    console.log("Stop-Update")
     
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons

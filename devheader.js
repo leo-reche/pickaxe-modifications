@@ -367,8 +367,8 @@ window.fetch = function(input, init) {
         return response;
       }).catch(error => {
                 // Pass through any errors from the first function
-                console.error("Error in SSE fetch:", error);
-                throw error;
+                console.error("ReplaceFetch returning this error: ", error);
+                return error;
             });
 
   } else {
@@ -447,8 +447,8 @@ window.fetch = async function(...args) {
 
         } catch (error) {
 
+        console.log("Sync fetch caught this error: ", error)
         stopButtonOff()
-        throw error;
 
         }
     
@@ -482,9 +482,12 @@ function stopStream() {
         if(errBox){
             console.log("StopStream-ErrorBoxFound")
             errBox.textContent = "This response was stopped by the user.";
-            var allMsgs = document.querySelectorAll('div.gap-y-3.text-left')
-            allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
         }
+        var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
+        allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
+        var thread = document.querySelector('div.grid.grid-cols-1.gap-y-6.w-full');
+        
+
     }, 100); 
 }
 
