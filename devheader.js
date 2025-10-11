@@ -381,69 +381,72 @@ window.fetch = async function(...args) {
     console.log("SyncFetch-URL:",url)
 
     if (url.includes("https://core-api.pickaxe.co/pickaxe")){   //Massive if{} to get the formid,responseid,lastmessage,documents
-    const aUrl = new URL(url)
-    if (aUrl.searchParams.has("formid")) {
-        formId = aUrl.searchParams.get("formid")
-        console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-    }
-    if (aUrl.searchParams.has("responseid")) {
-        responseId = aUrl.searchParams.get("responseid")
-        console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-    }
-    try {
-        formId = JSON.parse(config.body).formId
-        console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-    } catch(e){}
-    try {
-        responseId = JSON.parse(config.body).responseId
-        console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-    } catch(e){}
-    try {
-        latestRequest = JSON.parse(config.body).value
-        console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-    } catch(e){}
-    try {
-        studioUserId = JSON.parse(config.body).studioUserId
-        console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-    } catch(e){}
-    try {
-        documents = JSON.parse(config.body).documentIds
-        console.log("documents: ",documents)
-    } catch(e){}
-    } 
-
-    
-    currentAbortController = new AbortController();
-    const signal = currentAbortController.signal;
-    console.log("SyncFetch - Creating Abort")
-
-    try {  
-    console.log("SyncFetch - Calling OriginalFetch") 
-    const response = await originalFetch(url, { ...config, signal }); //Original fetch
-    const out = response.clone(); // return this to your UI
-    
-
-    (async () => {
+        const aUrl = new URL(url)
+        if (aUrl.searchParams.has("formid")) {
+            formId = aUrl.searchParams.get("formid")
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        }
+        if (aUrl.searchParams.has("responseid")) {
+            responseId = aUrl.searchParams.get("responseid")
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        }
         try {
-        
-        const r = out.body.getReader();
-        while (!(await r.read()).done) {}
-        errorMessageHandler()
+            formId = JSON.parse(config.body).formId
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        } catch(e){}
+        try {
+            responseId = JSON.parse(config.body).responseId
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        } catch(e){}
+        try {
+            latestRequest = JSON.parse(config.body).value
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        } catch(e){}
+        try {
+            studioUserId = JSON.parse(config.body).studioUserId
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        } catch(e){}
+        try {
+            documents = JSON.parse(config.body).documentIds
+            console.log("documents: ",documents)
+        } catch(e){}
+     
 
-        setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
-
-        } catch (_) {}
-
-
-    })();
-
-    return response;
-
-    } catch (error) {
-
-    stopButtonOff()
-    }
     
+        currentAbortController = new AbortController();
+        const signal = currentAbortController.signal;
+        console.log("SyncFetch - Creating Abort")
+
+        try {  
+        console.log("SyncFetch - Calling OriginalFetch") 
+        const response = await originalFetch(url, { ...config, signal }); //Original fetch
+        const out = response.clone(); // return this to your UI
+        
+
+        (async () => {
+            try {
+            
+            const r = out.body.getReader();
+            while (!(await r.read()).done) {}
+            errorMessageHandler()
+
+            setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
+
+            } catch (_) {}
+
+
+        })();
+
+        return response;
+
+        } catch (error) {
+
+        stopButtonOff()
+        }
+    
+    } else {
+        const response = await originalFetch(url, { ...config});
+    }
 };
 
 
