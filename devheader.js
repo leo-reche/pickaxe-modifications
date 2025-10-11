@@ -568,7 +568,7 @@ XMLHttpRequest = function() {
     '\\\\)': ' $$ ',     // Replace \) with $$
     '$':' $$ ',
     '$$':'\n $$ \n',
-    '<think>':'<div id="reason" class="reasoning">',
+    '<think>':'<div id=\\"reason\\" class=\\"reasoning\\">',
     '</think>':'</div>',
   };
 
