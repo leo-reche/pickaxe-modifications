@@ -1,0 +1,48 @@
+/* Hide reasoning by default, show only a preview */
+.reasoning {
+    max-height: 54px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: max-height 0.3s ease;
+    background: #d4d4d4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 18px;
+    color:#494949;
+    font-size:small
+}
+
+/* Add a "click to expand" indicator */
+.reasoning::after {
+    content: "▼ Click to expand reasoning";
+    position: absolute;
+    bottom: 2px;
+    right: 0px;
+    background: #d4d4d4;
+    padding: 3px 30px;
+    font-size: 12px;
+    font-weight:500;
+    border-radius:5px;
+    color: #000000;
+}
+
+.reasoning p{
+  margin-top:20px !important;
+  padding-left: 20px;
+}
+
+.reasoning p::before {
+    content: "→";
+    position: absolute;
+    left: 10px;
+}
+
+/* Expanded state */
+.reasoning.expanded {
+    max-height: none;
+}
+
+.reasoning.expanded::after {
+    content: "▲ Click to collapse";
+}
