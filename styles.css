@@ -46,3 +46,17 @@
 .reasoning.expanded::after {
     content: "▲ Click to collapse";
 }
+
+pre:has(.pxe-markdown-code-inline) {
+    background:#dedede;
+    border-radius:.5em;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+code.pxe-markdown-code-inline{
+    background-color:#dedede !important;
+    color:black !important;
+    font-weight:600 !important;
+}
