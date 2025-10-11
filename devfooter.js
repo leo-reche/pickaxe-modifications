@@ -2,6 +2,7 @@
 let bgcols = []
 
 function stopButtonOn(handleClick, toggleHover){
+    console.log("Stop-On")
 
     const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest('div.flex.items-end'); //Select textbox
     const sendButton = txtBoxArea.querySelectorAll("button")[1]; //Select second element of type button inside container of textbox
@@ -24,6 +25,8 @@ function stopButtonOn(handleClick, toggleHover){
 }
 
 function stopButtonOff(handleClick,toggleHover){
+        
+    console.log("Stop-Off")
 
     const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest('div.flex.items-end'); 
     const sendButton = txtBoxArea.querySelectorAll("button")[1]; 
@@ -35,6 +38,9 @@ function stopButtonOff(handleClick,toggleHover){
 }
 
 function handleClick(event) {
+
+    console.log("Stop-Click")
+
     const sendButton = document.querySelector('#studio-root textarea.resize-none')
                                 ?.closest('div.flex.items-end')
                                 ?.querySelectorAll("button")[1]; 
@@ -49,6 +55,7 @@ function handleClick(event) {
 }
         
 function toggleHover(e) {
+
     //receives only mouseenter & mouseleave events. If enter then bg1 else then bg0
     const sendButton = document.querySelector('#studio-root textarea.resize-none')
                                 ?.closest('div.flex.items-end')
@@ -61,6 +68,8 @@ function toggleHover(e) {
 
 
 function stopButtonUpdate(){
+
+    console.log("Stop-Update")
     
     const sendButton = document.querySelector('#studio-root textarea.resize-none')
                                 ?.closest('div.flex.items-end')
@@ -78,10 +87,11 @@ function stopButtonUpdate(){
 
         if (disabled.length > 0){  //if there are any disabled buttons (= message sending or doc being uploaded)
 
+            console.log("Stop-Update-BranchOn")
             stopButtonOn(handleClick,toggleHover);
 
         } else {
-            
+            console.log("Stop-Update-BranchOff")
             stopButtonOff(handleClick,toggleHover);
             
         }
@@ -91,10 +101,9 @@ function stopButtonUpdate(){
 
 
 const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes
-observer.observe(document.body, {
-childList: true,
-subtree: true
-
+    observer.observe(document.body, {
+    childList: true,
+    subtree: true
 });
 
 

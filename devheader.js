@@ -166,12 +166,40 @@ if (url.includes("https://core-api.pickaxe.co/pickaxe/sse")) {
 }
 }
 
+function errorMessageHandler(){
+
+    console.log("Header.ErrorMessageHandler")
+
+    setTimeout(function(){ //waits 50ms for the "error message" to load
+    var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
+    if (errBox){
+        const txtBox = document.querySelector('#studio-root textarea.resize-none');
+        if (txtBox) {  //Inserts last request back into input
+                const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
+                    window.HTMLTextAreaElement.prototype,
+                    'value'
+                ).set;
+                nativeTextareaValueSetter.call(txtBox, latestRequest);
+                const inputEvent = new Event('input', { bubbles: true });
+                txtBox.dispatchEvent(inputEvent);
+        }
+        errBox.textContent = "There has been an error. Please try sending your message again";
+        var allMsgs = document.querySelectorAll('div.gap-y-3.text-left')
+        allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
+    }
+    }, 50); 
+
+}
+
 
 let originalFetch2 = window.fetch;
 
 window.fetch = function(input, init) {
+
   const url = typeof input === 'string' ? input : input.url;
   
+  console.log("ReplaceFetch started")
+
   return originalFetch2.call(this, input, init)
     .then(response => {
       // Check if this is the specific SSE endpoint we want to log
@@ -337,7 +365,11 @@ let originalFetch = window.fetch;
 
 // Overwrite the global fetch function
 window.fetch = async function(...args) {
+
     const [url, config] = args;
+
+    console.log("SyncFetch-URL:",url)
+
     if (url.includes("https://core-api.pickaxe.co/pickaxe")){   //Massive if{} to get the formid,responseid,lastmessage,documents
     const aUrl = new URL(url)
     if (aUrl.searchParams.has("formid")) {
@@ -370,35 +402,13 @@ window.fetch = async function(...args) {
     } catch(e){}
     } 
 
-
+    
     currentAbortController = new AbortController();
     const signal = currentAbortController.signal;
-
-    function errorMessageHandler(){
-    
-        setTimeout(function(){ //waits 50ms for the "error message" to load
-        var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
-        if (errBox){
-            const txtBox = document.querySelector('#studio-root textarea.resize-none');
-            if (txtBox) {  //Inserts last request back into input
-                    const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
-                        window.HTMLTextAreaElement.prototype,
-                        'value'
-                    ).set;
-                    nativeTextareaValueSetter.call(txtBox, latestRequest);
-                    const inputEvent = new Event('input', { bubbles: true });
-                    txtBox.dispatchEvent(inputEvent);
-            }
-            errBox.textContent = "There has been an error. Please try sending your message again";
-            var allMsgs = document.querySelectorAll('div.gap-y-3.text-left')
-            allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
-        }
-        }, 50); 
-
-    }
-
+    console.log("SyncFetch - Creating Abort")
 
     try {  
+    console.log("SyncFetch - Calling OriginalFetch") 
     const response = await originalFetch(url, { ...config, signal }); //Original fetch
     const out = response.clone(); // return this to your UI
     
@@ -430,10 +440,12 @@ window.fetch = async function(...args) {
 function stopStream() {
     if (currentAbortController) { //stops the stream
         currentAbortController.abort();
+        console.log("Send signal to abort")
     }
 
     const txtBox = document.querySelector('#studio-root textarea.resize-none');
     if (txtBox) {  //Inserts last request back into input
+            console.log("Stop-Stream-Textbox identified")
             const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
                 window.HTMLTextAreaElement.prototype,
                 'value'
@@ -442,12 +454,15 @@ function stopStream() {
             const inputEvent = new Event('input', { bubbles: true });
             txtBox.dispatchEvent(inputEvent);
     }
+
     setTimeout(function(){ //waits 50ms for the "error message" to load
+        console.log("StopStream-RenamingErrorBox")
         var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
         if(errBox){
-        errBox.textContent = "This response was stopped by the user.";
-        var allMsgs = document.querySelectorAll('div.gap-y-3.text-left')
-        allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
+            console.log("StopStream-ErrorBoxFound")
+            errBox.textContent = "This response was stopped by the user.";
+            var allMsgs = document.querySelectorAll('div.gap-y-3.text-left')
+            allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
         }
     }, 100); 
 }
@@ -506,9 +521,60 @@ XMLHttpRequest = function() {
   return xhr;
 };
 
+
+
+
+
+
 //Event listener for the click on expand thinging
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('reasoning')) {
         e.target.classList.toggle('expanded');
     }
+});
+
+
+
+// Overwrite the global xml object
+const OriginalXHR = XMLHttpRequest;
+
+
+XMLHttpRequest = new Proxy(OriginalXHR, {
+construct(target, args) {
+    const xhr = new target(...args);
+    let interceptedUrl = '';
+
+    const originalOpen = xhr.open;
+    xhr.open = function(method, url, ...rest) {
+    console.log("xhr.open called with:", method, url);
+    interceptedUrl = url; // Store the URL for later use
+    return originalOpen.apply(this, [method, url, ...rest]);
+    };
+
+    const originalSend = xhr.send;
+    xhr.send = function(body) {
+    console.log("xhr.send called with body:", body);
+    
+    if (interceptedUrl.includes("https://core-api.pickaxe.co/feedback")) {   
+        console.log("sending feedback with payload:", body);
+        
+        // Parse the body if it's a string, or use it directly if it's already an object
+        let payloadData;
+        try {
+        payloadData = typeof body === 'string' ? JSON.parse(body) : body;
+        } catch (e) {
+        payloadData = body; // Use as-is if parsing fails
+        }
+        
+        originalFetch("https://hooks.zapier.com/hooks/catch/8011346/u9d1eee/", {
+        method: "POST",
+        body: JSON.stringify(payloadData)
+        });
+    }
+    
+    return originalSend.apply(this, [body]);
+    };
+
+    return xhr;
+}
 });
