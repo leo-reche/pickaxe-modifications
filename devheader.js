@@ -209,14 +209,13 @@ window.fetch = function(input, init) {
           
           // PATTERNS CONFIGURATION - Now a dictionary/object
           const PATTERN_REPLACEMENTS = {
-            '\\\\[': '\n $$ \n',     // Replace \[ with $$
-            '\\\\]': '\n $$ \n',     // Replace \] with $$
-            '\\\\(': ' $$ ',     // Replace \( with $$
-            '\\\\)': ' $$ ',     // Replace \) with $$
-            '$':' $$ ',
-            '$$':'\n $$ \n',
-            '<think>':'<div id="reason" class="reasoning">',
-            '</think>':'</div>',
+                '$$':'\\n $$$$ \\n',
+                '\\\\[': '\\n $$$$ \\n',     // Replace \[ with $$
+                '\\\\]': '\\n $$$$ \\n',     // Replace \] with $$
+                '\\\\(': ' $$$$ ',     // Replace \( with $$
+                '\\\\)': ' $$$$ ',     // Replace \) with $$
+                '<think>':'<div id=\'reason\' class=\'reasoning\'>',
+                '</think>':'</div>',
           };
           
           // Get all patterns for partial detection
@@ -326,16 +325,14 @@ window.fetch = function(input, init) {
                           // Apply each pattern->replacement mapping
                           Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
                             if (modifiedToken.includes(pattern)) {
-                              console.log(`Pattern "${pattern}" found - replacing with "${replacement}"`);
+                              
+                              console.log("Pattern: ",pattern," found in token: ",modifiedToken, ". Replacing...")
                               patternsFound = true;
                               // Replace all instances of the pattern with its specific replacement
                               modifiedToken = modifiedToken.split(pattern).join(replacement);
+                              console.log("Token After Replacement: ", modifiedToken)
                             }
                           });
-                          
-                          if (patternsFound) {
-                            console.log("Modified token:", modifiedToken);
-                          }
                           
                           // Handle partial patterns at the end
                           partialBuffer = '';
@@ -592,6 +589,7 @@ XMLHttpRequest = function() {
         let modifiedResponse = originalResponse;
         for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
           modifiedResponse = modifiedResponse.replaceAll(pattern, replacement);
+          modifiedResponse = modifiedResponse.replace(/\$([^$]+)\$/g, '$$$$1$$');
         }
         
         // Log right before returning
