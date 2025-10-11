@@ -351,12 +351,10 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 
 
 
-
+// control enter to send
 document.addEventListener('keydown', function(event) {
   // Check if Control is pressed and key is Enter.
-  console.log("keydown event")
   if (event.ctrlKey && event.key === 'Enter') {
-    console.log("Pressing Enter")
     const sendButton = document.querySelector('#studio-root textarea.resize-none')
                             ?.closest('div.flex.items-end')
                             ?.querySelectorAll("button")[1]; 

@@ -130,10 +130,6 @@ history.pushState = function(...args) {
 
 // ================ DB Sync
 
-// Store the original fetch function
-let originalFetch = window.fetch;
-
-
 let formId = null;
 let responseId = null;
 let studioUserId = null;
@@ -171,6 +167,173 @@ if (url.includes("https://core-api.pickaxe.co/pickaxe/sse")) {
 }
 
 
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called - creating pass-through stream");
+          
+          // PATTERNS CONFIGURATION - Now a dictionary/object
+          const PATTERN_REPLACEMENTS = {
+            '\\[': ' $$ ',     // Replace \[ with $$
+            '\\]': ' $$ ',     // Replace \] with $$
+            '\\(': ' $$ ',     // Replace \( with $$
+            '\\)': ' $$ ',     // Replace \) with $$
+            '<think>':'<div id="reason" class="reasoning">',
+            '</think>':'</div>',
+          };
+          
+          // Get all patterns for partial detection
+          const ALL_PATTERNS = Object.keys(PATTERN_REPLACEMENTS);
+          
+          // Get the original response body stream
+          const originalStream = response.body;
+          const reader = originalStream.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          
+          // Buffer to handle partial patterns across chunks
+          let partialBuffer = '';
+          
+          console.log("Stream started - Pattern replacements configured:", PATTERN_REPLACEMENTS);
+          
+          // Create a new ReadableStream that will process and pass through the data
+          const newStream = new ReadableStream({
+            async start(controller) {
+              console.log("New stream controller started");
+              
+              async function pump() {
+                const { done, value } = await reader.read();
+                
+                if (done) {
+                  console.log("Stream ended");
+                  if (partialBuffer) {
+                    console.log("Remaining partial buffer:", partialBuffer);
+                  }
+                  controller.close();
+                  return;
+                }
+                
+                // Decode the chunk
+                const chunk = decoder.decode(value, { stream: true });
+                console.log("Processing chunk of length:", chunk.length);
+                
+                // Parse the SSE lines and modify token content
+                let modifiedChunk = '';
+                const lines = chunk.split('\n');
+                
+                lines.forEach(line => {
+                  if (line.startsWith('data: ')) {
+                    const jsonStr = line.slice(6);
+                    try {
+                      const parsed = JSON.parse(jsonStr);
+                      if (parsed.token) {
+                        // Combine with partial buffer for pattern detection
+                        let tokenToProcess = partialBuffer + parsed.token;
+                        
+                        // Replace all pattern instances with their specific replacements
+                        let modifiedToken = tokenToProcess;
+                        let patternsFound = false;
+                        
+                        // Apply each pattern->replacement mapping
+                        Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
+                          if (modifiedToken.includes(pattern)) {
+                            console.log(`Pattern "${pattern}" found - replacing with "${replacement}"`);
+                            patternsFound = true;
+                            // Replace all instances of the pattern with its specific replacement
+                            modifiedToken = modifiedToken.split(pattern).join(replacement);
+                          }
+                        });
+                        
+                        if (patternsFound) {
+                          console.log("Modified token:", modifiedToken);
+                        }
+                        
+                        // Handle partial patterns at the end
+                        partialBuffer = '';
+                        let longestPartial = '';
+                        
+                        ALL_PATTERNS.forEach(pattern => {
+                          for (let i = pattern.length - 1; i > 0; i--) {
+                            const partialPattern = pattern.substring(0, i);
+                            if (modifiedToken.endsWith(partialPattern)) {
+                              if (partialPattern.length > longestPartial.length) {
+                                longestPartial = partialPattern;
+                                console.log(`Token ends with partial pattern '${partialPattern}'`);
+                              }
+                            }
+                          }
+                        });
+                        
+                        if (longestPartial) {
+                          // Remove the partial from the token and store it in buffer
+                          partialBuffer = longestPartial;
+                          modifiedToken = modifiedToken.slice(0, -longestPartial.length);
+                        }
+                        
+                        // Reconstruct the data line with modified token
+                        parsed.token = modifiedToken;
+                        modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
+                      } else {
+                        // Non-token data, pass through unchanged
+                        modifiedChunk += line + '\n';
+                      }
+                    } catch (e) {
+                      // Non-JSON lines, pass through unchanged
+                      modifiedChunk += line + '\n';
+                    }
+                  } else {
+                    // Non-data lines, pass through unchanged
+                    modifiedChunk += line + '\n';
+                  }
+                });
+                
+                // Remove the extra newline at the end if present
+                if (modifiedChunk.endsWith('\n\n')) {
+                  modifiedChunk = modifiedChunk.slice(0, -1);
+                } else if (chunk.endsWith('\n') && !modifiedChunk.endsWith('\n')) {
+                  modifiedChunk += '\n';
+                }
+                
+                // Encode and send the modified chunk
+                controller.enqueue(encoder.encode(modifiedChunk));
+                console.log("Modified chunk sent");
+                
+                // Continue reading
+                pump();
+              }
+              
+              pump();
+            }
+          });
+          
+          // Create a new Response with our stream and the original headers
+          const newResponse = new Response(newStream, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+          
+          console.log("Returning new response with modified stream");
+          return newResponse;
+        }
+      }
+      
+      // Return the original response for non-SSE endpoints
+      return response;
+    });
+};
+
+
+let originalFetch = window.fetch;
 
 // Overwrite the global fetch function
 window.fetch = async function(...args) {
@@ -260,8 +423,6 @@ window.fetch = async function(...args) {
 
     stopButtonOff()
     }
-
-
     
 };
 
