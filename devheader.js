@@ -199,78 +199,203 @@ let originalFetch = window.fetch;
 
 // Overwrite the global fetch function
 window.fetch = async function(...args) {
-
     const [url, config] = args;
-
-    console.log("SyncFetch-URL:",url)
-
-    if (url.includes("https://core-api.pickaxe.co/pickaxe")){   //Massive if{} to get the formid,responseid,lastmessage,documents
-        const aUrl = new URL(url)
-        if (aUrl.searchParams.has("formid")) {
-            formId = aUrl.searchParams.get("formid")
-            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-        }
-        if (aUrl.searchParams.has("responseid")) {
-            responseId = aUrl.searchParams.get("responseid")
-            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-        }
-        try {
-            formId = JSON.parse(config.body).formId
-            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-        } catch(e){}
-        try {
-            responseId = JSON.parse(config.body).responseId
-            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-        } catch(e){}
-        try {
-            latestRequest = JSON.parse(config.body).value
-            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-        } catch(e){}
-        try {
-            studioUserId = JSON.parse(config.body).studioUserId
-            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
-        } catch(e){}
-        try {
-            documents = JSON.parse(config.body).documentIds
-            console.log("documents: ",documents)
-        } catch(e){}
-     
-
     
-        currentAbortController = new AbortController();
-        const signal = currentAbortController.signal;
-        console.log("SyncFetch - Creating Abort")
+    // Initial request logging
+    console.log("🔵 FETCH INTERCEPTED");
+    console.log("├─ URL:", url);
+    console.log("├─ Method:", config?.method || 'GET');
+    console.log("├─ Headers:", config?.headers);
+    console.log("└─ Body:", config?.body);
 
-        try {  
-        console.log("SyncFetch - Calling OriginalFetch") 
-        const response = await originalFetch(url, { ...config, signal }); //Original fetch
-        const out = response.clone(); // return this to your UI
+    if (url.includes("https://core-api.pickaxe.co/pickaxe")) {
+        console.log("🟢 PICKAXE API DETECTED");
         
-
-        (async () => {
-            try {
-            
-            const r = out.body.getReader();
-            while (!(await r.read()).done) {}
-            errorMessageHandler()
-
-            setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
-
-            } catch (_) {}
-
-
-        })();
-
-        return response;
-
-        } catch (error) {
-
-        console.log("Sync fetch caught this error: ", error)
-        stopButtonOff()
-
+        // Initialize variables
+        let formId = null;
+        let responseId = null;
+        let studioUserId = null;
+        let latestRequest = null;
+        let documents = null;
+        
+        // Extract parameters from URL
+        const aUrl = new URL(url);
+        console.log("📍 URL Parameters:", Object.fromEntries(aUrl.searchParams));
+        
+        if (aUrl.searchParams.has("formid")) {
+            formId = aUrl.searchParams.get("formid");
+            console.log("✓ FormID from URL:", formId);
         }
-    
+        
+        if (aUrl.searchParams.has("responseid")) {
+            responseId = aUrl.searchParams.get("responseid");
+            console.log("✓ ResponseID from URL:", responseId);
+        }
+        
+        // Extract parameters from body
+        if (config?.body) {
+            console.log("📦 Parsing Request Body...");
+            let bodyData = null;
+            
+            try {
+                bodyData = JSON.parse(config.body);
+                console.log("✓ Body parsed successfully:", bodyData);
+                
+                // Extract each field with individual error handling
+                if (bodyData.formId !== undefined) {
+                    formId = bodyData.formId;
+                    console.log("  └─ formId extracted:", formId);
+                }
+                
+                if (bodyData.responseId !== undefined) {
+                    responseId = bodyData.responseId;
+                    console.log("  └─ responseId extracted:", responseId);
+                }
+                
+                if (bodyData.value !== undefined) {
+                    latestRequest = bodyData.value;
+                    console.log("  └─ latestRequest extracted:", latestRequest);
+                }
+                
+                if (bodyData.studioUserId !== undefined) {
+                    studioUserId = bodyData.studioUserId;
+                    console.log("  └─ studioUserId extracted:", studioUserId);
+                }
+                
+                if (bodyData.documentIds !== undefined) {
+                    documents = bodyData.documentIds;
+                    console.log("  └─ documents extracted:", documents);
+                }
+            } catch (parseError) {
+                console.error("❌ Body parse error:", parseError.message);
+            }
+        }
+        
+        // Log current state
+        console.log("📊 CURRENT STATE:");
+        console.log("├─ formId:", formId);
+        console.log("├─ responseId:", responseId);
+        console.log("├─ studioUserId:", studioUserId);
+        console.log("├─ latestRequest:", latestRequest);
+        console.log("└─ documents:", documents);
+        
+        // Create abort controller
+        const currentAbortController = new AbortController();
+        const signal = currentAbortController.signal;
+        console.log("🎛️ AbortController created");
+        
+        try {
+            console.log("🚀 Initiating original fetch...");
+            const startTime = performance.now();
+            
+            // Call original fetch
+            const response = await originalFetch(url, { ...config, signal });
+            
+            const endTime = performance.now();
+            console.log(`⏱️ Fetch completed in ${(endTime - startTime).toFixed(2)}ms`);
+            
+            // Log response details
+            console.log("📨 RESPONSE DETAILS:");
+            console.log("├─ Status:", response.status, response.statusText);
+            console.log("├─ Headers:", Object.fromEntries(response.headers.entries()));
+            console.log("└─ OK:", response.ok);
+            
+            // Clone response for processing
+            const clonedResponse = response.clone();
+            console.log("📋 Response cloned for processing");
+            
+            // Async stream processing
+            (async () => {
+                console.log("🔄 Starting async stream processing...");
+                let chunkCount = 0;
+                let totalBytes = 0;
+                
+                try {
+                    const reader = clonedResponse.body.getReader();
+                    const decoder = new TextDecoder();
+                    let accumulatedData = '';
+                    
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        
+                        if (value) {
+                            chunkCount++;
+                            totalBytes += value.length;
+                            const chunkText = decoder.decode(value, { stream: !done });
+                            accumulatedData += chunkText;
+                            
+                            console.log(`📦 Chunk #${chunkCount}:`, {
+                                bytes: value.length,
+                                totalBytes: totalBytes,
+                                preview: chunkText.slice(0, 100) + (chunkText.length > 100 ? '...' : '')
+                            });
+                        }
+                        
+                        if (done) {
+                            console.log("✅ Stream reading complete");
+                            console.log(`📊 Total: ${chunkCount} chunks, ${totalBytes} bytes`);
+                            
+                            // Try to parse final data if it's JSON
+                            try {
+                                const jsonData = JSON.parse(accumulatedData);
+                                console.log("📄 Final JSON data:", jsonData);
+                            } catch (e) {
+                                console.log("📄 Final data (not JSON):", accumulatedData.slice(0, 500));
+                            }
+                            
+                            break;
+                        }
+                    }
+                    
+                    console.log("🔧 Calling errorMessageHandler...");
+                    if (typeof errorMessageHandler === 'function') {
+                        errorMessageHandler();
+                    } else {
+                        console.warn("⚠️ errorMessageHandler not found");
+                    }
+                    
+                    console.log("⏳ Scheduling syncConversation in 2 seconds...");
+                    setTimeout(() => {
+                        console.log("🔄 Executing syncConversation");
+                        console.log("├─ responseId:", responseId);
+                        console.log("├─ formId:", formId);
+                        console.log("├─ studioUserId:", studioUserId);
+                        console.log("├─ pastedContent:", typeof pastedContent !== 'undefined' ? pastedContent : 'undefined');
+                        console.log("└─ url:", url);
+                        
+                        if (typeof syncConversation === 'function') {
+                            syncConversation(responseId, formId, studioUserId, pastedContent, url);
+                        } else {
+                            console.warn("⚠️ syncConversation function not found");
+                        }
+                    }, 2000);
+                    
+                } catch (streamError) {
+                    console.error("❌ Stream processing error:", streamError);
+                }
+            })();
+            
+            console.log("↩️ Returning original response to caller");
+            return response;
+            
+        } catch (fetchError) {
+            console.error("❌ FETCH ERROR:", fetchError);
+            console.log("├─ Error name:", fetchError.name);
+            console.log("├─ Error message:", fetchError.message);
+            console.log("└─ Error stack:", fetchError.stack);
+            
+            if (typeof stopButtonOff === 'function') {
+                console.log("🛑 Calling stopButtonOff");
+                stopButtonOff();
+            } else {
+                console.warn("⚠️ stopButtonOff function not found");
+            }
+            
+            throw fetchError; // Re-throw the error
+        }
+        
     } else {
+        console.log("🔀 Non-Pickaxe URL, passing through to original fetch");
         return await originalFetch(url, {...config});
     }
 };
