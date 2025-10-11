@@ -209,10 +209,10 @@ window.fetch = function(input, init) {
           
           // PATTERNS CONFIGURATION - Now a dictionary/object
           const PATTERN_REPLACEMENTS = {
-            '$$[': ' $$ ',     // Replace \[ with $$
-            '\$$': ' $$ ',     // Replace \] with $$
-            '\$$': ' $$ ',     // Replace \( with $$
-            '\$$': ' $$ ',     // Replace \) with $$
+            '\\\\[': ' $$ ',     // Replace \[ with $$
+            '\\\\]': ' $$ ',     // Replace \] with $$
+            '\\\\(': ' $$ ',     // Replace \( with $$
+            '\\\\)': ' $$ ',     // Replace \) with $$
             '<think>':'<div id="reason" class="reasoning">',
             '</think>':'</div>',
           };
@@ -236,13 +236,21 @@ window.fetch = function(input, init) {
             async start(controller) {
               console.log("New stream controller started");
               
+              if (init && init.signal) {
+                init.signal.addEventListener('abort', () => {
+                  console.log("Abort signal received in SSE stream");
+                  reader.cancel();
+                  controller.close();
+                });
+              }
+
               async function pump() {
                 const { done, value } = await reader.read();
                 
                 if (done) {
                   console.log("Stream ended");
                   if (partialBuffer) {
-                    console.log("Remaining partial buffer:", partialBuffer);
+                    //console.log("Remaining partial buffer:", partialBuffer);
                   }
                   controller.close();
                   return;
@@ -250,7 +258,7 @@ window.fetch = function(input, init) {
                 
                 // Decode the chunk
                 const chunk = decoder.decode(value, { stream: true });
-                console.log("Processing chunk of length:", chunk.length);
+                //console.log("Processing chunk of length:", chunk.length);
                 
                 // Parse the SSE lines and modify token content
                 let modifiedChunk = '';
@@ -280,7 +288,7 @@ window.fetch = function(input, init) {
                         });
                         
                         if (patternsFound) {
-                          console.log("Modified token:", modifiedToken);
+                          //console.log("Modified token:", modifiedToken);
                         }
                         
                         // Handle partial patterns at the end
@@ -293,7 +301,7 @@ window.fetch = function(input, init) {
                             if (modifiedToken.endsWith(partialPattern)) {
                               if (partialPattern.length > longestPartial.length) {
                                 longestPartial = partialPattern;
-                                console.log(`Token ends with partial pattern '${partialPattern}'`);
+                                //console.log(`Token ends with partial pattern '${partialPattern}'`);
                               }
                             }
                           }
@@ -331,7 +339,7 @@ window.fetch = function(input, init) {
                 
                 // Encode and send the modified chunk
                 controller.enqueue(encoder.encode(modifiedChunk));
-                console.log("Modified chunk sent");
+                //console.log("Modified chunk sent");
                 
                 // Continue reading
                 pump();
@@ -348,7 +356,7 @@ window.fetch = function(input, init) {
             headers: response.headers
           });
           
-          console.log("Returning new response with modified stream");
+          //console.log("Returning new response with modified stream");
           return newResponse;
         }
         
@@ -441,7 +449,7 @@ window.fetch = async function(...args) {
 function stopStream() {
     if (currentAbortController) { //stops the stream
         currentAbortController.abort();
-        console.log("Send signal to abort")
+        console.log("Sent signal to abort")
     }
 
     const txtBox = document.querySelector('#studio-root textarea.resize-none');

@@ -43,6 +43,7 @@ function handleClick(event) {
 
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
+    
     event.preventDefault();
     event.stopPropagation();
     stopStream();
