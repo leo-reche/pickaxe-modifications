@@ -209,10 +209,10 @@ window.fetch = function(input, init) {
           
           // PATTERNS CONFIGURATION - Now a dictionary/object
           const PATTERN_REPLACEMENTS = {
-            '$$[': ' $$ ',     // Replace \[ with $$
-            '\$$': ' $$ ',     // Replace \] with $$
-            '\$$': ' $$ ',     // Replace \( with $$
-            '\$$': ' $$ ',     // Replace \) with $$
+            '\\\\[': ' $$ ',     // Replace \[ with $$
+            '\\\\]': ' $$ ',     // Replace \] with $$
+            '\\\\(': ' $$ ',     // Replace \( with $$
+            '\\\\)': ' $$ ',     // Replace \) with $$
             '<think>':'<div id="reason" class="reasoning">',
             '</think>':'</div>',
           };
