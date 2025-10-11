@@ -201,12 +201,12 @@ window.fetch = async function(...args) {
 
     const [url, config] = args;
 
-    
+    console.log("🔵 SyncFetch START - URL:", url);
+    console.log("🔵 SyncFetch - Full Config:", JSON.stringify(config, null, 2));
+
     if (url.includes("https://core-api.pickaxe.co/pickaxe")) {
         console.log("✅ SyncFetch - Pickaxe URL detected");
-        console.log("🔵 SyncFetch START - URL:", url);
-        console.log("🔵 SyncFetch - Full Config:", JSON.stringify(config, null, 2));
-
+        
         // Massive if{} to get the formid,responseid,lastmessage,documents
         const aUrl = new URL(url);
         console.log("🔍 SyncFetch - URL Params:", Array.from(aUrl.searchParams.entries()));
@@ -299,57 +299,6 @@ window.fetch = async function(...args) {
             console.log("📡 Response OK:", response.ok);
             console.log("📡 Response Type:", response.type);
             
-            const out = response.clone();
-            console.log("📋 SyncFetch - Response cloned for streaming");
-
-            // Async stream processing
-            (async () => {
-                console.log("🔄 Starting async stream processing");
-                try {
-                    const r = out.body.getReader();
-                    console.log("📖 Stream reader created");
-                    
-                    let chunkCount = 0;
-                    let totalBytes = 0;
-                    const streamStartTime = Date.now();
-                    
-                    while (true) {
-                        const { done, value } = await r.read();
-                        chunkCount++;
-                        
-                        if (value) {
-                            totalBytes += value.length;
-                            console.log(`📦 Chunk #${chunkCount}: ${value.length} bytes (Total: ${totalBytes} bytes)`);
-                        }
-                        
-                        if (done) {
-                            const streamTime = Date.now() - streamStartTime;
-                            console.log(`✅ Stream complete - ${chunkCount} chunks, ${totalBytes} bytes in ${streamTime}ms`);
-                            break;
-                        }
-                    }
-                    
-                    console.log("🔧 Calling errorMessageHandler()");
-                    errorMessageHandler();
-
-                    console.log("⏰ Setting timeout for syncConversation (2000ms)");
-                    setTimeout(() => {
-                        console.log("🔄 Executing syncConversation with:", {
-                            responseId,
-                            formId,
-                            studioUserId,
-                            pastedContent,
-                            url
-                        });
-                        syncConversation(responseId, formId, studioUserId, pastedContent, url);
-                    }, 2000);
-
-                } catch (streamError) {
-                    console.error("❌ Stream processing error:", streamError);
-                    console.error("Error stack:", streamError.stack);
-                }
-            })();
-
             console.log("🔵 SyncFetch - Returning response to caller");
             return response;
 
@@ -372,6 +321,7 @@ window.fetch = async function(...args) {
     } else {
         console.log("⏩ SyncFetch - Non-Pickaxe URL, passing through to originalFetch");
         const response = await originalFetch(url, {...config});
+        console.log("✅ Pass-through response:", response.status, response.statusText);
         return response;
     }
 };
@@ -395,19 +345,7 @@ function stopStream() {
             txtBox.dispatchEvent(inputEvent);
     }
 
-    setTimeout(function(){ //waits 50ms for the "error message" to load
-        console.log("StopStream-RenamingErrorBox")
-        var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
-        if(errBox){
-            console.log("StopStream-ErrorBoxFound")
-            errBox.textContent = "This response was stopped by the user.";
-        }
-        var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
-        allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
-        var thread = document.querySelector('div.grid.grid-cols-1.gap-y-6.w-full');
-        
 
-    }, 100); 
 }
 
 
