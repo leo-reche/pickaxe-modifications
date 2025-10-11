@@ -195,15 +195,13 @@ function errorMessageHandler(){
 let originalFetch2 = window.fetch;
 
 window.fetch = function(input, init) {
-
   const url = typeof input === 'string' ? input : input.url;
   
-  console.log("ReplaceFetch started")
-
-  return originalFetch2.call(this, input, init)
-    .then(response => {
-      // Check if this is the specific SSE endpoint we want to log
-      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+  if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {  // Added opening brace here
+    console.log("ReplaceFetch started | input:",input," | init: ",init)
+    return originalFetch2.call(this, input, init)
+      .then(response => {
+        // Check if this is the specific SSE endpoint we want to log
         const contentType = response.headers.get('content-type');
         
         if (contentType && contentType.includes('text/event-stream')) {
@@ -211,10 +209,10 @@ window.fetch = function(input, init) {
           
           // PATTERNS CONFIGURATION - Now a dictionary/object
           const PATTERN_REPLACEMENTS = {
-            '\\[': ' $$ ',     // Replace \[ with $$
-            '\\]': ' $$ ',     // Replace \] with $$
-            '\\(': ' $$ ',     // Replace \( with $$
-            '\\)': ' $$ ',     // Replace \) with $$
+            '$$[': ' $$ ',     // Replace \[ with $$
+            '\$$': ' $$ ',     // Replace \] with $$
+            '\$$': ' $$ ',     // Replace \( with $$
+            '\$$': ' $$ ',     // Replace \) with $$
             '<think>':'<div id="reason" class="reasoning">',
             '</think>':'</div>',
           };
@@ -353,11 +351,14 @@ window.fetch = function(input, init) {
           console.log("Returning new response with modified stream");
           return newResponse;
         }
-      }
-      
-      // Return the original response for non-SSE endpoints
-      return response;
-    });
+        
+        // Return the original response for non-SSE endpoints
+        return response;
+      });  
+
+  } else {
+    return originalFetch2.call(this, input, init);
+  }
 };
 
 
