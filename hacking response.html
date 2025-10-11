@@ -1,0 +1,1292 @@
+<!-- viewing responses -->
+
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called");
+          
+          // Clone the response so we can read it without consuming the original
+          const clonedResponse = response.clone();
+          
+          // Log response details
+          console.log("SSE Response received:", {
+            url: response.url,
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+          
+          // Log the response body
+          clonedResponse.text().then(body => {
+            console.log("SSE Response body:", body);
+          });
+        }
+      }
+      
+      // Return the original response so the application continues working normally
+      return response;
+    });
+};
+
+</script>
+
+<!-- identifying $$ !-->
+
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called");
+          
+          // Clone the response so we can read it without consuming the original
+          const clonedResponse = response.clone();
+          
+          // Log response details
+          console.log("SSE Response received:", {
+            url: response.url,
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+          
+          // Process the stream
+          const reader = clonedResponse.body.getReader();
+          const decoder = new TextDecoder();
+          
+          console.log("Stream started");
+          
+          function readStream() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                console.log("Stream ended");
+                return;
+              }
+              
+              // Decode the chunk and log it
+              const chunk = decoder.decode(value, { stream: true });
+              
+              // SSE data typically comes in lines starting with "data: "
+              const lines = chunk.split('\n');
+              lines.forEach(line => {
+                if (line.startsWith('data: ')) {
+                  const token = line.slice(6); // Remove "data: " prefix
+                  if (token.trim()) {
+                    console.log(token);
+                    
+                    // Check if token contains $$
+                    if (token.includes('$$')) {
+                      console.log("$$ identified");
+                    }
+                  }
+                }
+              });
+              
+              // Continue reading
+              readStream();
+            });
+          }
+          
+          readStream();
+        }
+      }
+      
+      // Return the original response so the application continues working normally
+      return response;
+    });
+};
+
+</script>
+
+
+
+
+<!-- identifying text over multiple tokens !-->
+
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called");
+          
+          // Clone the response so we can read it without consuming the original
+          const clonedResponse = response.clone();
+          
+          // Log response details
+          console.log("SSE Response received:", {
+            url: response.url,
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+          
+          // Process the stream
+          const reader = clonedResponse.body.getReader();
+          const decoder = new TextDecoder();
+          
+          // Buffer to accumulate actual text content
+          let textBuffer = '';
+          
+          console.log("Stream started");
+          
+          function readStream() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                console.log("Stream ended");
+                console.log("Final buffer:", textBuffer);
+                return;
+              }
+              
+              // Decode the chunk and log it
+              const chunk = decoder.decode(value, { stream: true });
+              
+              // SSE data typically comes in lines starting with "data: "
+              const lines = chunk.split('\n');
+              lines.forEach(line => {
+                if (line.startsWith('data: ')) {
+                  const tokenData = line.slice(6); // Remove "data: " prefix
+                  if (tokenData.trim()) {
+                    console.log("Token:", tokenData);
+                    
+                    // Parse JSON to extract actual token value
+                    try {
+                      const parsed = JSON.parse(tokenData);
+                      if (parsed.token) {
+                        // Add actual token text to buffer
+                        textBuffer += parsed.token;
+                        console.log("Text buffer after adding:", textBuffer);
+                        
+                        // Check if buffer contains x+1
+                        if (textBuffer.includes('x+1')) {
+                          console.log("x+1 identified");
+                          textBuffer = '';
+                          console.log("Buffer cleared");
+                        }
+                      }
+                    } catch (e) {
+                      // Not JSON or parsing error, skip
+                      console.log("Could not parse token data:", e);
+                    }
+                  }
+                }
+              });
+              
+              // Continue reading
+              readStream();
+            });
+          }
+          
+          readStream();
+        }
+      }
+      
+      // Return the original response so the application continues working normally
+      return response;
+    });
+};
+
+</script>
+
+
+
+
+<!-- making the buffer 3 tokens only !-->
+
+
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called");
+          
+          // Clone the response so we can read it without consuming the original
+          const clonedResponse = response.clone();
+          
+          // Log response details
+          console.log("SSE Response received:", {
+            url: response.url,
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+          
+          // Process the stream
+          const reader = clonedResponse.body.getReader();
+          const decoder = new TextDecoder();
+          
+          // Array to keep last 3 tokens
+          let tokenArray = [];
+          
+          console.log("Stream started");
+          
+          function readStream() {
+            reader.read().then(({ done, value }) => {
+              if (done) {
+                console.log("Stream ended");
+                console.log("Final buffer:", tokenArray.join(''));
+                return;
+              }
+              
+              // Decode the chunk and log it
+              const chunk = decoder.decode(value, { stream: true });
+              
+              // SSE data typically comes in lines starting with "data: "
+              const lines = chunk.split('\n');
+              lines.forEach(line => {
+                if (line.startsWith('data: ')) {
+                  const tokenData = line.slice(6); // Remove "data: " prefix
+                  if (tokenData.trim()) {
+                    console.log("Token:", tokenData);
+                    
+                    // Parse JSON to extract actual token value
+                    try {
+                      const parsed = JSON.parse(tokenData);
+                      if (parsed.token) {
+                        // Add token to array, keep only last 3
+                        tokenArray.push(parsed.token);
+                        if (tokenArray.length > 3) {
+                          tokenArray.shift();
+                        }
+                        
+                        const textBuffer = tokenArray.join('');
+                        console.log("Text buffer (last 3 tokens):", textBuffer);
+                        
+                        // Check if buffer contains x+1
+                        if (textBuffer.includes('x+1')) {
+                          console.log("x+1 identified");
+                          tokenArray = [];
+                          console.log("Buffer cleared");
+                        }
+                      }
+                    } catch (e) {
+                      // Not JSON or parsing error, skip
+                      console.log("Could not parse token data:", e);
+                    }
+                  }
+                }
+              });
+              
+              // Continue reading
+              readStream();
+            });
+          }
+          
+          readStream();
+        }
+      }
+      
+      // Return the original response so the application continues working normally
+      return response;
+    });
+};
+
+</script>
+
+
+
+
+<!-- reading then pumping the read response !-->
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called - creating pass-through stream");
+          
+          // Get the original response body stream
+          const originalStream = response.body;
+          const reader = originalStream.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          
+          // Array to keep last 3 tokens
+          let tokenArray = [];
+          
+          console.log("Stream started");
+          
+          // Create a new ReadableStream that will process and pass through the data
+          const newStream = new ReadableStream({
+            async start(controller) {
+              console.log("New stream controller started");
+              
+              async function pump() {
+                const { done, value } = await reader.read();
+                
+                if (done) {
+                  console.log("Stream ended");
+                  controller.close();
+                  return;
+                }
+                
+                // Decode the chunk
+                const chunk = decoder.decode(value, { stream: true });
+                console.log("Processing chunk of length:", chunk.length);
+                
+                // For now, just pass through the original chunk unchanged
+                controller.enqueue(encoder.encode(chunk));
+                
+                // Log what we're passing through
+                const lines = chunk.split('\n');
+                lines.forEach(line => {
+                  if (line.startsWith('data: ')) {
+                    console.log("Passing through:", line);
+                  }
+                });
+                
+                // Continue reading
+                pump();
+              }
+              
+              pump();
+            }
+          });
+          
+          // Create a new Response with our stream and the original headers
+          const newResponse = new Response(newStream, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+          
+          console.log("Returning new response with pass-through stream");
+          return newResponse;
+        }
+      }
+      
+      // Return the original response for non-SSE endpoints
+      return response;
+    });
+};
+
+</script>
+
+
+
+<!--Identifying x+1 per chunk including a partial buffer -->
+
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called - creating pass-through stream");
+          
+          // Get the original response body stream
+          const originalStream = response.body;
+          const reader = originalStream.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          
+          // Buffer to handle partial patterns across chunks
+          let partialBuffer = '';
+          
+          console.log("Stream started");
+          
+          // Create a new ReadableStream that will process and pass through the data
+          const newStream = new ReadableStream({
+            async start(controller) {
+              console.log("New stream controller started");
+              
+              async function pump() {
+                const { done, value } = await reader.read();
+                
+                if (done) {
+                  console.log("Stream ended");
+                  if (partialBuffer) {
+                    console.log("Remaining partial buffer:", partialBuffer);
+                  }
+                  controller.close();
+                  return;
+                }
+                
+                // Decode the chunk
+                const chunk = decoder.decode(value, { stream: true });
+                console.log("Processing chunk of length:", chunk.length);
+                
+                // Extract token text from the SSE/JSON format
+                let tokenText = '';
+                const lines = chunk.split('\n');
+                lines.forEach(line => {
+                  if (line.startsWith('data: ')) {
+                    const jsonStr = line.slice(6);
+                    try {
+                      const parsed = JSON.parse(jsonStr);
+                      if (parsed.token) {
+                        tokenText += parsed.token;
+                      }
+                    } catch (e) {
+                      // Skip non-JSON lines
+                    }
+                  }
+                });
+                
+                // Combine with any partial buffer from previous chunk
+                const fullText = partialBuffer + tokenText;
+                console.log("Analyzing text:", fullText);
+                
+                // Check if the full text contains x+1
+                if (fullText.includes('x+1')) {
+                  console.log("x+1 identified in chunk!");
+                }
+                
+                // Check for partial patterns at the end of tokenText
+                if (tokenText.endsWith('x')) {
+                  console.log("Chunk ends with 'x' - potential pattern start");
+                  partialBuffer = 'x';
+                } else if (tokenText.endsWith('x+')) {
+                  console.log("Chunk ends with 'x+' - potential pattern start");
+                  partialBuffer = 'x+';
+                } else {
+                  // Clear buffer if no partial pattern
+                  partialBuffer = '';
+                }
+                
+                // Pass through the original chunk unchanged
+                controller.enqueue(encoder.encode(chunk));
+                console.log("Chunk passed through");
+                
+                // Continue reading
+                pump();
+              }
+              
+              pump();
+            }
+          });
+          
+          // Create a new Response with our stream and the original headers
+          const newResponse = new Response(newStream, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+          
+          console.log("Returning new response with pass-through stream");
+          return newResponse;
+        }
+      }
+      
+      // Return the original response for non-SSE endpoints
+      return response;
+    });
+};
+
+</script>
+
+
+<!--Identifying a given pattern per chunk including a partial buffer -->
+
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called - creating pass-through stream");
+          
+          // PATTERN CONFIGURATION - Change this to whatever pattern you want to detect
+          const PATTERN_TO_IDENTIFY = '\\[';
+          
+          // Get the original response body stream
+          const originalStream = response.body;
+          const reader = originalStream.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          
+          // Buffer to handle partial patterns across chunks
+          let partialBuffer = '';
+          
+          console.log("Stream started - Looking for pattern:", PATTERN_TO_IDENTIFY);
+          
+          // Create a new ReadableStream that will process and pass through the data
+          const newStream = new ReadableStream({
+            async start(controller) {
+              console.log("New stream controller started");
+              
+              async function pump() {
+                const { done, value } = await reader.read();
+                
+                if (done) {
+                  console.log("Stream ended");
+                  if (partialBuffer) {
+                    console.log("Remaining partial buffer:", partialBuffer);
+                  }
+                  controller.close();
+                  return;
+                }
+                
+                // Decode the chunk
+                const chunk = decoder.decode(value, { stream: true });
+                console.log("Processing chunk of length:", chunk.length);
+                
+                // Extract token text from the SSE/JSON format
+                let tokenText = '';
+                const lines = chunk.split('\n');
+                lines.forEach(line => {
+                  if (line.startsWith('data: ')) {
+                    const jsonStr = line.slice(6);
+                    try {
+                      const parsed = JSON.parse(jsonStr);
+                      if (parsed.token) {
+                        tokenText += parsed.token;
+                      }
+                    } catch (e) {
+                      // Skip non-JSON lines
+                    }
+                  }
+                });
+                
+                // Combine with any partial buffer from previous chunk
+                const fullText = partialBuffer + tokenText;
+                console.log("Analyzing text:", fullText);
+                
+                // Check if the full text contains the pattern
+                if (fullText.includes(PATTERN_TO_IDENTIFY)) {
+                  console.log(`Pattern "${PATTERN_TO_IDENTIFY}" identified in chunk!`);
+                }
+                
+                // Check for partial patterns at the end of tokenText
+                // Build possible partial patterns (all prefixes of the pattern)
+                for (let i = PATTERN_TO_IDENTIFY.length - 1; i > 0; i--) {
+                  const partialPattern = PATTERN_TO_IDENTIFY.substring(0, i);
+                  if (tokenText.endsWith(partialPattern)) {
+                    console.log(`Chunk ends with '${partialPattern}' - potential pattern start`);
+                    partialBuffer = partialPattern;
+                    break;
+                  } else {
+                    partialBuffer = '';
+                  }
+                }
+                
+                // Pass through the original chunk unchanged
+                controller.enqueue(encoder.encode(chunk));
+                console.log("Chunk passed through");
+                
+                // Continue reading
+                pump();
+              }
+              
+              pump();
+            }
+          });
+          
+          // Create a new Response with our stream and the original headers
+          const newResponse = new Response(newStream, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+          
+          console.log("Returning new response with pass-through stream");
+          return newResponse;
+        }
+      }
+      
+      // Return the original response for non-SSE endpoints
+      return response;
+    });
+};
+
+</script>
+
+
+
+<!--Identifying a list of patterns per chunk including a partial buffer -->
+
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called - creating pass-through stream");
+          
+          // PATTERNS CONFIGURATION - Add any patterns you want to detect
+          const PATTERNS_TO_IDENTIFY = ['x+1', 'x-1'];
+          
+          // Get the original response body stream
+          const originalStream = response.body;
+          const reader = originalStream.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          
+          // Buffer to handle partial patterns across chunks
+          let partialBuffer = '';
+          
+          console.log("Stream started - Looking for patterns:", PATTERNS_TO_IDENTIFY);
+          
+          // Create a new ReadableStream that will process and pass through the data
+          const newStream = new ReadableStream({
+            async start(controller) {
+              console.log("New stream controller started");
+              
+              async function pump() {
+                const { done, value } = await reader.read();
+                
+                if (done) {
+                  console.log("Stream ended");
+                  if (partialBuffer) {
+                    console.log("Remaining partial buffer:", partialBuffer);
+                  }
+                  controller.close();
+                  return;
+                }
+                
+                // Decode the chunk
+                const chunk = decoder.decode(value, { stream: true });
+                console.log("Processing chunk of length:", chunk.length);
+                
+                // Extract token text from the SSE/JSON format
+                let tokenText = '';
+                const lines = chunk.split('\n');
+                lines.forEach(line => {
+                  if (line.startsWith('data: ')) {
+                    const jsonStr = line.slice(6);
+                    try {
+                      const parsed = JSON.parse(jsonStr);
+                      if (parsed.token) {
+                        tokenText += parsed.token;
+                      }
+                    } catch (e) {
+                      // Skip non-JSON lines
+                    }
+                  }
+                });
+                
+                // Combine with any partial buffer from previous chunk
+                const fullText = partialBuffer + tokenText;
+                console.log("Analyzing text:", fullText);
+                
+                // Check if the full text contains any of the patterns
+                PATTERNS_TO_IDENTIFY.forEach(pattern => {
+                  if (fullText.includes(pattern)) {
+                    console.log(`Pattern "${pattern}" identified in chunk!`);
+                  }
+                });
+                
+                // Check for partial patterns at the end of tokenText
+                partialBuffer = '';
+                PATTERNS_TO_IDENTIFY.forEach(pattern => {
+                  // Check all possible prefixes of each pattern
+                  for (let i = pattern.length - 1; i > 0; i--) {
+                    const partialPattern = pattern.substring(0, i);
+                    if (tokenText.endsWith(partialPattern)) {
+                      // Keep the longest partial match
+                      if (partialPattern.length > partialBuffer.length) {
+                        partialBuffer = partialPattern;
+                        console.log(`Chunk ends with '${partialPattern}' - potential start of "${pattern}"`);
+                      }
+                    }
+                  }
+                });
+                
+                if (!partialBuffer) {
+                  console.log("No partial patterns at end of chunk");
+                }
+                
+                // Pass through the original chunk unchanged
+                controller.enqueue(encoder.encode(chunk));
+                console.log("Chunk passed through");
+                
+                // Continue reading
+                pump();
+              }
+              
+              pump();
+            }
+          });
+          
+          // Create a new Response with our stream and the original headers
+          const newResponse = new Response(newStream, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+          
+          console.log("Returning new response with pass-through stream");
+          return newResponse;
+        }
+      }
+      
+      // Return the original response for non-SSE endpoints
+      return response;
+    });
+};
+
+</script>
+
+<!-- Substituting -->
+
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called - creating pass-through stream");
+          
+          // PATTERNS CONFIGURATION
+          const PATTERNS_TO_IDENTIFY = ['\\[','\\]', '\\(','\\)'];
+          const REPLACEMENT_PATTERN = ' $$ ';  // The pattern to substitute with
+          
+          // Get the original response body stream
+          const originalStream = response.body;
+          const reader = originalStream.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          
+          // Buffer to handle partial patterns across chunks
+          let partialBuffer = '';
+          
+          console.log("Stream started - Looking for patterns:", PATTERNS_TO_IDENTIFY);
+          console.log("Will replace with:", REPLACEMENT_PATTERN);
+          
+          // Create a new ReadableStream that will process and pass through the data
+          const newStream = new ReadableStream({
+            async start(controller) {
+              console.log("New stream controller started");
+              
+              async function pump() {
+                const { done, value } = await reader.read();
+                
+                if (done) {
+                  console.log("Stream ended");
+                  if (partialBuffer) {
+                    console.log("Remaining partial buffer:", partialBuffer);
+                  }
+                  controller.close();
+                  return;
+                }
+                
+                // Decode the chunk
+                const chunk = decoder.decode(value, { stream: true });
+                console.log("Processing chunk of length:", chunk.length);
+                
+                // Parse the SSE lines and modify token content
+                let modifiedChunk = '';
+                const lines = chunk.split('\n');
+                
+                lines.forEach(line => {
+                  if (line.startsWith('data: ')) {
+                    const jsonStr = line.slice(6);
+                    try {
+                      const parsed = JSON.parse(jsonStr);
+                      if (parsed.token) {
+                        // Combine with partial buffer for pattern detection
+                        let tokenToProcess = partialBuffer + parsed.token;
+                        
+                        // Replace all pattern instances
+                        let modifiedToken = tokenToProcess;
+                        let patternsFound = false;
+                        
+                        PATTERNS_TO_IDENTIFY.forEach(pattern => {
+                          if (modifiedToken.includes(pattern)) {
+                            console.log(`Pattern "${pattern}" found - replacing with "${REPLACEMENT_PATTERN}"`);
+                            patternsFound = true;
+                            // Replace all instances of the pattern
+                            modifiedToken = modifiedToken.split(pattern).join(REPLACEMENT_PATTERN);
+                          }
+                        });
+                        
+                        if (patternsFound) {
+                          console.log("Modified token:", modifiedToken);
+                        }
+                        
+                        // Handle partial patterns at the end
+                        partialBuffer = '';
+                        let longestPartial = '';
+                        
+                        PATTERNS_TO_IDENTIFY.forEach(pattern => {
+                          for (let i = pattern.length - 1; i > 0; i--) {
+                            const partialPattern = pattern.substring(0, i);
+                            if (modifiedToken.endsWith(partialPattern)) {
+                              if (partialPattern.length > longestPartial.length) {
+                                longestPartial = partialPattern;
+                                console.log(`Token ends with partial pattern '${partialPattern}'`);
+                              }
+                            }
+                          }
+                        });
+                        
+                        if (longestPartial) {
+                          // Remove the partial from the token and store it in buffer
+                          partialBuffer = longestPartial;
+                          modifiedToken = modifiedToken.slice(0, -longestPartial.length);
+                        }
+                        
+                        // Reconstruct the data line with modified token
+                        parsed.token = modifiedToken;
+                        modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
+                      } else {
+                        // Non-token data, pass through unchanged
+                        modifiedChunk += line + '\n';
+                      }
+                    } catch (e) {
+                      // Non-JSON lines, pass through unchanged
+                      modifiedChunk += line + '\n';
+                    }
+                  } else {
+                    // Non-data lines, pass through unchanged
+                    modifiedChunk += line + '\n';
+                  }
+                });
+                
+                // Remove the extra newline at the end if present
+                if (modifiedChunk.endsWith('\n\n')) {
+                  modifiedChunk = modifiedChunk.slice(0, -1);
+                } else if (chunk.endsWith('\n') && !modifiedChunk.endsWith('\n')) {
+                  modifiedChunk += '\n';
+                }
+                
+                // Encode and send the modified chunk
+                controller.enqueue(encoder.encode(modifiedChunk));
+                console.log("Modified chunk sent");
+                
+                // Continue reading
+                pump();
+              }
+              
+              pump();
+            }
+          });
+          
+          // Create a new Response with our stream and the original headers
+          const newResponse = new Response(newStream, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+          
+          console.log("Returning new response with modified stream");
+          return newResponse;
+        }
+      }
+      
+      // Return the original response for non-SSE endpoints
+      return response;
+    });
+};
+
+</script>
+
+
+<!-- Multi substituting-->
+<script>
+
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called - creating pass-through stream");
+          
+          // PATTERNS CONFIGURATION - Now a dictionary/object
+          const PATTERN_REPLACEMENTS = {
+            '\\[': ' $$ ',     // Replace \[ with $$
+            '\\]': ' $$ ',     // Replace \] with $$
+            '\\(': ' $$ ',     // Replace \( with $$
+            '\\)': ' $$ ',     // Replace \) with $$
+            '<think>':'<div id="reason" class="reasoning">',
+            '</think>':'</div>',
+          };
+          
+          // Get all patterns for partial detection
+          const ALL_PATTERNS = Object.keys(PATTERN_REPLACEMENTS);
+          
+          // Get the original response body stream
+          const originalStream = response.body;
+          const reader = originalStream.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          
+          // Buffer to handle partial patterns across chunks
+          let partialBuffer = '';
+          
+          console.log("Stream started - Pattern replacements configured:", PATTERN_REPLACEMENTS);
+          
+          // Create a new ReadableStream that will process and pass through the data
+          const newStream = new ReadableStream({
+            async start(controller) {
+              console.log("New stream controller started");
+              
+              async function pump() {
+                const { done, value } = await reader.read();
+                
+                if (done) {
+                  console.log("Stream ended");
+                  if (partialBuffer) {
+                    console.log("Remaining partial buffer:", partialBuffer);
+                  }
+                  controller.close();
+                  return;
+                }
+                
+                // Decode the chunk
+                const chunk = decoder.decode(value, { stream: true });
+                console.log("Processing chunk of length:", chunk.length);
+                
+                // Parse the SSE lines and modify token content
+                let modifiedChunk = '';
+                const lines = chunk.split('\n');
+                
+                lines.forEach(line => {
+                  if (line.startsWith('data: ')) {
+                    const jsonStr = line.slice(6);
+                    try {
+                      const parsed = JSON.parse(jsonStr);
+                      if (parsed.token) {
+                        // Combine with partial buffer for pattern detection
+                        let tokenToProcess = partialBuffer + parsed.token;
+                        
+                        // Replace all pattern instances with their specific replacements
+                        let modifiedToken = tokenToProcess;
+                        let patternsFound = false;
+                        
+                        // Apply each pattern->replacement mapping
+                        Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
+                          if (modifiedToken.includes(pattern)) {
+                            console.log(`Pattern "${pattern}" found - replacing with "${replacement}"`);
+                            patternsFound = true;
+                            // Replace all instances of the pattern with its specific replacement
+                            modifiedToken = modifiedToken.split(pattern).join(replacement);
+                          }
+                        });
+                        
+                        if (patternsFound) {
+                          console.log("Modified token:", modifiedToken);
+                        }
+                        
+                        // Handle partial patterns at the end
+                        partialBuffer = '';
+                        let longestPartial = '';
+                        
+                        ALL_PATTERNS.forEach(pattern => {
+                          for (let i = pattern.length - 1; i > 0; i--) {
+                            const partialPattern = pattern.substring(0, i);
+                            if (modifiedToken.endsWith(partialPattern)) {
+                              if (partialPattern.length > longestPartial.length) {
+                                longestPartial = partialPattern;
+                                console.log(`Token ends with partial pattern '${partialPattern}'`);
+                              }
+                            }
+                          }
+                        });
+                        
+                        if (longestPartial) {
+                          // Remove the partial from the token and store it in buffer
+                          partialBuffer = longestPartial;
+                          modifiedToken = modifiedToken.slice(0, -longestPartial.length);
+                        }
+                        
+                        // Reconstruct the data line with modified token
+                        parsed.token = modifiedToken;
+                        modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
+                      } else {
+                        // Non-token data, pass through unchanged
+                        modifiedChunk += line + '\n';
+                      }
+                    } catch (e) {
+                      // Non-JSON lines, pass through unchanged
+                      modifiedChunk += line + '\n';
+                    }
+                  } else {
+                    // Non-data lines, pass through unchanged
+                    modifiedChunk += line + '\n';
+                  }
+                });
+                
+                // Remove the extra newline at the end if present
+                if (modifiedChunk.endsWith('\n\n')) {
+                  modifiedChunk = modifiedChunk.slice(0, -1);
+                } else if (chunk.endsWith('\n') && !modifiedChunk.endsWith('\n')) {
+                  modifiedChunk += '\n';
+                }
+                
+                // Encode and send the modified chunk
+                controller.enqueue(encoder.encode(modifiedChunk));
+                console.log("Modified chunk sent");
+                
+                // Continue reading
+                pump();
+              }
+              
+              pump();
+            }
+          });
+          
+          // Create a new Response with our stream and the original headers
+          const newResponse = new Response(newStream, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+          
+          console.log("Returning new response with modified stream");
+          return newResponse;
+        }
+      }
+      
+      // Return the original response for non-SSE endpoints
+      return response;
+    });
+};
+
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('reasoning')) {
+        e.target.classList.toggle('expanded');
+    }
+});
+
+</script>
+<style>
+    /* Hide reasoning by default, show only a preview */
+.reasoning {
+    max-height: 54px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: max-height 0.3s ease;
+    background: #d4d4d4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 18px;
+    color:#494949;
+    font-size:small
+}
+
+/* Add a "click to expand" indicator */
+.reasoning::after {
+    content: "▼ Click to expand reasoning";
+    position: absolute;
+    bottom: 2px;
+    right: 0px;
+    background: #d4d4d4;
+    padding: 3px 30px;
+    font-size: 12px;
+    font-weight:500;
+    border-radius:5px;
+    color: #000000;
+}
+
+.reasoning p{
+  margin-top:20px !important;
+  padding-left: 20px;
+}
+
+.reasoning p::before {
+    content: "→";
+    position: absolute;
+    left: 10px;
+}
+
+/* Expanded state */
+.reasoning.expanded {
+    max-height: none;
+}
+
+.reasoning.expanded::after {
+    content: "▲ Click to collapse";
+}
+
+
+</style>
+
+
+
+<!--read static responses-->
+<script>
+const originalXHR2 = XMLHttpRequest;
+
+XMLHttpRequest = function() {
+  const xhr = new originalXHR2();
+  
+  // Store the original open method
+  const originalOpen = xhr.open;
+  let requestUrl = '';
+  
+  // Override the open method to capture the URL
+  xhr.open = function(method, url, ...args) {
+    requestUrl = url;
+    return originalOpen.apply(this, [method, url, ...args]);
+  };
+  
+  // Add event listener for when the request completes
+  xhr.addEventListener('readystatechange', function() {
+    if (this.readyState === 4) { // Request completed
+      // Check if this is from the chat conversation endpoint
+      if (requestUrl && requestUrl.startsWith('https://core-api.pickaxe.co/pickaxe/chat/conversation')) {
+        console.log("Chat conversation XHR called");
+        
+        // Log response details
+        console.log("Response received:", {
+          url: requestUrl,
+          status: this.status,
+          statusText: this.statusText,
+          responseType: this.responseType,
+          contentType: this.getResponseHeader('content-type')
+        });
+        
+        // Log the response body
+        console.log("Response body:", this.responseText || this.response);
+        
+        // If it's JSON, also log the parsed version for easier reading
+        try {
+          if (this.responseText) {
+            const jsonData = JSON.parse(this.responseText);
+            console.log("Parsed JSON response:", jsonData);
+          }
+        } catch (e) {
+          // Not JSON or invalid JSON, text already logged above
+        }
+      }
+    }
+  });
+  
+  return xhr;
+};
+
+</script>
+
+
+<!--Substitute static responses-->
+
+
+<script>
+const originalXHR2 = XMLHttpRequest;
+
+XMLHttpRequest = function() {
+  const xhr = new originalXHR2();
+  
+  const PATTERN_REPLACEMENTS = {
+    '\\[': ' $$ ',     // Replace \[ with $$
+    '\\]': ' $$ ',     // Replace \] with $$
+    '\\(': ' $$ ',     // Replace \( with $$
+    '\\)': ' $$ ',     // Replace \) with $$
+    '<think>':'<div id=\\"reason\\" class=\\"reasoning\\">',
+    '</think>':'</div>',
+  };
+  
+  // Store the original open method
+  const originalOpen = xhr.open;
+  let requestUrl = '';
+  
+  // Override the open method to capture the URL
+  xhr.open = function(method, url, ...args) {
+    requestUrl = url;
+    return originalOpen.apply(this, [method, url, ...args]);
+  };
+  
+  // Override the responseText getter
+  Object.defineProperty(xhr, 'responseText', {
+    get: function() {
+      let originalResponse = Object.getOwnPropertyDescriptor(originalXHR2.prototype, 'responseText').get.call(this);
+      
+      // Check if this is from the chat conversation endpoint and we have a response
+      if (requestUrl && requestUrl.startsWith('https://core-api.pickaxe.co/pickaxe/chat/conversation') && originalResponse) {
+        // Apply all pattern replacements using simple string replacement
+        let modifiedResponse = originalResponse;
+        for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
+          modifiedResponse = modifiedResponse.replaceAll(pattern, replacement);
+        }
+        
+        // Log right before returning
+        console.log("Returning modified response:", modifiedResponse);
+        
+        return modifiedResponse;
+      }
+      
+      return originalResponse;
+    }
+  });
+  
+  return xhr;
+};
+</script>
