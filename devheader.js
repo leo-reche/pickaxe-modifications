@@ -209,10 +209,12 @@ window.fetch = function(input, init) {
           
           // PATTERNS CONFIGURATION - Now a dictionary/object
           const PATTERN_REPLACEMENTS = {
-            '\\\\[': ' $$ ',     // Replace \[ with $$
-            '\\\\]': ' $$ ',     // Replace \] with $$
+            '\\\\[': '\n $$ \n',     // Replace \[ with $$
+            '\\\\]': '\n $$ \n',     // Replace \] with $$
             '\\\\(': ' $$ ',     // Replace \( with $$
             '\\\\)': ' $$ ',     // Replace \) with $$
+            '$':' $$ ',
+            '$$':'\n $$ \n',
             '<think>':'<div id="reason" class="reasoning">',
             '</think>':'</div>',
           };
@@ -560,14 +562,16 @@ XMLHttpRequest = function() {
   const xhr = new originalXHR2();
   
   const PATTERN_REPLACEMENTS = {
-    '\\[': ' $$ ',     // Replace \[ with $$
-    '\\]': ' $$ ',     // Replace \] with $$
-    '\\(': ' $$ ',     // Replace \( with $$
-    '\\)': ' $$ ',     // Replace \) with $$
-    '<think>':'<div id=\\"reason\\" class=\\"reasoning\\">',
+    '\\\\[': '\n $$ \n',     // Replace \[ with $$
+    '\\\\]': '\n $$ \n',     // Replace \] with $$
+    '\\\\(': ' $$ ',     // Replace \( with $$
+    '\\\\)': ' $$ ',     // Replace \) with $$
+    '$':' $$ ',
+    '$$':'\n $$ \n',
+    '<think>':'<div id="reason" class="reasoning">',
     '</think>':'</div>',
   };
-  
+
   // Store the original open method
   const originalOpen = xhr.open;
   let requestUrl = '';
