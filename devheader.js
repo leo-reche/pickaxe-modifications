@@ -562,7 +562,7 @@ XMLHttpRequest = function() {
   const xhr = new originalXHR2();
   
   const PATTERN_REPLACEMENTS = {
-    '$':'$$$$'
+    '$':'$$$$',
     '\\\\[': '\\n $$$$ \\n',     // Replace \[ with $$
     '\\\\]': '\\n $$$$ \\n',     // Replace \] with $$
     '\\\\(': ' $$$$ ',     // Replace \( with $$
