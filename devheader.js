@@ -209,9 +209,9 @@ window.fetch = function(input, init) {
           
           // PATTERNS CONFIGURATION - Now a dictionary/object
           const PATTERN_REPLACEMENTS = {
-                '$$':'\\n $$$$ \\n',
-                '\\\\[': '\\n $$$$ \\n',     // Replace \[ with $$
-                '\\\\]': '\\n $$$$ \\n',     // Replace \] with $$
+                '$$':'\n $$$$ \n',
+                '\\\\[': '\n $$$$ \n',     // Replace \[ with $$
+                '\\\\]': '\n $$$$ \n',     // Replace \] with $$
                 '\\\\(': ' $$$$ ',     // Replace \( with $$
                 '\\\\)': ' $$$$ ',     // Replace \) with $$
                 '<think>':'<div id=\'reason\' class=\'reasoning\'>',
@@ -590,7 +590,7 @@ XMLHttpRequest = function() {
         for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
           modifiedResponse = modifiedResponse.replaceAll(pattern, replacement);
         }
-        
+
         modifiedResponse = modifiedResponse.replace(/\s\$([^$]+)\$\s/g, ' $$$$$1$$$$ ');
         
         // Log right before returning
