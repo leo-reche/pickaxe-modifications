@@ -243,7 +243,9 @@ window.fetch = function(input, init) {
                   console.log("Abort signal received in SSE stream");
                   reader.cancel();
                   controller.close();
-                  throw new DOMException("BodyStreamBuffer was aborted", "AbortError");
+                  console.log("ReplaceFetch returning original error")
+                  return new DOMException("BodyStreamBuffer was aborted", "AbortError");
+
                 });
               }
 
