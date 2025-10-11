@@ -137,6 +137,7 @@ let latestRequest = null;
 let documents = null;
 let wasStopped = false;
 let pastedContent = [""];
+let currentAbortController = null;
 
 
 
