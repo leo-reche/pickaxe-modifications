@@ -244,7 +244,7 @@ window.fetch = function(input, init) {
                   reader.cancel();
                   controller.close();
                   console.log("ReplaceFetch returning original error")
-                  return new DOMException("BodyStreamBuffer was aborted", "AbortError");
+                  return new Error("Stopp");
 
                 });
               }
