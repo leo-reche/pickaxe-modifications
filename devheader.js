@@ -201,12 +201,12 @@ window.fetch = async function(...args) {
 
     const [url, config] = args;
 
-    console.log("🔵 SyncFetch START - URL:", url);
-    console.log("🔵 SyncFetch - Full Config:", JSON.stringify(config, null, 2));
-
+    
     if (url.includes("https://core-api.pickaxe.co/pickaxe")) {
         console.log("✅ SyncFetch - Pickaxe URL detected");
-        
+        console.log("🔵 SyncFetch START - URL:", url);
+        console.log("🔵 SyncFetch - Full Config:", JSON.stringify(config, null, 2));
+
         // Massive if{} to get the formid,responseid,lastmessage,documents
         const aUrl = new URL(url);
         console.log("🔍 SyncFetch - URL Params:", Array.from(aUrl.searchParams.entries()));
@@ -372,7 +372,6 @@ window.fetch = async function(...args) {
     } else {
         console.log("⏩ SyncFetch - Non-Pickaxe URL, passing through to originalFetch");
         const response = await originalFetch(url, {...config});
-        console.log("✅ Pass-through response:", response.status, response.statusText);
         return response;
     }
 };
