@@ -4,8 +4,8 @@ let bgcols = []
 function stopButtonOn(handleClick, toggleHover){
     console.log("Stop-On")
 
-    const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest('div.flex.items-end'); //Select textbox
-    const sendButton = txtBoxArea.querySelectorAll("button")[1]; //Select second element of type button inside container of textbox
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
 
     sendButton.removeEventListener('click', handleClick) //Remove if already exists, otherwise do nothing 
     sendButton.removeEventListener('mouseenter', toggleHover)
@@ -28,8 +28,8 @@ function stopButtonOff(handleClick,toggleHover){
         
     console.log("Stop-Off")
 
-    const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest('div.flex.items-end'); 
-    const sendButton = txtBoxArea.querySelectorAll("button")[1]; 
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     const svg = sendButton.querySelector("svg").querySelector("path");
     svg.setAttribute('d', "m16.175 11-5.6-5.6L12 4l8 8-8 8-1.425-1.4 5.6-5.6H4v-2z");
     sendButton.removeEventListener('click', handleClick);
@@ -41,9 +41,8 @@ function handleClick(event) {
 
     console.log("Stop-Click")
 
-    const sendButton = document.querySelector('#studio-root textarea.resize-none')
-                                ?.closest('div.flex.items-end')
-                                ?.querySelectorAll("button")[1]; 
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     event.preventDefault();
     event.stopPropagation();
     stopStream();
@@ -57,9 +56,8 @@ function handleClick(event) {
 function toggleHover(e) {
 
     //receives only mouseenter & mouseleave events. If enter then bg1 else then bg0
-    const sendButton = document.querySelector('#studio-root textarea.resize-none')
-                                ?.closest('div.flex.items-end')
-                                ?.querySelectorAll("button")[1]; 
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     if (sendButton){
         sendButton.setAttribute("style", e.type === 'mouseenter' ? bgcols[1] : bgcols[0]); 
     }
@@ -71,9 +69,8 @@ function stopButtonUpdate(){
 
     console.log("Stop-Update")
     
-    const sendButton = document.querySelector('#studio-root textarea.resize-none')
-                                ?.closest('div.flex.items-end')
-                                ?.querySelectorAll("button")[1]; 
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     
     if (sendButton){
         
@@ -364,10 +361,10 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 document.addEventListener('keydown', function(event) {
   // Check if Control is pressed and key is Enter.
   if (event.ctrlKey && event.key === 'Enter') {
-    const sendButton = document.querySelector('#studio-root textarea.resize-none')
+    const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
                             ?.closest('div.flex.items-end')
-                            ?.querySelectorAll("button")[1]; 
-    console.log(sendButton)
+                            ?.querySelectorAll("button");
+    const sendButton = sendButtonDiv[sendButtonDiv.length -1];
     // "Press" the button by triggering a click event.
     if (sendButton) {
       sendButton.click();
