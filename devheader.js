@@ -445,7 +445,7 @@ window.fetch = async function(...args) {
         }
     
     } else {
-        const response = await originalFetch(url, { ...config});
+        return await originalFetch(url, {...config});
     }
 };
 
