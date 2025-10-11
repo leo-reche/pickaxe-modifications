@@ -265,50 +265,6 @@ window.fetch = async function(...args) {
     
 };
 
-// ============= XHR Feedback overwrite
-const OriginalXHR = XMLHttpRequest;
-
-
-XMLHttpRequest = new Proxy(OriginalXHR, {
-construct(target, args) {
-    const xhr = new target(...args);
-    let interceptedUrl = '';
-
-    const originalOpen = xhr.open;
-    xhr.open = function(method, url, ...rest) {
-    console.log("xhr.open called with:", method, url);
-    interceptedUrl = url; // Store the URL for later use
-    return originalOpen.apply(this, [method, url, ...rest]);
-    };
-
-    const originalSend = xhr.send;
-    xhr.send = function(body) {
-    console.log("xhr.send called with body:", body);
-    
-    if (interceptedUrl.includes("https://core-api.pickaxe.co/feedback")) {   
-        console.log("sending feedback with payload:", body);
-        
-        // Parse the body if it's a string, or use it directly if it's already an object
-        let payloadData;
-        try {
-        payloadData = typeof body === 'string' ? JSON.parse(body) : body;
-        } catch (e) {
-        payloadData = body; // Use as-is if parsing fails
-        }
-        
-        originalFetch("https://hooks.zapier.com/hooks/catch/8011346/u9d1eee/", {
-        method: "POST",
-        body: JSON.stringify(payloadData)
-        });
-    }
-    
-    return originalSend.apply(this, [body]);
-    };
-
-    return xhr;
-}
-});
-
 
 function stopStream() {
     if (currentAbortController) { //stops the stream
@@ -337,3 +293,61 @@ function stopStream() {
 
 
 
+// ============= XHL Replacing Characters
+
+const originalXHR2 = XMLHttpRequest;
+
+XMLHttpRequest = function() {
+  const xhr = new originalXHR2();
+  
+  const PATTERN_REPLACEMENTS = {
+    '\\[': ' $$ ',     // Replace \[ with $$
+    '\\]': ' $$ ',     // Replace \] with $$
+    '\\(': ' $$ ',     // Replace \( with $$
+    '\\)': ' $$ ',     // Replace \) with $$
+    '<think>':'<div id=\\"reason\\" class=\\"reasoning\\">',
+    '</think>':'</div>',
+  };
+  
+  // Store the original open method
+  const originalOpen = xhr.open;
+  let requestUrl = '';
+  
+  // Override the open method to capture the URL
+  xhr.open = function(method, url, ...args) {
+    requestUrl = url;
+    return originalOpen.apply(this, [method, url, ...args]);
+  };
+  
+  // Override the responseText getter
+  Object.defineProperty(xhr, 'responseText', {
+    get: function() {
+      let originalResponse = Object.getOwnPropertyDescriptor(originalXHR2.prototype, 'responseText').get.call(this);
+      
+      // Check if this is from the chat conversation endpoint and we have a response
+      if (requestUrl && requestUrl.startsWith('https://core-api.pickaxe.co/pickaxe/chat/conversation') && originalResponse) {
+        // Apply all pattern replacements using simple string replacement
+        let modifiedResponse = originalResponse;
+        for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
+          modifiedResponse = modifiedResponse.replaceAll(pattern, replacement);
+        }
+        
+        // Log right before returning
+        console.log("Returning modified response:", modifiedResponse);
+        
+        return modifiedResponse;
+      }
+      
+      return originalResponse;
+    }
+  });
+  
+  return xhr;
+};
+
+//Event listener for the click on expand thinging
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('reasoning')) {
+        e.target.classList.toggle('expanded');
+    }
+});

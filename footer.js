@@ -351,5 +351,16 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 
 
 
-
+const sendButton = document.querySelector('#studio-root textarea.resize-none')
+                            ?.closest('div.flex.items-end')
+                            ?.querySelectorAll("button")[1]; 
+document.addEventListener('keydown', function(event) {
+  // Check if Control is pressed and key is Enter.
+  if (event.ctrlKey && event.key === 'Enter') {
+    // "Press" the button by triggering a click event.
+    if (button) {
+      button.click();
+    }
+  }
+});
 
