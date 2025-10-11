@@ -589,7 +589,7 @@ XMLHttpRequest = function() {
         let modifiedResponse = originalResponse;
         for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
           modifiedResponse = modifiedResponse.replaceAll(pattern, replacement);
-          modifiedResponse = modifiedResponse.replace(/\$([^$]+)\$/g, '$$$$1$$');
+          modifiedResponse = modifiedResponse.replace(/(\s)\$([^$]+)\$(\s)/g, '$1$$$$2$$$3');
         }
         
         // Log right before returning
