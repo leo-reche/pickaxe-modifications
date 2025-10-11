@@ -590,7 +590,7 @@ XMLHttpRequest = function() {
         for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
           modifiedResponse = modifiedResponse.replaceAll(pattern, replacement);
         }
-        modifiedResponse = modifiedResponse.replace(/(\s)\$([^$]+)\$(\s)/g, '$1$$$$2$$$3');
+        modifiedResponse = modifiedResponse.replace_with_regex(pattern=/\s\$([^$]+)\$\s/g, replacement=" $$$$1$$$$ ")
         
         // Log right before returning
         console.log("Returning modified response:", modifiedResponse);
