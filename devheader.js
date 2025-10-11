@@ -193,6 +193,248 @@ function errorMessageHandler(){
 }
 
 
+let originalFetch2 = window.fetch;
+
+window.fetch = function(input, init) {
+  const url = typeof input === 'string' ? input : input.url;
+  
+  return originalFetch2.call(this, input, init)
+    .then(response => {
+      // Check if this is the specific SSE endpoint we want to log
+      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('text/event-stream')) {
+          console.log("SSE fetch called - creating pass-through stream");
+          
+          // PATTERNS CONFIGURATION - Now a dictionary/object
+          const PATTERN_REPLACEMENTS = {
+            '$$[': ' $$ ',     // Replace \[ with $$
+            '\$$': ' $$ ',     // Replace \] with $$
+            '\$$': ' $$ ',     // Replace \( with $$
+            '\$$': ' $$ ',     // Replace \) with $$
+            '<think>':'<div id="reason" class="reasoning">',
+            '</think>':'</div>',
+          };
+          
+          // Get all patterns for partial detection
+          const ALL_PATTERNS = Object.keys(PATTERN_REPLACEMENTS);
+          
+          // Get the original response body stream
+          const originalStream = response.body;
+          const reader = originalStream.getReader();
+          const decoder = new TextDecoder();
+          const encoder = new TextEncoder();
+          
+          // Buffer to handle partial patterns across chunks
+          let partialBuffer = '';
+          
+          // Get the abort signal if it exists
+          const abortSignal = init?.signal;
+          let isAborted = false;
+          
+          console.log("Stream started - Pattern replacements configured:", PATTERN_REPLACEMENTS);
+          
+          // Create a new ReadableStream that will process and pass through the data
+          const newStream = new ReadableStream({
+            async start(controller) {
+              console.log("New stream controller started");
+              
+              // Set up abort handler if signal exists
+              const handleAbort = () => {
+                console.log("Abort signal received - cleaning up stream");
+                isAborted = true;
+                
+                try {
+                  // Cancel the reader
+                  reader.cancel().catch(err => {
+                    console.log("Reader cancel error (may be already closed):", err);
+                  });
+                  
+                  // Close the controller with an abort error
+                  controller.error(new DOMException('Aborted', 'AbortError'));
+                } catch (err) {
+                  console.log("Error during abort handling:", err);
+                }
+              };
+              
+              if (abortSignal) {
+                if (abortSignal.aborted) {
+                  // Already aborted
+                  handleAbort();
+                  return;
+                }
+                
+                // Listen for abort event
+                abortSignal.addEventListener('abort', handleAbort);
+              }
+              
+              async function pump() {
+                try {
+                  // Check if aborted before reading
+                  if (isAborted) {
+                    console.log("Stream aborted, stopping pump");
+                    return;
+                  }
+                  
+                  const { done, value } = await reader.read();
+                  
+                  if (done) {
+                    console.log("Stream ended");
+                    if (partialBuffer) {
+                      console.log("Remaining partial buffer:", partialBuffer);
+                    }
+                    
+                    // Clean up abort listener if it exists
+                    if (abortSignal) {
+                      abortSignal.removeEventListener('abort', handleAbort);
+                    }
+                    
+                    controller.close();
+                    return;
+                  }
+                  
+                  // Check again after read in case abort happened during read
+                  if (isAborted) {
+                    console.log("Stream aborted after read, stopping");
+                    return;
+                  }
+                  
+                  // Decode the chunk
+                  const chunk = decoder.decode(value, { stream: true });
+                  console.log("Processing chunk of length:", chunk.length);
+                  
+                  // Parse the SSE lines and modify token content
+                  let modifiedChunk = '';
+                  const lines = chunk.split('\n');
+                  
+                  lines.forEach(line => {
+                    if (line.startsWith('data: ')) {
+                      const jsonStr = line.slice(6);
+                      try {
+                        const parsed = JSON.parse(jsonStr);
+                        if (parsed.token) {
+                          // Combine with partial buffer for pattern detection
+                          let tokenToProcess = partialBuffer + parsed.token;
+                          
+                          // Replace all pattern instances with their specific replacements
+                          let modifiedToken = tokenToProcess;
+                          let patternsFound = false;
+                          
+                          // Apply each pattern->replacement mapping
+                          Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
+                            if (modifiedToken.includes(pattern)) {
+                              console.log(`Pattern "${pattern}" found - replacing with "${replacement}"`);
+                              patternsFound = true;
+                              // Replace all instances of the pattern with its specific replacement
+                              modifiedToken = modifiedToken.split(pattern).join(replacement);
+                            }
+                          });
+                          
+                          if (patternsFound) {
+                            console.log("Modified token:", modifiedToken);
+                          }
+                          
+                          // Handle partial patterns at the end
+                          partialBuffer = '';
+                          let longestPartial = '';
+                          
+                          ALL_PATTERNS.forEach(pattern => {
+                            for (let i = pattern.length - 1; i > 0; i--) {
+                              const partialPattern = pattern.substring(0, i);
+                              if (modifiedToken.endsWith(partialPattern)) {
+                                if (partialPattern.length > longestPartial.length) {
+                                  longestPartial = partialPattern;
+                                  console.log(`Token ends with partial pattern '${partialPattern}'`);
+                                }
+                              }
+                            }
+                          });
+                          
+                          if (longestPartial) {
+                            // Remove the partial from the token and store it in buffer
+                            partialBuffer = longestPartial;
+                            modifiedToken = modifiedToken.slice(0, -longestPartial.length);
+                          }
+                          
+                          // Reconstruct the data line with modified token
+                          parsed.token = modifiedToken;
+                          modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
+                        } else {
+                          // Non-token data, pass through unchanged
+                          modifiedChunk += line + '\n';
+                        }
+                      } catch (e) {
+                        // Non-JSON lines, pass through unchanged
+                        modifiedChunk += line + '\n';
+                      }
+                    } else {
+                      // Non-data lines, pass through unchanged
+                      modifiedChunk += line + '\n';
+                    }
+                  });
+                  
+                  // Remove the extra newline at the end if present
+                  if (modifiedChunk.endsWith('\n\n')) {
+                    modifiedChunk = modifiedChunk.slice(0, -1);
+                  } else if (chunk.endsWith('\n') && !modifiedChunk.endsWith('\n')) {
+                    modifiedChunk += '\n';
+                  }
+                  
+                  // Encode and send the modified chunk
+                  controller.enqueue(encoder.encode(modifiedChunk));
+                  console.log("Modified chunk sent");
+                  
+                  // Continue reading
+                  pump();
+                } catch (error) {
+                  console.log("Error in pump:", error);
+                  
+                  // Clean up abort listener if it exists
+                  if (abortSignal) {
+                    abortSignal.removeEventListener('abort', handleAbort);
+                  }
+                  
+                  // Propagate the error
+                  if (error.name === 'AbortError' || isAborted) {
+                    controller.error(new DOMException('Aborted', 'AbortError'));
+                  } else {
+                    controller.error(error);
+                  }
+                }
+              }
+              
+              pump();
+            },
+            
+            cancel(reason) {
+              console.log("Stream cancelled with reason:", reason);
+              isAborted = true;
+              
+              // Cancel the underlying reader
+              return reader.cancel(reason).catch(err => {
+                console.log("Reader cancel error:", err);
+              });
+            }
+          });
+          
+          // Create a new Response with our stream and the original headers
+          const newResponse = new Response(newStream, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+          
+          console.log("Returning new response with modified stream");
+          return newResponse;
+        }
+      }
+      
+      // Return the original response for non-SSE endpoints
+      return response;
+    });
+};
+
 
 let originalFetch = window.fetch;
 
@@ -201,128 +443,76 @@ window.fetch = async function(...args) {
 
     const [url, config] = args;
 
-    console.log("🔵 SyncFetch START - URL:", url);
-    console.log("🔵 SyncFetch - Full Config:", JSON.stringify(config, null, 2));
+    console.log("SyncFetch-URL:",url)
 
-    if (url.includes("https://core-api.pickaxe.co/pickaxe")) {
-        console.log("✅ SyncFetch - Pickaxe URL detected");
-        
-        // Massive if{} to get the formid,responseid,lastmessage,documents
-        const aUrl = new URL(url);
-        console.log("🔍 SyncFetch - URL Params:", Array.from(aUrl.searchParams.entries()));
-        
+    if (url.includes("https://core-api.pickaxe.co/pickaxe")){   //Massive if{} to get the formid,responseid,lastmessage,documents
+        const aUrl = new URL(url)
         if (aUrl.searchParams.has("formid")) {
-            formId = aUrl.searchParams.get("formid");
-            console.log("📋 Found formId in URL params:", formId);
-            console.log("📊 Current state - formId:", formId, "responseId:", responseId, "studioUserId:", studioUserId);
+            formId = aUrl.searchParams.get("formid")
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
         }
-        
         if (aUrl.searchParams.has("responseid")) {
-            responseId = aUrl.searchParams.get("responseid");
-            console.log("📋 Found responseId in URL params:", responseId);
-            console.log("📊 Current state - formId:", formId, "responseId:", responseId, "studioUserId:", studioUserId);
+            responseId = aUrl.searchParams.get("responseid")
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
         }
-        
-        // Parse body for various fields
-        if (config && config.body) {
-            console.log("🔍 SyncFetch - Raw Body:", config.body);
-            
-            try {
-                const bodyData = JSON.parse(config.body);
-                console.log("📦 SyncFetch - Parsed Body:", JSON.stringify(bodyData, null, 2));
-                
-                if (bodyData.formId) {
-                    formId = bodyData.formId;
-                    console.log("📋 Found formId in body:", formId);
-                }
-            } catch(e) {
-                console.log("⚠️ Failed to parse body for formId:", e.message);
-            }
-            
-            try {
-                const bodyData = JSON.parse(config.body);
-                if (bodyData.responseId) {
-                    responseId = bodyData.responseId;
-                    console.log("📋 Found responseId in body:", responseId);
-                }
-            } catch(e) {
-                console.log("⚠️ Failed to parse body for responseId:", e.message);
-            }
-            
-            try {
-                const bodyData = JSON.parse(config.body);
-                if (bodyData.value) {
-                    latestRequest = bodyData.value;
-                    console.log("📋 Found latestRequest in body:", latestRequest);
-                }
-            } catch(e) {
-                console.log("⚠️ Failed to parse body for value:", e.message);
-            }
-            
-            try {
-                const bodyData = JSON.parse(config.body);
-                if (bodyData.studioUserId) {
-                    studioUserId = bodyData.studioUserId;
-                    console.log("📋 Found studioUserId in body:", studioUserId);
-                }
-            } catch(e) {
-                console.log("⚠️ Failed to parse body for studioUserId:", e.message);
-            }
-            
-            try {
-                const bodyData = JSON.parse(config.body);
-                if (bodyData.documentIds) {
-                    documents = bodyData.documentIds;
-                    console.log("📋 Found documents in body:", documents);
-                }
-            } catch(e) {
-                console.log("⚠️ Failed to parse body for documentIds:", e.message);
-            }
-        }
-        
-        console.log("📊 FINAL extracted values - formId:", formId, "responseId:", responseId, "studioUserId:", studioUserId, "documents:", documents);
+        try {
+            formId = JSON.parse(config.body).formId
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        } catch(e){}
+        try {
+            responseId = JSON.parse(config.body).responseId
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        } catch(e){}
+        try {
+            latestRequest = JSON.parse(config.body).value
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        } catch(e){}
+        try {
+            studioUserId = JSON.parse(config.body).studioUserId
+            console.log("formId: ",formId," responseiId: ",responseId," studioUserId: ",studioUserId)
+        } catch(e){}
+        try {
+            documents = JSON.parse(config.body).documentIds
+            console.log("documents: ",documents)
+        } catch(e){}
+     
 
+    
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
-        console.log("🎯 SyncFetch - AbortController created with signal:", signal);
+        console.log("SyncFetch - Creating Abort")
 
-        try {
-            console.log("🚀 SyncFetch - Calling originalFetch with signal");
-            const startTime = Date.now();
+        try {  
+        console.log("SyncFetch - Calling OriginalFetch") 
+        const response = await originalFetch(url, { ...config, signal }); //Original fetch
+        const out = response.clone(); // return this to your UI
+        
+
+        (async () => {
+            try {
             
-            const response = await originalFetch(url, { ...config, signal });
-            
-            const fetchTime = Date.now() - startTime;
-            console.log("✅ SyncFetch - Response received in", fetchTime, "ms");
-            console.log("📡 Response Status:", response.status, response.statusText);
-            console.log("📡 Response Headers:", Object.fromEntries(response.headers.entries()));
-            console.log("📡 Response OK:", response.ok);
-            console.log("📡 Response Type:", response.type);
-            
-            console.log("🔵 SyncFetch - Returning response to caller");
-            return response;
+            const r = out.body.getReader();
+            while (!(await r.read()).done) {}
+            errorMessageHandler()
+
+            setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
+
+            } catch (_) {}
+
+
+        })();
+
+        return response;
 
         } catch (error) {
-            console.error("❌ SyncFetch - Fetch error caught:", error);
-            console.error("❌ Error name:", error.name);
-            console.error("❌ Error message:", error.message);
-            console.error("❌ Error stack:", error.stack);
-            
-            if (error.name === 'AbortError') {
-                console.log("⛔ Request was aborted");
-            }
-            
-            console.log("🔧 Calling stopButtonOff() due to error");
-            stopButtonOff();
-            
-            throw error; // Re-throw to maintain original behavior
+
+        console.log("Sync fetch caught this error: ", error)
+        stopButtonOff()
+
         }
     
     } else {
-        console.log("⏩ SyncFetch - Non-Pickaxe URL, passing through to originalFetch");
-        const response = await originalFetch(url, {...config});
-        console.log("✅ Pass-through response:", response.status, response.statusText);
-        return response;
+        return await originalFetch(url, {...config});
     }
 };
 
@@ -345,7 +535,19 @@ function stopStream() {
             txtBox.dispatchEvent(inputEvent);
     }
 
+    setTimeout(function(){ //waits 50ms for the "error message" to load
+        console.log("StopStream-RenamingErrorBox")
+        var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
+        if(errBox){
+            console.log("StopStream-ErrorBoxFound")
+            errBox.textContent = "This response was stopped by the user.";
+        }
+        var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
+        allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
+        var thread = document.querySelector('div.grid.grid-cols-1.gap-y-6.w-full');
+        
 
+    }, 100); 
 }
 
 
