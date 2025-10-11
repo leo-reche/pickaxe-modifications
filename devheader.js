@@ -194,209 +194,186 @@ function errorMessageHandler(){
 
 
 
-
 let originalFetch = window.fetch;
 
 // Overwrite the global fetch function
 window.fetch = async function(...args) {
+
     const [url, config] = args;
-    
-    // Initial request logging
-    console.log("🔵 FETCH INTERCEPTED");
-    console.log("├─ URL:", url);
-    console.log("├─ Method:", config?.method || 'GET');
-    console.log("├─ Headers:", config?.headers);
-    console.log("└─ Body:", config?.body);
+
+    console.log("🔵 SyncFetch START - URL:", url);
+    console.log("🔵 SyncFetch - Full Config:", JSON.stringify(config, null, 2));
 
     if (url.includes("https://core-api.pickaxe.co/pickaxe")) {
-        console.log("🟢 PICKAXE API DETECTED");
+        console.log("✅ SyncFetch - Pickaxe URL detected");
         
-        // Initialize variables
-        let formId = null;
-        let responseId = null;
-        let studioUserId = null;
-        let latestRequest = null;
-        let documents = null;
-        
-        // Extract parameters from URL
+        // Massive if{} to get the formid,responseid,lastmessage,documents
         const aUrl = new URL(url);
-        console.log("📍 URL Parameters:", Object.fromEntries(aUrl.searchParams));
+        console.log("🔍 SyncFetch - URL Params:", Array.from(aUrl.searchParams.entries()));
         
         if (aUrl.searchParams.has("formid")) {
             formId = aUrl.searchParams.get("formid");
-            console.log("✓ FormID from URL:", formId);
+            console.log("📋 Found formId in URL params:", formId);
+            console.log("📊 Current state - formId:", formId, "responseId:", responseId, "studioUserId:", studioUserId);
         }
         
         if (aUrl.searchParams.has("responseid")) {
             responseId = aUrl.searchParams.get("responseid");
-            console.log("✓ ResponseID from URL:", responseId);
+            console.log("📋 Found responseId in URL params:", responseId);
+            console.log("📊 Current state - formId:", formId, "responseId:", responseId, "studioUserId:", studioUserId);
         }
         
-        // Extract parameters from body
-        if (config?.body) {
-            console.log("📦 Parsing Request Body...");
-            let bodyData = null;
+        // Parse body for various fields
+        if (config && config.body) {
+            console.log("🔍 SyncFetch - Raw Body:", config.body);
             
             try {
-                bodyData = JSON.parse(config.body);
-                console.log("✓ Body parsed successfully:", bodyData);
+                const bodyData = JSON.parse(config.body);
+                console.log("📦 SyncFetch - Parsed Body:", JSON.stringify(bodyData, null, 2));
                 
-                // Extract each field with individual error handling
-                if (bodyData.formId !== undefined) {
+                if (bodyData.formId) {
                     formId = bodyData.formId;
-                    console.log("  └─ formId extracted:", formId);
+                    console.log("📋 Found formId in body:", formId);
                 }
-                
-                if (bodyData.responseId !== undefined) {
+            } catch(e) {
+                console.log("⚠️ Failed to parse body for formId:", e.message);
+            }
+            
+            try {
+                const bodyData = JSON.parse(config.body);
+                if (bodyData.responseId) {
                     responseId = bodyData.responseId;
-                    console.log("  └─ responseId extracted:", responseId);
+                    console.log("📋 Found responseId in body:", responseId);
                 }
-                
-                if (bodyData.value !== undefined) {
+            } catch(e) {
+                console.log("⚠️ Failed to parse body for responseId:", e.message);
+            }
+            
+            try {
+                const bodyData = JSON.parse(config.body);
+                if (bodyData.value) {
                     latestRequest = bodyData.value;
-                    console.log("  └─ latestRequest extracted:", latestRequest);
+                    console.log("📋 Found latestRequest in body:", latestRequest);
                 }
-                
-                if (bodyData.studioUserId !== undefined) {
+            } catch(e) {
+                console.log("⚠️ Failed to parse body for value:", e.message);
+            }
+            
+            try {
+                const bodyData = JSON.parse(config.body);
+                if (bodyData.studioUserId) {
                     studioUserId = bodyData.studioUserId;
-                    console.log("  └─ studioUserId extracted:", studioUserId);
+                    console.log("📋 Found studioUserId in body:", studioUserId);
                 }
-                
-                if (bodyData.documentIds !== undefined) {
+            } catch(e) {
+                console.log("⚠️ Failed to parse body for studioUserId:", e.message);
+            }
+            
+            try {
+                const bodyData = JSON.parse(config.body);
+                if (bodyData.documentIds) {
                     documents = bodyData.documentIds;
-                    console.log("  └─ documents extracted:", documents);
+                    console.log("📋 Found documents in body:", documents);
                 }
-            } catch (parseError) {
-                console.error("❌ Body parse error:", parseError.message);
+            } catch(e) {
+                console.log("⚠️ Failed to parse body for documentIds:", e.message);
             }
         }
         
-        // Log current state
-        console.log("📊 CURRENT STATE:");
-        console.log("├─ formId:", formId);
-        console.log("├─ responseId:", responseId);
-        console.log("├─ studioUserId:", studioUserId);
-        console.log("├─ latestRequest:", latestRequest);
-        console.log("└─ documents:", documents);
-        
-        // Create abort controller
-        const currentAbortController = new AbortController();
+        console.log("📊 FINAL extracted values - formId:", formId, "responseId:", responseId, "studioUserId:", studioUserId, "documents:", documents);
+
+        currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
-        console.log("🎛️ AbortController created");
-        
+        console.log("🎯 SyncFetch - AbortController created with signal:", signal);
+
         try {
-            console.log("🚀 Initiating original fetch...");
-            const startTime = performance.now();
+            console.log("🚀 SyncFetch - Calling originalFetch with signal");
+            const startTime = Date.now();
             
-            // Call original fetch
             const response = await originalFetch(url, { ...config, signal });
             
-            const endTime = performance.now();
-            console.log(`⏱️ Fetch completed in ${(endTime - startTime).toFixed(2)}ms`);
+            const fetchTime = Date.now() - startTime;
+            console.log("✅ SyncFetch - Response received in", fetchTime, "ms");
+            console.log("📡 Response Status:", response.status, response.statusText);
+            console.log("📡 Response Headers:", Object.fromEntries(response.headers.entries()));
+            console.log("📡 Response OK:", response.ok);
+            console.log("📡 Response Type:", response.type);
             
-            // Log response details
-            console.log("📨 RESPONSE DETAILS:");
-            console.log("├─ Status:", response.status, response.statusText);
-            console.log("├─ Headers:", Object.fromEntries(response.headers.entries()));
-            console.log("└─ OK:", response.ok);
-            
-            // Clone response for processing
-            const clonedResponse = response.clone();
-            console.log("📋 Response cloned for processing");
-            
+            const out = response.clone();
+            console.log("📋 SyncFetch - Response cloned for streaming");
+
             // Async stream processing
             (async () => {
-                console.log("🔄 Starting async stream processing...");
-                let chunkCount = 0;
-                let totalBytes = 0;
-                
+                console.log("🔄 Starting async stream processing");
                 try {
-                    const reader = clonedResponse.body.getReader();
-                    const decoder = new TextDecoder();
-                    let accumulatedData = '';
+                    const r = out.body.getReader();
+                    console.log("📖 Stream reader created");
+                    
+                    let chunkCount = 0;
+                    let totalBytes = 0;
+                    const streamStartTime = Date.now();
                     
                     while (true) {
-                        const { done, value } = await reader.read();
+                        const { done, value } = await r.read();
+                        chunkCount++;
                         
                         if (value) {
-                            chunkCount++;
                             totalBytes += value.length;
-                            const chunkText = decoder.decode(value, { stream: !done });
-                            accumulatedData += chunkText;
-                            
-                            console.log(`📦 Chunk #${chunkCount}:`, {
-                                bytes: value.length,
-                                totalBytes: totalBytes,
-                                preview: chunkText.slice(0, 100) + (chunkText.length > 100 ? '...' : '')
-                            });
+                            console.log(`📦 Chunk #${chunkCount}: ${value.length} bytes (Total: ${totalBytes} bytes)`);
                         }
                         
                         if (done) {
-                            console.log("✅ Stream reading complete");
-                            console.log(`📊 Total: ${chunkCount} chunks, ${totalBytes} bytes`);
-                            
-                            // Try to parse final data if it's JSON
-                            try {
-                                const jsonData = JSON.parse(accumulatedData);
-                                console.log("📄 Final JSON data:", jsonData);
-                            } catch (e) {
-                                console.log("📄 Final data (not JSON):", accumulatedData.slice(0, 500));
-                            }
-                            
+                            const streamTime = Date.now() - streamStartTime;
+                            console.log(`✅ Stream complete - ${chunkCount} chunks, ${totalBytes} bytes in ${streamTime}ms`);
                             break;
                         }
                     }
                     
-                    console.log("🔧 Calling errorMessageHandler...");
-                    if (typeof errorMessageHandler === 'function') {
-                        errorMessageHandler();
-                    } else {
-                        console.warn("⚠️ errorMessageHandler not found");
-                    }
-                    
-                    console.log("⏳ Scheduling syncConversation in 2 seconds...");
+                    console.log("🔧 Calling errorMessageHandler()");
+                    errorMessageHandler();
+
+                    console.log("⏰ Setting timeout for syncConversation (2000ms)");
                     setTimeout(() => {
-                        console.log("🔄 Executing syncConversation");
-                        console.log("├─ responseId:", responseId);
-                        console.log("├─ formId:", formId);
-                        console.log("├─ studioUserId:", studioUserId);
-                        console.log("├─ pastedContent:", typeof pastedContent !== 'undefined' ? pastedContent : 'undefined');
-                        console.log("└─ url:", url);
-                        
-                        if (typeof syncConversation === 'function') {
-                            syncConversation(responseId, formId, studioUserId, pastedContent, url);
-                        } else {
-                            console.warn("⚠️ syncConversation function not found");
-                        }
+                        console.log("🔄 Executing syncConversation with:", {
+                            responseId,
+                            formId,
+                            studioUserId,
+                            pastedContent,
+                            url
+                        });
+                        syncConversation(responseId, formId, studioUserId, pastedContent, url);
                     }, 2000);
-                    
+
                 } catch (streamError) {
                     console.error("❌ Stream processing error:", streamError);
+                    console.error("Error stack:", streamError.stack);
                 }
             })();
-            
-            console.log("↩️ Returning original response to caller");
+
+            console.log("🔵 SyncFetch - Returning response to caller");
             return response;
+
+        } catch (error) {
+            console.error("❌ SyncFetch - Fetch error caught:", error);
+            console.error("❌ Error name:", error.name);
+            console.error("❌ Error message:", error.message);
+            console.error("❌ Error stack:", error.stack);
             
-        } catch (fetchError) {
-            console.error("❌ FETCH ERROR:", fetchError);
-            console.log("├─ Error name:", fetchError.name);
-            console.log("├─ Error message:", fetchError.message);
-            console.log("└─ Error stack:", fetchError.stack);
-            
-            if (typeof stopButtonOff === 'function') {
-                console.log("🛑 Calling stopButtonOff");
-                stopButtonOff();
-            } else {
-                console.warn("⚠️ stopButtonOff function not found");
+            if (error.name === 'AbortError') {
+                console.log("⛔ Request was aborted");
             }
             
-            throw fetchError; // Re-throw the error
+            console.log("🔧 Calling stopButtonOff() due to error");
+            stopButtonOff();
+            
+            throw error; // Re-throw to maintain original behavior
         }
-        
+    
     } else {
-        console.log("🔀 Non-Pickaxe URL, passing through to original fetch");
-        return await originalFetch(url, {...config});
+        console.log("⏩ SyncFetch - Non-Pickaxe URL, passing through to originalFetch");
+        const response = await originalFetch(url, {...config});
+        console.log("✅ Pass-through response:", response.status, response.statusText);
+        return response;
     }
 };
 
