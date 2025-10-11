@@ -199,6 +199,7 @@ window.fetch = function(input, init) {
   const url = typeof input === 'string' ? input : input.url;
   
   if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {  // Added opening brace here
+
     console.log("ReplaceFetch started | input:",input," | init: ",init)
     return originalFetch2.call(this, input, init)
       .then(response => {
@@ -364,7 +365,11 @@ window.fetch = function(input, init) {
         
         // Return the original response for non-SSE endpoints
         return response;
-      });  
+      }).catch(error => {
+                // Pass through any errors from the first function
+                console.error("Error in SSE fetch:", error);
+                throw error;
+            });
 
   } else {
     return originalFetch2.call(this, input, init);
@@ -443,6 +448,8 @@ window.fetch = async function(...args) {
         } catch (error) {
 
         stopButtonOff()
+        throw error;
+
         }
     
     } else {
