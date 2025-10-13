@@ -3,8 +3,8 @@ let bgcols = []
 
 function stopButtonOn(handleClick, toggleHover){
 
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
-    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
+    const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest('div.flex.items-end'); //Select textbox
+    const sendButton = txtBoxArea.querySelectorAll("button")[1]; //Select second element of type button inside container of textbox
 
     sendButton.removeEventListener('click', handleClick) //Remove if already exists, otherwise do nothing 
     sendButton.removeEventListener('mouseenter', toggleHover)
@@ -25,8 +25,8 @@ function stopButtonOn(handleClick, toggleHover){
 
 function stopButtonOff(handleClick,toggleHover){
 
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
-    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
+    const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest('div.flex.items-end'); 
+    const sendButton = txtBoxArea.querySelectorAll("button")[1]; 
     const svg = sendButton.querySelector("svg").querySelector("path");
     svg.setAttribute('d', "m16.175 11-5.6-5.6L12 4l8 8-8 8-1.425-1.4 5.6-5.6H4v-2z");
     sendButton.removeEventListener('click', handleClick);
@@ -35,12 +35,9 @@ function stopButtonOff(handleClick,toggleHover){
 }
 
 function handleClick(event) {
-
-    console.log("Stop-Click")
-
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
-    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
-
+    const sendButton = document.querySelector('#studio-root textarea.resize-none')
+                                ?.closest('div.flex.items-end')
+                                ?.querySelectorAll("button")[1]; 
     event.preventDefault();
     event.stopPropagation();
     stopStream();
@@ -52,10 +49,10 @@ function handleClick(event) {
 }
         
 function toggleHover(e) {
-
     //receives only mouseenter & mouseleave events. If enter then bg1 else then bg0
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
-    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
+    const sendButton = document.querySelector('#studio-root textarea.resize-none')
+                                ?.closest('div.flex.items-end')
+                                ?.querySelectorAll("button")[1]; 
     if (sendButton){
         sendButton.setAttribute("style", e.type === 'mouseenter' ? bgcols[1] : bgcols[0]); 
     }
@@ -65,8 +62,9 @@ function toggleHover(e) {
 
 function stopButtonUpdate(){
     
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
-    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
+    const sendButton = document.querySelector('#studio-root textarea.resize-none')
+                                ?.closest('div.flex.items-end')
+                                ?.querySelectorAll("button")[1]; 
     
     if (sendButton){
         
@@ -80,11 +78,10 @@ function stopButtonUpdate(){
 
         if (disabled.length > 0){  //if there are any disabled buttons (= message sending or doc being uploaded)
 
-            console.log("Stop-Update-BranchOn")
             stopButtonOn(handleClick,toggleHover);
 
         } else {
-            console.log("Stop-Update-BranchOff")
+            
             stopButtonOff(handleClick,toggleHover);
             
         }
@@ -94,9 +91,10 @@ function stopButtonUpdate(){
 
 
 const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes
-    observer.observe(document.body, {
-    childList: true,
-    subtree: true
+observer.observe(document.body, {
+childList: true,
+subtree: true
+
 });
 
 
@@ -357,10 +355,10 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 document.addEventListener('keydown', function(event) {
   // Check if Control is pressed and key is Enter.
   if (event.ctrlKey && event.key === 'Enter') {
-    const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
+    const sendButton = document.querySelector('#studio-root textarea.resize-none')
                             ?.closest('div.flex.items-end')
-                            ?.querySelectorAll("button");
-    const sendButton = sendButtonDiv[sendButtonDiv.length -1];
+                            ?.querySelectorAll("button")[1]; 
+    console.log(sendButton)
     // "Press" the button by triggering a click event.
     if (sendButton) {
       sendButton.click();
