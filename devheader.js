@@ -591,7 +591,7 @@ XMLHttpRequest = function() {
           modifiedResponse = modifiedResponse.replaceAll(pattern, replacement);
         }
 
-        modifiedResponse = modifiedResponse.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"'])/g, '$1$$$$$2$$$$$3');
+        modifiedResponse = modifiedResponse.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
         
         // Log right before returning
         console.log("Returning modified response:", modifiedResponse);
