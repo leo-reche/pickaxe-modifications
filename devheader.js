@@ -555,9 +555,6 @@ function stopStream() {
 
 const originalXHR2 = XMLHttpRequest;
 
-whk = process.env.ZAPIER_WEBHOOK;
-console.log(whk);
-
 XMLHttpRequest = function() {
   const xhr = new originalXHR2();
   
