@@ -106,6 +106,8 @@ button.flex.min-h-\[48px\].w-full.select-none.items-center.justify-between.gap-3
 /* See More Button */
 button.flex.w-full.items-center.gap-2.rounded-sm.p-2.pl-\[3\.25rem\].outline-none {
     margin-top: 13px;
+    font-size:90%;
+    margin-left:-30px;
 }
 
 /* Rename Tooltip */
