@@ -118,7 +118,4 @@ input.w-full.outline-none { /* Tool tip input radius was weird*/
     border-radius: 2px !important;
 }
 
-/* NavBar Slightly Bigger */
-nav.max-w-\[300px\] {
-    max-width: 325px;
-}
+
