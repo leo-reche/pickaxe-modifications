@@ -92,8 +92,10 @@ button.flex.min-h-\[50px\].select-none.items-center.justify-between.gap-3.p-2.ou
 
 /*Each Conversation*/
 button.flex.min-h-\[48px\].w-full.select-none.items-center.justify-between.gap-3.p-2.pl-\[3\.25rem\].outline-none {
-    margin-left: 15px;
-    margin-bottom:-10px
+    margin-left: -30px;
+    margin-bottom:-12px;
+    width:110%;
+    font-size:90%
 }
 
 /*Conversation holders*/
@@ -106,3 +108,15 @@ button.flex.w-full.items-center.gap-2.rounded-sm.p-2.pl-\[3\.25rem\].outline-non
     margin-top: 13px;
 }
 
+/* Rename Tooltip */
+.react-tooltip.core-styles-module_tooltip__3vRRp.styles-module_tooltip__mnnfp {
+    translate: 20% -70%;
+} 
+input.w-full.outline-none { /* Tool tip input radius was weird*/
+    border-radius: 2px !important;
+}
+
+/* NavBar Slightly Bigger */
+nav.max-w-\[300px\] {
+    max-width: 325px;
+}
