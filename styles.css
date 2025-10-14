@@ -111,7 +111,7 @@ button.flex.w-full.items-center.gap-2.rounded-sm.p-2.pl-\[3\.25rem\].outline-non
 }
 
 /* Rename Tooltip */
-.react-tooltip.core-styles-module_tooltip__3vRRp.styles-module_tooltip__mnnfp {
+div:has(> .w-\[48px\].h-full.flex.items-center.justify-center) .react-tooltip {
     translate: 20% -70%;
 } 
 input.w-full.outline-none { /* Tool tip input radius was weird*/
