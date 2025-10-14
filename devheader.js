@@ -217,7 +217,8 @@ window.fetch = function(input, init) {
                 '<think>':'<div id=\'reason\' class=\'reasoning\'>',
                 '</think>':'</div>',
           };
-          
+
+
           // Get all patterns for partial detection
           const ALL_PATTERNS = Object.keys(PATTERN_REPLACEMENTS);
           
@@ -233,6 +234,9 @@ window.fetch = function(input, init) {
           // Get the abort signal if it exists
           const abortSignal = init?.signal;
           let isAborted = false;
+
+          let specialTokenFound = false
+          let specialBuffer = ''
           
           console.log("Stream started - Pattern replacements configured:", PATTERN_REPLACEMENTS);
           
@@ -322,6 +326,16 @@ window.fetch = function(input, init) {
                           let modifiedToken = tokenToProcess;
                           let patternsFound = false;
                           
+                          if (modifiedToken.includes('$')){
+                            
+                          }
+                          
+
+
+                          if (mathFound === true) {
+
+                          }
+                            
                           // Apply each pattern->replacement mapping
                           Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
                             if (modifiedToken.includes(pattern)) {
@@ -359,6 +373,11 @@ window.fetch = function(input, init) {
                           // Reconstruct the data line with modified token
                           parsed.token = modifiedToken;
                           modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
+                          
+                          
+
+
+
                         } else {
                           // Non-token data, pass through unchanged
                           modifiedChunk += line + '\n';
