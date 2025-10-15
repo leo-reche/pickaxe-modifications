@@ -361,9 +361,15 @@ document.addEventListener('keydown', function(event) {
                             ?.closest('div.flex.items-end')
                             ?.querySelectorAll("button");
     const sendButton = sendButtonDiv[sendButtonDiv.length -1];
+
+    let cooloff = false
     // "Press" the button by triggering a click event.
-    if (sendButton) {
+    if (sendButton && !cooloff) {
       sendButton.click();
+      cooloff = true
+      setTimeout(() => {
+          cooloff = false
+      }, 5000);
     }
   }
 });
