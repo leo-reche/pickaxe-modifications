@@ -234,9 +234,6 @@ window.fetch = function(input, init) {
           // Get the abort signal if it exists
           const abortSignal = init?.signal;
           let isAborted = false;
-
-          let specialTokenFound = false
-          let specialBuffer = ''
           
           console.log("Stream started - Pattern replacements configured:", PATTERN_REPLACEMENTS);
           
@@ -274,6 +271,7 @@ window.fetch = function(input, init) {
                 abortSignal.addEventListener('abort', handleAbort);
               }
               
+              let mathBuffer = '';
               async function pump() {
                 try {
                   // Check if aborted before reading
@@ -325,18 +323,8 @@ window.fetch = function(input, init) {
                           // Replace all pattern instances with their specific replacements
                           let modifiedToken = tokenToProcess;
                           let patternsFound = false;
-                          
-                          if (modifiedToken.includes('$')){
-                            
-                          }
-                          
 
-
-                          if (mathFound === true) {
-
-                          }
-                            
-                          // Apply each pattern->replacement mapping
+                          // substitute on the modified token
                           Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
                             if (modifiedToken.includes(pattern)) {
                               
@@ -347,7 +335,7 @@ window.fetch = function(input, init) {
                               console.log("Token After Replacement: ", modifiedToken)
                             }
                           });
-                          
+
                           // Handle partial patterns at the end
                           partialBuffer = '';
                           let longestPartial = '';
@@ -373,10 +361,6 @@ window.fetch = function(input, init) {
                           // Reconstruct the data line with modified token
                           parsed.token = modifiedToken;
                           modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
-                          
-                          
-
-
 
                         } else {
                           // Non-token data, pass through unchanged
@@ -398,12 +382,44 @@ window.fetch = function(input, init) {
                   } else if (chunk.endsWith('\n') && !modifiedChunk.endsWith('\n')) {
                     modifiedChunk += '\n';
                   }
+
+
                   
-                  // Encode and send the modified chunk
-                  controller.enqueue(encoder.encode(modifiedChunk));
-                  console.log("Modified chunk sent");
+                  const mathBufferlines = modifiedChunk.split('\n');
                   
-                  // Continue reading
+                  lines.forEach(line => {
+                    if (line.startsWith('data: ')) {
+                      const jsonStr = line.slice(6);
+                      try {
+                        const parsed = JSON.parse(jsonStr);
+                        if (parsed.token) {
+                          mathBuffer = mathBuffer + parsed.token;
+                        }
+                      } catch {
+
+                      }
+                    }    
+                  })  
+
+                  if (mathBuffer.includes('$')){
+                    
+                    if (mathBuffer.length < 250){
+                      pump()
+                    } else {
+                      mathModifiedChunk = 'event:delta\ndata: {"token": "'+mathBuffer+'"}\n'
+                      controller.enqueue(encoder.encode(mathModifiedChunk));
+                      console.log("Math modified chunk sent. Here you see it:", mathModifiedChunk);
+                    }
+
+                  } else {
+                    // Encode and send the modified chunk
+                    controller.enqueue(encoder.encode(modifiedChunk));
+                    console.log("Modified chunk sent");
+                  }
+                  
+
+                    
+                    // Continue reading
                   pump();
                 } catch (error) {
                   console.log("Error in pump:", error);
