@@ -387,7 +387,7 @@ window.fetch = function(input, init) {
                   
                   const mathBufferlines = modifiedChunk.split('\n');
                   
-                  lines.forEach(line => {
+                  mathBufferlines.forEach(line => {
                     if (line.startsWith('data: ')) {
                       const jsonStr = line.slice(6);
                       try {
@@ -406,7 +406,7 @@ window.fetch = function(input, init) {
                     if (mathBuffer.length < 250){
                       pump()
                     } else {
-                      mathModifiedChunk = 'event:delta\ndata: {"token": "'+JSON.stringify(mathBuffer)+'"}\n'
+                      mathModifiedChunk = 'event:delta\ndata: {"token": '+JSON.stringify(mathBuffer)+'}\n'
                       controller.enqueue(encoder.encode(mathModifiedChunk));
                       console.log("Math modified chunk sent. Here you see it:", mathModifiedChunk);
                     }
@@ -415,6 +415,7 @@ window.fetch = function(input, init) {
                     // Encode and send the modified chunk
                     controller.enqueue(encoder.encode(modifiedChunk));
                     console.log("Modified chunk sent");
+                    mathBuffer = '';
                   }
                   
 
