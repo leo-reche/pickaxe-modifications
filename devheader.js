@@ -392,7 +392,7 @@ window.fetch = function(input, init) {
                   const mathBufferlines = modifiedChunk.split('\n');
 
                   mathBufferlines.forEach(line => {
-                    if (line.startsWith('data: ') && areWeDone == false) {
+                    if (line.startsWith('data: ')) {
                       const jsonStr = line.slice(6);
                       try {
                         const parsed = JSON.parse(jsonStr);
