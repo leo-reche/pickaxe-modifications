@@ -409,6 +409,7 @@ window.fetch = function(input, init) {
                       mathModifiedChunk = 'event:delta\ndata: {"token": '+JSON.stringify(mathBuffer)+'}\n'
                       controller.enqueue(encoder.encode(mathModifiedChunk));
                       console.log("Math modified chunk sent. Here you see it:", mathModifiedChunk);
+                      mathBuffer = '';
                     }
 
                   } else {
