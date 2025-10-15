@@ -412,7 +412,7 @@ window.fetch = function(input, init) {
                     } else {
                       mathBuffer = mathBuffer.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
                       if (mathBuffer.includes("[DONE]")){
-                        mathBuffer.replace("[DONE","")
+                        mathBuffer.replace("[DONE]","")
                       }
                       let mathModifiedChunk = '\nevent:delta\ndata: {\"token\": '+JSON.stringify(mathBuffer)+'}\n\n';
                       controller.enqueue(encoder.encode(mathModifiedChunk));
