@@ -354,6 +354,7 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 
 
 // control enter to send
+let cooloff = false
 document.addEventListener('keydown', function(event) {
   // Check if Control is pressed and key is Enter.
   if (event.ctrlKey && event.key === 'Enter') {
@@ -362,14 +363,17 @@ document.addEventListener('keydown', function(event) {
                             ?.querySelectorAll("button");
     const sendButton = sendButtonDiv[sendButtonDiv.length -1];
 
-    let cooloff = false
+
     // "Press" the button by triggering a click event.
     if (sendButton && !cooloff) {
       sendButton.click();
+      console.log("click")
       cooloff = true
       setTimeout(() => {
           cooloff = false
-      }, 5000);
+      }, 500);
+    } else {
+      console.log("cooloff!")
     }
   }
 });
