@@ -209,11 +209,10 @@ window.fetch = function(input, init) {
           
           // PATTERNS CONFIGURATION - Now a dictionary/object
           const PATTERN_REPLACEMENTS = {
-                '\n$$':'\n $$$$ \n',
-                '\\\\[': '\n $$$$ \n',     // Replace \[ with $$
-                '\\\\]': '\n $$$$ \n',     // Replace \] with $$
-                '\\\\(': ' $$$$ ',     // Replace \( with $$
-                '\\\\)': ' $$$$ ',     // Replace \) with $$
+                '\\\\[': '\n $$ \n',     // Replace \[ with $$
+                '\\\\]': '\n $$ \n',     // Replace \] with $$
+                '\\\\(': ' $$ ',     // Replace \( with $$
+                '\\\\)': ' $$ ',     // Replace \) with $$
                 '<think>':'<div id=\'reason\' class=\'reasoning\'>',
                 '</think>':'</div>',
           };
@@ -328,6 +327,7 @@ window.fetch = function(input, init) {
                           if (modifiedToken.includes("$")){
                             mathModeOn = true
                           }
+
                           // substitute on the modified token
                           Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
                             if (modifiedToken.includes(pattern)) {
@@ -410,7 +410,8 @@ window.fetch = function(input, init) {
                     if (mathBuffer.length < 250){
                       //just keep reading to keep adding to the maths buffer
                     } else {
-                      mathModifiedChunk = '\nevent:delta\ndata: {\"token\": '+JSON.stringify(mathBuffer)+'}\n\n'
+                      mathBuffer = mathBuffer.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
+                      let mathModifiedChunk = '\nevent:delta\ndata: {\"token\": '+JSON.stringify(mathBuffer)+'}\n\n';
                       controller.enqueue(encoder.encode(mathModifiedChunk));
                       console.log("Math modified chunk sent. Here you see it:", mathModifiedChunk);
                       mathBuffer = '';
@@ -596,15 +597,15 @@ function stopStream() {
 
 const originalXHR2 = XMLHttpRequest;
 
+
 XMLHttpRequest = function() {
   const xhr = new originalXHR2();
   
   const PATTERN_REPLACEMENTS = {
-    '\\n$$':'\\n $$$$ \\n',
-    '\\\\[': '\\n $$$$ \\n',     // Replace \[ with $$
-    '\\\\]': '\\n $$$$ \\n',     // Replace \] with $$
-    '\\\\(': ' $$$$ ',     // Replace \( with $$
-    '\\\\)': ' $$$$ ',     // Replace \) with $$
+    '\\\\[': '\\n $$ \\n',     // Replace \[ with $$
+    '\\\\]': '\\n $$ \\n',     // Replace \] with $$
+    '\\\\(': ' $$',     // Replace \( with $$
+    '\\\\)': ' $$ ',     // Replace \) with $$
     '<think>':'<div id=\'reason\' class=\'reasoning\'>',
     '</think>':'</div>',
   };
@@ -635,7 +636,6 @@ XMLHttpRequest = function() {
         modifiedResponse = modifiedResponse.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
         
         // Log right before returning
-        console.log("Returning modified response:", modifiedResponse);
         
         return modifiedResponse;
       }
