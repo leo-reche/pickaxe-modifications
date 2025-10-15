@@ -36,8 +36,6 @@ function stopButtonOff(handleClick,toggleHover){
 
 function handleClick(event) {
 
-    console.log("Stop-Click")
-
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
 
@@ -80,11 +78,9 @@ function stopButtonUpdate(){
 
         if (disabled.length > 0){  //if there are any disabled buttons (= message sending or doc being uploaded)
 
-            console.log("Stop-Update-BranchOn")
             stopButtonOn(handleClick,toggleHover);
 
         } else {
-            console.log("Stop-Update-BranchOff")
             stopButtonOff(handleClick,toggleHover);
             
         }
@@ -115,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // paste handler (unchanged)
   document.addEventListener('paste', (e) => {
-    console.log("paste event")
     if (!e.target.matches(targetSelector)) return;
     const items = (e.clipboardData || window.clipboardData).items;
 
@@ -125,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pastedContent.push(text);
     }
  
-    setTimeout( function(){ console.log("pasted: ",pastedContent)},500)
     let imageFile = null;
     for (const it of items) { if (it.type?.startsWith('image/')) { imageFile = it.getAsFile(); break; } }
     if (!imageFile) return;
