@@ -390,9 +390,9 @@ window.fetch = function(input, init) {
 
                   
                   const mathBufferlines = modifiedChunk.split('\n');
-                  
+
                   mathBufferlines.forEach(line => {
-                    if (line.startsWith('data: ')) {
+                    if (line.startsWith('data: ') && areWeDone == false) {
                       const jsonStr = line.slice(6);
                       try {
                         const parsed = JSON.parse(jsonStr);
@@ -402,12 +402,12 @@ window.fetch = function(input, init) {
                       } catch {
 
                       }
-                    }    
+                    }
                   })  
 
                   if (mathModeOn || mathBuffer.includes('$')){
                     
-                    if (mathBuffer.length < 250){
+                    if (mathBuffer.length < 250 && !mathBuffer.includes("[DONE]")){
                       //just keep reading to keep adding to the maths buffer
                     } else {
                       mathBuffer = mathBuffer.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
