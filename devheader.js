@@ -406,7 +406,7 @@ window.fetch = function(input, init) {
                     if (mathBuffer.length < 250){
                       pump()
                     } else {
-                      mathModifiedChunk = 'event:delta\ndata: {"token": "'+mathBuffer+'"}\n'
+                      mathModifiedChunk = 'event:delta\ndata: {"token": "'+JSON.stringify(mathBuffer)+'"}\n'
                       controller.enqueue(encoder.encode(mathModifiedChunk));
                       console.log("Math modified chunk sent. Here you see it:", mathModifiedChunk);
                     }
