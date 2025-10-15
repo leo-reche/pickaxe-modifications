@@ -406,7 +406,7 @@ window.fetch = function(input, init) {
                     if (mathBuffer.length < 250){
                       //just keep reading to keep adding to the maths buffer
                     } else {
-                      mathModifiedChunk = '\nevent:delta\ndata: {\"token\": '+JSON.stringify(mathBuffer)+'}\n'
+                      mathModifiedChunk = '\nevent:delta\ndata: {\"token\": '+JSON.stringify(mathBuffer)+'}\n\n'
                       controller.enqueue(encoder.encode(mathModifiedChunk));
                       console.log("Math modified chunk sent. Here you see it:", mathModifiedChunk);
                       mathBuffer = '';
