@@ -404,9 +404,9 @@ window.fetch = function(input, init) {
                   if (mathBuffer.includes('$')){
                     
                     if (mathBuffer.length < 250){
-                      pump()
+                      //just keep reading to keep adding to the maths buffer
                     } else {
-                      mathModifiedChunk = 'event:delta\ndata: {"token": '+JSON.stringify(mathBuffer)+'}\n'
+                      mathModifiedChunk = '\nevent:delta\ndata: {\"token\": '+JSON.stringify(mathBuffer)+'}\n'
                       controller.enqueue(encoder.encode(mathModifiedChunk));
                       console.log("Math modified chunk sent. Here you see it:", mathModifiedChunk);
                       mathBuffer = '';
@@ -415,7 +415,7 @@ window.fetch = function(input, init) {
                   } else {
                     // Encode and send the modified chunk
                     controller.enqueue(encoder.encode(modifiedChunk));
-                    console.log("Modified chunk sent");
+                    console.log("Modified chunk sent, see it here:",modifiedChunk);
                     mathBuffer = '';
                   }
                   
