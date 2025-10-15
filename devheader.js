@@ -308,6 +308,7 @@ window.fetch = function(input, init) {
                   console.log("Processing chunk of length:", chunk.length);
                   
                   // Parse the SSE lines and modify token content
+                  let mathModeOn = false
                   let modifiedChunk = '';
                   const lines = chunk.split('\n');
                   
@@ -324,6 +325,9 @@ window.fetch = function(input, init) {
                           let modifiedToken = tokenToProcess;
                           let patternsFound = false;
 
+                          if (modifiedToken.includes("$")){
+                            mathModeOn = true
+                          }
                           // substitute on the modified token
                           Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
                             if (modifiedToken.includes(pattern)) {
@@ -401,7 +405,7 @@ window.fetch = function(input, init) {
                     }    
                   })  
 
-                  if (mathBuffer.includes('$')){
+                  if (mathModeOn || mathBuffer.includes('$')){
                     
                     if (mathBuffer.length < 250){
                       //just keep reading to keep adding to the maths buffer
