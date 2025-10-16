@@ -411,10 +411,8 @@ window.fetch = function(input, init) {
                       //just keep reading to keep adding to the maths buffer
                     } else {
                       mathBuffer = mathBuffer.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
-                      console.log("Done found? ",mathBuffer.includes("[DONE]"))
                       if (mathBuffer.includes("[DONE]")){
-                        mathBuffer.replace("[DONE]","")
-                        console.log("done removed")
+                        mathBuffer = mathBuffer.replace("[DONE]","")
                       }
                       let mathModifiedChunk = '\nevent:delta\ndata: {\"token\": '+JSON.stringify(mathBuffer)+'}\n\n';
                       controller.enqueue(encoder.encode(mathModifiedChunk));
