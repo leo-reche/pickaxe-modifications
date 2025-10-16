@@ -367,14 +367,11 @@ document.addEventListener('keydown', function(event) {
     // "Press" the button by triggering a click event.
     if (sendButton && !cooloff) {
       sendButton.click();
-      console.log("click")
       cooloff = true
       setTimeout(() => {
           cooloff = false
-      }, 500);
-    } else {
-      console.log("cooloff!")
-    }
+      }, 200);
+    } 
   }
 });
 
