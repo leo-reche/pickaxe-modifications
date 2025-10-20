@@ -107,6 +107,61 @@
 Banner HTML -->*/
 
 
+
+// =============== Banner
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  const banner = document.createElement("div");
+  banner.className = "fc-banner";
+  banner.setAttribute("role", "status");
+  banner.setAttribute("aria-live", "polite");
+  banner.innerHTML = `
+    <span>
+      ✨ New Bots released! Try out Grok (American), DeepSeek (Chinese) and Mistral (French).
+    </span>
+    <button class="fc-banner__close" type="button" aria-label="Dismiss announcement">×</button>
+  `;
+
+  // Add close button functionality
+  banner.querySelector(".fc-banner__close").addEventListener("click", () => {
+    banner.remove();
+  });
+
+  // Insert at the top of the body
+  document.body.prepend(banner);
+});
+
+  (function () {
+    const banner = document.querySelector('.fc-banner');
+    if (!banner) return;
+
+    function setHeightVar() {
+      banner.style.setProperty('--fc-banner-h', banner.scrollHeight + 'px');
+    }
+    setHeightVar();
+    window.addEventListener('resize', setHeightVar);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(setHeightVar).catch(() => {});
+    }
+
+    function hideBanner() {
+      if (banner.classList.contains('is-hiding')) return;
+      banner.classList.add('is-hiding');
+      banner.addEventListener('transitionend', () => banner.remove(), { once: true });
+    }
+
+    const timer = setTimeout(hideBanner, 5000);
+
+    banner.addEventListener('click', function (e) {
+      if (e.target.closest('.fc-banner__close')) {
+        clearTimeout(timer);
+        hideBanner();
+      }
+    });
+  })();
+
+
 //=========== Pricing Redirect
 
 function checkPricingRedirect() {
