@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
   banner.setAttribute("aria-live", "polite");
   banner.innerHTML = `
     <span>
-      ✨ New Bots released! Try out Grok (American), DeepSeek (Chinese) and Mistral (French).
+      Pickaxe is experiencing a server errors today. We're already in contact with them, and apologize for the inconvenience.
     </span>
     <button class="fc-banner__close" type="button" aria-label="Dismiss announcement">×</button>
   `;
