@@ -1,114 +1,7 @@
- /* <!-- 
-<div class="fc-banner" role="status" aria-live="polite">
-  <span>
-    ✨ New Bots released! Try out Grok (American), DeepSeek (Chinese) and Mistral (French).
-  </span>
-  <button class="fc-banner__close" type="button" aria-label="Dismiss announcement">×</button>
-</div>
-
-<style>
-  .fc-banner {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 9999;
-    box-sizing: border-box;
-    max-width: 95%;
-    background: #f9fafb;  softer gray 
-    color: #111;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    text-align: center;
-    font: 600 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-    overflow: hidden;
-    max-height: var(--fc-banner-h, 200px);
-    opacity: 1;
-    transition: max-height 300ms ease, opacity 300ms ease, padding 300ms ease, border-color 300ms ease, transform 300ms ease;
-  }
-
-  .fc-banner span {
-    max-width: 800px;
-  }
-
-  .fc-banner__close {
-    flex-shrink: 0;
-    border: 0;
-    background: rgba(0, 0, 0, 0.06);
-    color: #111;
-    border-radius: 6px;
-    padding: 4px 10px;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-  }
-
-  .fc-banner__close:hover,
-  .fc-banner__close:focus {
-    background: rgba(0, 0, 0, 0.12);
-    outline: none;
-  }
-
-  .fc-banner.is-hiding {
-    opacity: 0;
-    max-height: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    border-color: transparent;
-    transform: translate(-50%, -10px);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .fc-banner {
-      transition: none;
-    }
-  }
-</style>
-
-
-<script>
-  (function () {
-    const banner = document.querySelector('.fc-banner');
-    if (!banner) return;
-
-    function setHeightVar() {
-      banner.style.setProperty('--fc-banner-h', banner.scrollHeight + 'px');
-    }
-    setHeightVar();
-    window.addEventListener('resize', setHeightVar);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(setHeightVar).catch(() => {});
-    }
-
-    function hideBanner() {
-      if (banner.classList.contains('is-hiding')) return;
-      banner.classList.add('is-hiding');
-      banner.addEventListener('transitionend', () => banner.remove(), { once: true });
-    }
-
-    const timer = setTimeout(hideBanner, 5000);
-
-    banner.addEventListener('click', function (e) {
-      if (e.target.closest('.fc-banner__close')) {
-        clearTimeout(timer);
-        hideBanner();
-      }
-    });
-  })();
-</script>
-
-Banner HTML -->*/
 
 
 
-// =============== Banner
+/*/ =============== Banner
 
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -141,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
     setHeightVar();
 
     window.addEventListener('resize', setHeightVar);
-    
+
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(setHeightVar).catch(() => {});
     }
@@ -167,6 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
   
+/*/
 
 //=========== Pricing Redirect
 
