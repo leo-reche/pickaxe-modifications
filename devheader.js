@@ -130,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Insert at the top of the body
   document.body.prepend(banner);
-});
 
   (function () {
     const banner = document.querySelector('.fc-banner');
@@ -140,7 +139,9 @@ document.addEventListener("DOMContentLoaded", function() {
       banner.style.setProperty('--fc-banner-h', banner.scrollHeight + 'px');
     }
     setHeightVar();
+
     window.addEventListener('resize', setHeightVar);
+    
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(setHeightVar).catch(() => {});
     }
@@ -161,6 +162,11 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   })();
 
+
+
+});
+
+  
 
 //=========== Pricing Redirect
 
