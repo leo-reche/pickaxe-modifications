@@ -124,7 +124,6 @@ input.w-full.outline-none { /* Tool tip input radius was weird*/
 button.flex.min-h-\[50px\].select-none.items-center.justify-between.gap-3.p-2.outline-none[style*="background-color: rgba(233, 73, 19, 0.027)"] {
     background-color: #ffeedf !important;
     border-radius:15px;
-    translate:-5px;
 }
 
 
