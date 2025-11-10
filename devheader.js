@@ -477,6 +477,7 @@ window.fetch = async function(...args) {
             errorMessageHandler()
 
             setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
+            setTimeout(() => {addEditButton()}, 1000);
 
             } catch (_) {}
 
@@ -541,6 +542,23 @@ function stopStream() {
     }, 100); 
 }
 
+
+function addEditButton(){
+  var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
+        var lastMsg = allMsgs[allMsgs.length-1]
+        lastMsg.style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
+        
+          const p = document.createElement('p');
+          p.setAttribute('align', 'right');
+
+          // small tag for smaller text
+          const small = document.createElement('small');
+          small.textContent = 'Edit';
+          small.style.color = 'grey';
+          p.appendChild(small);
+
+        lastMsg.appendChild(p);
+}
 
 
 // ============= XHL Replacing Characters
