@@ -405,23 +405,25 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 
 document.addEventListener('keydown', function(event) {
   // Only act on plain Enter (no modifiers)
-  if (event.key === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
-    const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
-      ?.closest('div.relative.flex')
-      ?.querySelectorAll("button");
+  setTimeout(() => {
+    if (event.key === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
+      const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
+        ?.closest('div.relative.flex')
+        ?.querySelectorAll("button");
 
-    const sendButton = sendButtonDiv?.[sendButtonDiv.length - 1];
+      const sendButton = sendButtonDiv?.[sendButtonDiv.length - 1];
 
-    if (sendButton && !cooloff) {
-      event.preventDefault(); // prevent default newline behavior
-      sendButton.click();
-      console.log("Send Button Autoclicked")
-      cooloff = true;
-      setTimeout(() => {
-        cooloff = false;
-      }, 500);
+      if (sendButton && !cooloff) {
+        event.preventDefault(); // prevent default newline behavior
+        sendButton.click();
+        console.log("Send Button Autoclicked")
+        cooloff = true;
+        setTimeout(() => {
+          cooloff = false;
+        }, 500);
+      }
     }
-  }
+  },100);
 });
 
 
