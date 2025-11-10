@@ -543,22 +543,28 @@ function stopStream() {
 }
 
 
-/*function addEditButton(){
+function addEditButton(){
   var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
         var lastMsg = allMsgs[allMsgs.length-1]
         
-          const p = document.createElement('p');
-          p.setAttribute('align', 'right');
+          // Select the message container (adjust selector as needed)
+        const messageDiv = lastMsg.closest('.text-\\[16px\\]');
 
-          // small tag for smaller text
-          const small = document.createElement('small');
-          small.textContent = 'Edit';
-          small.style.color = 'grey';
-          p.appendChild(small);
+        // Create the HTML for the button section
+        const buttonHTML = `
+          <div class="flex h-4 items-center justify-end gap-3">
+            <button class="flex items-center gap-1 opacity-70 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100" style="color: rgb(0, 0, 0);">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 shrink-0">
+                <path fill="currentColor" d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"></path>
+              </svg>
+            </button>
+          </div>
+        `;
 
-        lastMsg.appendChild(p);
+        // Append it right after the message div
+        messageDiv.insertAdjacentHTML('afterend', buttonHTML);
 }
-*/
+
 
 // ============= XHL Replacing Characters
 
