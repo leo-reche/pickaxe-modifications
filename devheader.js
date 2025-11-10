@@ -159,6 +159,7 @@ window.fetch = function(input, init) {
         if (contentType && contentType.includes('text/event-stream')) {
           
           // PATTERNS CONFIGURATION - Now a dictionary/object
+
           const PATTERN_REPLACEMENTS = {
                 '\\[': '\n $$ \n',     // Replace \[ with $$
                 '\\]': '\n $$ \n',     // Replace \] with $$
@@ -551,6 +552,10 @@ XMLHttpRequest = function() {
   const xhr = new originalXHR2();
   
   const PATTERN_REPLACEMENTS = {
+    '\\\\[': '\\n $$ \\n',     // Replace \[ with $$
+    '\\\\]': '\\n $$ \\n',     // Replace \] with $$
+    '\\\\(': ' $$',     // Replace \( with $$
+    '\\\\)': ' $$ ',     // Replace \) with $$
     '<think>':'<div id=\'reason\' class=\'reasoning\'>',
     '</think>':'</div>',
   };
