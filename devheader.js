@@ -544,12 +544,11 @@ function stopStream() {
 
 
 function addEditButton(){
-  var allMsgs = document.querySelectorAll('.flex.w-full.justify-end');
+  var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
         var lastMsg = allMsgs[allMsgs.length-1]
         
           // Select the message container (adjust selector as needed)
-        const messageDiv = lastMsg.closest('.text-\\[16px\\]');
-
+        const messageDiv = lastMsg
         // Create the HTML for the button section
         const buttonHTML = `
           <div class="flex h-4 items-center justify-end gap-3">
@@ -562,6 +561,7 @@ function addEditButton(){
         `;
 
         // Append it right after the message div
+        messageDiv.closest("div.flex.gap-x-3").classList.add('flex-col');
         messageDiv.insertAdjacentHTML('afterend', buttonHTML);
         const editButton = messageDiv.nextElementSibling.querySelector('#edit-button');
 
@@ -571,11 +571,7 @@ function addEditButton(){
             if (!markdownDiv) return;
 
             // Get all text inside .pxe-markdown (e.g., from all paragraphs, lists, etc.)
-            const text = Array.from(markdownDiv.querySelectorAll('*'))
-                .map(el => el.innerText)
-                .filter(Boolean)
-                .join('\n');
-
+            const text = markdownDiv.innerText.trim();
             // Find the textarea
             const txtBox = document.querySelector('#studio-root textarea.resize-none');
             if (txtBox) {
