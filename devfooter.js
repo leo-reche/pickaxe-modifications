@@ -116,9 +116,9 @@ function addTextAreaId (){
       const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
         ?.closest('div.relative.flex')
         ?.querySelectorAll("button");
-
       const sendButton = sendButtonDiv?.[sendButtonDiv.length - 1];
       sendButton.addEventListener('click', function() {
+        cooloff = true;
         setTimeout(() => {
               cooloff = false;
             }, 500);
