@@ -67,13 +67,11 @@ function toggleHover(e) {
 
 function stopButtonUpdate(){
     
-    console.log("Change Detected")
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     
     if (sendButton){
         
-        console.log("Stop Button Found")
         currentStyle = sendButton.getAttribute("style")
         if (!bgcols.includes(currentStyle)){
             bgcols.push(currentStyle)
@@ -371,10 +369,11 @@ document.addEventListener('keydown', function(event) {
     if (sendButton && !cooloff) {
       event.preventDefault(); // prevent default newline behavior
       sendButton.click();
+      console.log("Send Button Autoclicked")
       cooloff = true;
       setTimeout(() => {
         cooloff = false;
-      }, 200);
+      }, 1000);
     }
   }
 });
