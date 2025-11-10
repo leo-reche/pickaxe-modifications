@@ -93,12 +93,39 @@ function stopButtonUpdate(){
 }
 
 
+function addTextAreaId (){
 
-const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes
+  if (!document.querySelector("#text-area")){
+    const textArea = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")
+    if (textArea) {
+
+      textArea.id = "text-area"
+
+      //Once a text-area is found
+
+      const observer2 = new MutationObserver(stopButtonUpdate); //observe text area document for any changes
+      observer2.observe(textArea, {
+        childList: true,
+        subtree: true
+      });
+      console.log("Added text area!")
+    } else {
+      console.log("TextArea not found")
+    }
+  } else {
+    console.log("TextArea found")
+  }
+  
+}
+
+
+const observer = new MutationObserver(addTextAreaId); //observe whole document for any changes
     observer.observe(document.body, {
     childList: true,
     subtree: true
 });
+
+
 
 
 
@@ -375,8 +402,20 @@ document.addEventListener('keydown', function(event) {
       cooloff = true;
       setTimeout(() => {
         cooloff = false;
-      }, 1000);
+      }, 500);
     }
   }
 });
+
+const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
+  ?.closest('div.relative.flex')
+  ?.querySelectorAll("button");
+
+const sendButton = sendButtonDiv?.[sendButtonDiv.length - 1];
+sendButton.addEventListener('click', function() {
+  setTimeout(() => {
+        cooloff = false;
+      }, 500);
+});
+
 
