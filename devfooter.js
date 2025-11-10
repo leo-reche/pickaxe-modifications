@@ -65,11 +65,13 @@ function toggleHover(e) {
 
 function stopButtonUpdate(){
     
+    console.log("Change Detected")
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     
     if (sendButton){
         
+        console.log("Stop Button Found")
         currentStyle = sendButton.getAttribute("style")
         if (!bgcols.includes(currentStyle)){
             bgcols.push(currentStyle)
@@ -80,11 +82,9 @@ function stopButtonUpdate(){
 
         if (stopList.length > 0){  //if there is a stop button
 
-            console.log("Stop-Update-BranchOn")
             stopButtonOn(handleClick,toggleHover);
 
         } else {
-            console.log("Stop-Update-BranchOff")
             stopButtonOff(handleClick,toggleHover);
             
         }
@@ -115,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // paste handler (unchanged)
   document.addEventListener('paste', (e) => {
-    console.log("paste event")
     if (!e.target.matches(targetSelector)) return;
     const items = (e.clipboardData || window.clipboardData).items;
 
@@ -322,7 +321,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .from(wrapper.querySelector('#chat-container-wrapper'))
         .save();
     } catch (err){
-      console.error(err);
       alert('Could not generate PDF.');
     } finally {
       document.body.removeChild(wrapper);
