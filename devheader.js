@@ -475,9 +475,8 @@ window.fetch = async function(...args) {
             const r = out.body.getReader();
             while (!(await r.read()).done) {}
             errorMessageHandler()
-
+            addEditButton()
             setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
-            setTimeout(() => {addEditButton()}, 1000);
 
             } catch (_) {}
 
