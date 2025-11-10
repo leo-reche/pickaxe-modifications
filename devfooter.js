@@ -357,24 +357,25 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 
 
 // control enter to send
-let cooloff = false
+let cooloff = false;
+
 document.addEventListener('keydown', function(event) {
-  // Check if Control is pressed and key is Enter.
-  if (event.ctrlKey && event.key === 'Enter') {
+  // Only act on plain Enter (no modifiers)
+  if (event.key === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
     const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
-                            ?.closest('div.flex.items-end')
-                            ?.querySelectorAll("button");
-    const sendButton = sendButtonDiv[sendButtonDiv.length -1];
+      ?.closest('div.relative.flex')
+      ?.querySelectorAll("button");
 
+    const sendButton = sendButtonDiv?.[sendButtonDiv.length - 1];
 
-    // "Press" the button by triggering a click event.
     if (sendButton && !cooloff) {
+      event.preventDefault(); // prevent default newline behavior
       sendButton.click();
-      cooloff = true
+      cooloff = true;
       setTimeout(() => {
-          cooloff = false
+        cooloff = false;
       }, 200);
-    } 
+    }
   }
 });
 
