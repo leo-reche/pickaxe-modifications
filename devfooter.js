@@ -3,7 +3,7 @@ let bgcols = []
 
 function stopButtonOn(handleClick, toggleHover){
 
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
 
     sendButton.removeEventListener('click', handleClick) //Remove if already exists, otherwise do nothing 
@@ -11,7 +11,7 @@ function stopButtonOn(handleClick, toggleHover){
     sendButton.removeEventListener('mouseleave', toggleHover)
 
     //change it to a square
-    sendButton.querySelector("svg").querySelector("path").setAttribute('d', "M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3z"); 
+    //sendButton.querySelector("svg").querySelector("path").setAttribute('d', "M7 4h10a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3z"); 
 
 
     //and change its functionality
@@ -25,7 +25,7 @@ function stopButtonOn(handleClick, toggleHover){
 
 function stopButtonOff(handleClick,toggleHover){
 
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     const svg = sendButton.querySelector("svg").querySelector("path");
     svg.setAttribute('d', "m16.175 11-5.6-5.6L12 4l8 8-8 8-1.425-1.4 5.6-5.6H4v-2z");
@@ -38,7 +38,7 @@ function handleClick(event) {
 
     console.log("Stop-Click")
 
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
 
     event.preventDefault();
@@ -54,7 +54,7 @@ function handleClick(event) {
 function toggleHover(e) {
 
     //receives only mouseenter & mouseleave events. If enter then bg1 else then bg0
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     if (sendButton){
         sendButton.setAttribute("style", e.type === 'mouseenter' ? bgcols[1] : bgcols[0]); 
@@ -65,7 +65,7 @@ function toggleHover(e) {
 
 function stopButtonUpdate(){
     
-    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest('div.flex.items-end')?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     
     if (sendButton){
@@ -75,10 +75,10 @@ function stopButtonUpdate(){
             bgcols.push(currentStyle)
         }
 
-        const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest('div.flex.items-end');
-        const disabled = txtBoxArea.querySelectorAll("button[disabled]"); //querying the list of disabled buttons
+        const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest("div.relative.flex");
+        const stopList = txtBoxArea.querySelectorAll('path[d="M6 6h12v12H6z"]'); //querying the list of disabled buttons
 
-        if (disabled.length > 0){  //if there are any disabled buttons (= message sending or doc being uploaded)
+        if (stopList.length > 0){  //if there is a stop button
 
             console.log("Stop-Update-BranchOn")
             stopButtonOn(handleClick,toggleHover);
@@ -91,10 +91,10 @@ function stopButtonUpdate(){
     }
 }
 
-
+const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest("div.relative.flex");
 
 const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes
-    observer.observe(document.body, {
+    observer.observe(txtBoxArea, {
     childList: true,
     subtree: true
 });
@@ -124,7 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (text && !text.trim().startsWith('{')) {
         pastedContent.push(text);
     }
- 
+  });
+});
+
+    /*
     setTimeout( function(){ console.log("pasted: ",pastedContent)},500)
     let imageFile = null;
     for (const it of items) { if (it.type?.startsWith('image/')) { imageFile = it.getAsFile(); break; } }
@@ -159,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     triggerChange(input);
   });
 });
-
+*/
 
 
 
