@@ -68,7 +68,9 @@ function toggleHover(e) {
 function stopButtonUpdate(){
     
     const txtBoxButtons = document.querySelector('#studio-root textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
-    const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
+    if(txtBoxButtons){
+      const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
+    }
     
     if (sendButton){
         
@@ -90,6 +92,7 @@ function stopButtonUpdate(){
         }
     }
 }
+
 
 
 const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes

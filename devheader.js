@@ -543,10 +543,9 @@ function stopStream() {
 }
 
 
-function addEditButton(){
+/*function addEditButton(){
   var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
         var lastMsg = allMsgs[allMsgs.length-1]
-        lastMsg.style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
         
           const p = document.createElement('p');
           p.setAttribute('align', 'right');
@@ -559,7 +558,7 @@ function addEditButton(){
 
         lastMsg.appendChild(p);
 }
-
+*/
 
 // ============= XHL Replacing Characters
 
