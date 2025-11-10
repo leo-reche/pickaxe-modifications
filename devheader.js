@@ -523,9 +523,19 @@ function stopStream() {
             errBox.textContent = "This response was stopped by the user.";
         }
         var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
-        allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
-        var thread = document.querySelector('div.grid.grid-cols-1.gap-y-6.w-full');
+        var lastMsg = allMsgs[allMsgs.length-1]
+        lastMsg.style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
         
+          const p = document.createElement('p');
+          p.setAttribute('align', 'right');
+
+          // small tag for smaller text
+          const small = document.createElement('small');
+          small.textContent = 'Stopped';
+          small.style.color = 'grey';
+          p.appendChild(small);
+
+        lastMsg.appendChild(p);
 
     }, 100); 
 }
@@ -541,10 +551,6 @@ XMLHttpRequest = function() {
   const xhr = new originalXHR2();
   
   const PATTERN_REPLACEMENTS = {
-    '\\\\[': '\\n $$ \\n',     // Replace \[ with $$
-    '\\\\]': '\\n $$ \\n',     // Replace \] with $$
-    '\\\\(': ' $$',     // Replace \( with $$
-    '\\\\)': ' $$ ',     // Replace \) with $$
     '<think>':'<div id=\'reason\' class=\'reasoning\'>',
     '</think>':'</div>',
   };

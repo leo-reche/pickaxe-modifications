@@ -71,7 +71,7 @@ function stopButtonUpdate(){
     
     if (sendButton){
         
-
+        console.log("Stop Button Found")
         currentStyle = sendButton.getAttribute("style")
         if (!bgcols.includes(currentStyle)){
             bgcols.push(currentStyle)
@@ -81,7 +81,7 @@ function stopButtonUpdate(){
         const stopList = txtBoxArea.querySelectorAll('path[d="M6 6h12v12H6z"]'); //querying the list of disabled buttons
 
         if (stopList.length > 0){  //if there is a stop button
-          console.log("Stop Button Found")
+
             stopButtonOn(handleClick,toggleHover);
 
         } else {
@@ -91,14 +91,17 @@ function stopButtonUpdate(){
     }
 }
 
-
-
-const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes
-    observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
-
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest("div.relative.flex");
+    console.log(txtBoxArea)
+    const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes
+        observer.observe(txtBoxArea, {
+        childList: true,
+        subtree: true
+    });
+  },2000);
+}
 
 
 
