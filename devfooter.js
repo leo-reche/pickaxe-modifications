@@ -71,7 +71,7 @@ function stopButtonUpdate(){
     
     if (sendButton){
         
-        console.log("Stop Button Found")
+
         currentStyle = sendButton.getAttribute("style")
         if (!bgcols.includes(currentStyle)){
             bgcols.push(currentStyle)
@@ -81,7 +81,7 @@ function stopButtonUpdate(){
         const stopList = txtBoxArea.querySelectorAll('path[d="M6 6h12v12H6z"]'); //querying the list of disabled buttons
 
         if (stopList.length > 0){  //if there is a stop button
-
+          console.log("Stop Button Found")
             stopButtonOn(handleClick,toggleHover);
 
         } else {
