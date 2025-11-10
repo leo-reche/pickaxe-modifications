@@ -91,13 +91,15 @@ function stopButtonUpdate(){
     }
 }
 
-const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest("div.relative.flex");
-
-const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes
-    observer.observe(txtBoxArea, {
-    childList: true,
-    subtree: true
-});
+document.addEventListener('DOMContentLoaded', () => {
+  const txtBoxArea = document.querySelector('#studio-root textarea.resize-none').closest("div.relative.flex");
+  console.log(txtBoxArea)
+  const observer = new MutationObserver(stopButtonUpdate); //observe whole document for any changes
+      observer.observe(txtBoxArea, {
+      childList: true,
+      subtree: true
+  });
+}
 
 
 
