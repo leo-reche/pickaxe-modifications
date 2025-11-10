@@ -92,6 +92,7 @@ function stopButtonUpdate(){
     }
 }
 
+let cooloff = false;
 
 function addTextAreaId (){
 
@@ -101,14 +102,30 @@ function addTextAreaId (){
 
       textArea.id = "text-area"
 
-      //Once a text-area is found
+      console.log("Text Area Loaded")
+      //===========Once a text-area is found
 
-      const observer2 = new MutationObserver(stopButtonUpdate); //observe text area document for any changes
+      //Start observing text area for stop buttons
+      const observer2 = new MutationObserver(stopButtonUpdate); 
       observer2.observe(textArea, {
         childList: true,
         subtree: true
       });
-      console.log("Added text area!")
+
+      // Start observing enter for clicks
+      const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
+        ?.closest('div.relative.flex')
+        ?.querySelectorAll("button");
+
+      const sendButton = sendButtonDiv?.[sendButtonDiv.length - 1];
+      sendButton.addEventListener('click', function() {
+        setTimeout(() => {
+              cooloff = false;
+            }, 500);
+      });
+
+      //=========================
+      
     } else {
       console.log("TextArea not found")
     }
@@ -383,8 +400,8 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 
 
 
-// control enter to send
-let cooloff = false;
+// enter to send
+
 
 document.addEventListener('keydown', function(event) {
   // Only act on plain Enter (no modifiers)
@@ -407,15 +424,6 @@ document.addEventListener('keydown', function(event) {
   }
 });
 
-const sendButtonDiv = document.querySelector('#studio-root textarea.resize-none')
-  ?.closest('div.relative.flex')
-  ?.querySelectorAll("button");
 
-const sendButton = sendButtonDiv?.[sendButtonDiv.length - 1];
-sendButton.addEventListener('click', function() {
-  setTimeout(() => {
-        cooloff = false;
-      }, 500);
-});
 
 
