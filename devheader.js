@@ -464,9 +464,14 @@ window.fetch = async function(...args) {
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
        
+    
+   
 
+    
         try {  
-       
+        setTimeout(() => {
+            addEditButton();
+          }, 50);
         const response = await originalFetch(url, { ...config, signal }); //Original fetch
         const out = response.clone(); // return this to your UI
         
@@ -477,7 +482,6 @@ window.fetch = async function(...args) {
             const r = out.body.getReader();
             while (!(await r.read()).done) {}
             errorMessageHandler()
-            addEditButton()
             setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
 
             } catch (_) {}
@@ -581,6 +585,7 @@ function addEditButton(){
                     'value'
                 ).set;
                 nativeTextareaValueSetter.call(txtBox, text); // Insert extracted text
+                stopStream()
                 const inputEvent = new Event('input', { bubbles: true });
                 txtBox.dispatchEvent(inputEvent); // React etc. will now update state
             }
