@@ -188,14 +188,41 @@ button.flex.min-h-\[50px\].select-none.items-center.justify-between.gap-3.p-2.ou
   }
 
 /*-----------------EDIT BUTTON-------------------*/
-.edit-btn-wrapper {
-    opacity: 0;
-    transition: opacity 1s ease-in-out; /* smoother + longer */
+/* Container that triggers hover visibility */
+.edit-hover-container {
+  position: relative;
+  padding-bottom: 8px; /* extra hover area below text */
 }
 
-.edit-btn-wrapper.edit-btn-visible {
-    opacity: 1;
+/* Wrapper for the button */
+.edit-btn-wrapper {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none; /* avoids blocking message text when hidden */
+  transition: opacity 0.35s ease;
 }
+
+/* Button fade-in on hover */
+.edit-hover-container:hover .edit-btn-wrapper {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Button itself styling */
+.edit-btn {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  opacity: 1;
+}
+
 
 
   @media (prefers-reduced-motion: reduce) {
