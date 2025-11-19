@@ -476,15 +476,22 @@ window.fetch = async function(...args) {
         const out = response.clone(); // return this to your UI
         
 
-        (async () => {
+       (async () => {
             try {
-            
-            const r = out.body.getReader();
-            while (!(await r.read()).done) {}
-            errorMessageHandler()
-            setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
-
+                const r = out.body.getReader();
+                while (!(await r.read()).done) {}
+        
+                // *** IMPORTANT FIX ***
+                currentAbortController = null;
+        
+                errorMessageHandler();
+                setTimeout(() => {
+                    syncConversation(responseId, formId, studioUserId, pastedContent, url);
+                }, 2000);
+        
             } catch (_) {}
+        })();
+
 
 
         })();
@@ -579,9 +586,12 @@ function addEditButton() {
     const editButton = wrapper.querySelector('#edit-button');
 
     // Fade it in
-    setTimeout(() => {
-      wrapper.style.opacity = 1;
-    }, 10);
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            wrapper.classList.add("edit-btn-visible");
+        });
+    });
+
 
     editButton.addEventListener('click', function () {
         const markdownDiv = messageDiv.querySelector('.pxe-markdown');
@@ -603,12 +613,12 @@ function addEditButton() {
         const messageStillGenerating = currentAbortController !== null;
 
         if (messageStillGenerating) {
-            // Use the original behavior
-            stopStream();  // Will grey message + write "Stopped"
-        } else {
-            // Message already finished → do NOT grey or stop
-            // No stopStream call
-        }
+    // Message still being generated → stop it and grey out
+              stopStream();
+          } else {
+              // Message has already completed → DO NOT grey out, DO NOT stop anything
+              console.log("Edit button pressed on completed message.");
+          }
     });
 }
 
