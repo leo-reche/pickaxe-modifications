@@ -548,49 +548,70 @@ function stopStream() {
 }
 
 
-function addEditButton(){
-  var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
-        var lastMsg = allMsgs[allMsgs.length-1]
-        
-          // Select the message container (adjust selector as needed)
-        const messageDiv = lastMsg
-        // Create the HTML for the button section
-        const buttonHTML = `
-          <div class="flex h-4 items-center justify-end gap-3">
-            <button id=edit-button class="flex items-center gap-1 opacity-70 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100" style="color: rgb(0, 0, 0);">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 shrink-0">
-                <path fill="grey" d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"></path>
-              </svg>
-            </button>
-          </div>
-        `;
+function addEditButton() {
+    var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
+    var lastMsg = allMsgs[allMsgs.length - 1];
 
-        // Append it right after the message div
-        messageDiv.closest("div.flex.gap-x-3").classList.add('flex-col');
-        messageDiv.insertAdjacentHTML('afterend', buttonHTML);
-        const editButton = messageDiv.nextElementSibling.querySelector('#edit-button');
+    const messageDiv = lastMsg;
 
-        editButton.addEventListener('click', function () {
-            // Find the .pxe-markdown in the messageDiv
-            const markdownDiv = messageDiv.querySelector('.pxe-markdown');
-            if (!markdownDiv) return;
+    // Button container with fade-in animation
+    const buttonHTML = `
+      <div class="flex h-4 items-center justify-end gap-3 edit-btn-wrapper" 
+           style="opacity:0; transition: opacity 0.5s ease;">
+        <button id="edit-button" 
+          class="flex items-center gap-1 opacity-70 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100"
+          style="color: rgb(0, 0, 0);">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 shrink-0">
+            <path fill="grey"
+              d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z">
+            </path>
+          </svg>
 
-            // Get all text inside .pxe-markdown (e.g., from all paragraphs, lists, etc.)
-            const text = markdownDiv.innerText.trim();
-            // Find the textarea
-            const txtBox = document.querySelector('#studio-root textarea.resize-none');
-            if (txtBox) {
-                const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
-                    window.HTMLTextAreaElement.prototype,
-                    'value'
-                ).set;
-                nativeTextareaValueSetter.call(txtBox, text); // Insert extracted text
-                stopStream()
-                const inputEvent = new Event('input', { bubbles: true });
-                txtBox.dispatchEvent(inputEvent); // React etc. will now update state
-            }
-        });
+        </button>
+      </div>
+    `;
+
+    messageDiv.closest("div.flex.gap-x-3").classList.add('flex-col');
+    messageDiv.insertAdjacentHTML('afterend', buttonHTML);
+
+    const wrapper = messageDiv.nextElementSibling;
+    const editButton = wrapper.querySelector('#edit-button');
+
+    // Fade it in
+    setTimeout(() => {
+      wrapper.style.opacity = 1;
+    }, 10);
+
+    editButton.addEventListener('click', function () {
+        const markdownDiv = messageDiv.querySelector('.pxe-markdown');
+        if (!markdownDiv) return;
+
+        const text = markdownDiv.innerText.trim();
+        const txtBox = document.querySelector('#studio-root textarea.resize-none');
+
+        if (txtBox) {
+            const setter = Object.getOwnPropertyDescriptor(
+                window.HTMLTextAreaElement.prototype,
+                'value'
+            ).set;
+            setter.call(txtBox, text);
+            txtBox.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        // ---- NEW LOGIC ----
+        const messageStillGenerating = currentAbortController !== null;
+
+        if (messageStillGenerating) {
+            // Use the original behavior
+            stopStream();  // Will grey message + write "Stopped"
+        } else {
+            // Message already finished → do NOT grey or stop
+            // No stopStream call
+        }
+    });
 }
+
 
 
 // ============= XHL Replacing Characters
