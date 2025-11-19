@@ -187,6 +187,17 @@ button.flex.min-h-\[50px\].select-none.items-center.justify-between.gap-3.p-2.ou
     transform: translate(-50%, -10px);
   }
 
+/*-----------------EDIT BUTTON-------------------*/
+.edit-btn-wrapper {
+    opacity: 0;
+    transition: opacity 1s ease-in-out; /* smoother + longer */
+}
+
+.edit-btn-wrapper.edit-btn-visible {
+    opacity: 1;
+}
+
+
   @media (prefers-reduced-motion: reduce) {
     .fc-banner {
       transition: none;
