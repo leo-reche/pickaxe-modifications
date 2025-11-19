@@ -402,7 +402,7 @@ if (iframe && iframe.src === "https://dashboard-app-395477780264.europe-west1.ru
 
 // enter to send
 
-
+/*
 document.addEventListener('keydown', function(event) {
   // Only act on plain Enter (no modifiers)
   setTimeout(() => {
@@ -425,7 +425,7 @@ document.addEventListener('keydown', function(event) {
     }
   },100);
 });
-
+*/
 
 
 
