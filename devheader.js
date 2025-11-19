@@ -562,16 +562,10 @@ function addEditButton() {
     // Prevent double-adding
     if (lastMsg.querySelector('.edit-btn-wrapper')) return;
 
-    // Ensure parent is positioned
-    lastMsg.style.position = "relative";
-
-  if (!lastMsg.classList.contains('edit-hover-container')) {
-    lastMsg.classList.add('edit-hover-container');
-}
-
     // Create button container
     const buttonWrapper = document.createElement("div");
-    buttonWrapper.className = "edit-btn-wrapper";
+    buttonWrapper.className = "edit-btn-wrapper"; // you can keep the CSS styling if you like
+    buttonWrapper.style.marginTop = "4px"; // optional spacing below the message
     buttonWrapper.innerHTML = `
         <button class="edit-btn" aria-label="Edit message">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -608,6 +602,7 @@ function addEditButton() {
         }
     });
 }
+
 
 
 
