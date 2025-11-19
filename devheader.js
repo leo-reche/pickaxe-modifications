@@ -494,7 +494,6 @@ window.fetch = async function(...args) {
 
 
 
-        })();
 
         return response;
 
