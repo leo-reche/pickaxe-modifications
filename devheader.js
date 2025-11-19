@@ -563,7 +563,7 @@ function addEditButton() {
     // Button container with fade-in animation
     const buttonHTML = `
       <div class="flex h-4 items-center justify-end gap-3 edit-btn-wrapper" 
-           style="opacity:0; transition: opacity 0.5s ease;">
+           style="">
         <button id="edit-button" 
           class="flex items-center gap-1 opacity-70 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100"
           style="color: rgb(0, 0, 0);">
