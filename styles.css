@@ -191,24 +191,27 @@ button.flex.min-h-\[50px\].select-none.items-center.justify-between.gap-3.p-2.ou
 /* Container that triggers hover visibility */
 .edit-hover-container {
   position: relative;
-  padding-bottom: 8px; /* extra hover area below text */
+  display: inline-block;
+  width: 100%;
+  padding: 12px 0 20px 0;
+  z-index: 2;
 }
 
-/* Wrapper for the button */
 .edit-btn-wrapper {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 4px;
+  bottom: 2px;
   opacity: 0;
-  pointer-events: none; /* avoids blocking message text when hidden */
+  pointer-events: none;
   transition: opacity 0.35s ease;
+  z-index: 10;
 }
 
-/* Button fade-in on hover */
 .edit-hover-container:hover .edit-btn-wrapper {
   opacity: 1;
   pointer-events: auto;
 }
+
 
 /* Button itself styling */
 .edit-btn {
