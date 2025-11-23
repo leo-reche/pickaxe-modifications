@@ -426,7 +426,7 @@ window.fetch = async function(...args) {
 
    
 
-    if (url.includes("https://core-api.pickaxe.co/sse")){   //Massive if{} to get the formid,responseid,lastmessage,documents
+    if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")){   //Massive if{} to get the formid,responseid,lastmessage,documents
         const aUrl = new URL(url)
         if (aUrl.searchParams.has("formid")) {
             formId = aUrl.searchParams.get("formid")
