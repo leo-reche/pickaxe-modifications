@@ -153,7 +153,7 @@ window.fetch = function(input, init) {
   return originalFetch2.call(this, input, init)
     .then(response => {
       // Check if this is the specific SSE endpoint we want to log
-      if (url === 'https://core-api.pickaxe.co/pickaxe/sse') {
+      if (url === 'https://core-pickaxe-api.pickaxe.co/sse') {
         const contentType = response.headers.get('content-type');
         
         if (contentType && contentType.includes('text/event-stream')) {
