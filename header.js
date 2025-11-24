@@ -98,7 +98,7 @@ let currentAbortController = null;
 
 // syncing with database
 function syncConversation(responseId,formId,studioUserId,pastedContent,url){
-if (url.includes("https://core-api.pickaxe.co/pickaxe/sse")) {
+if (url.includes('https://core-pickaxe-api.pickaxe.co/sse')) {
     try {
     const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
     const payload = { 
