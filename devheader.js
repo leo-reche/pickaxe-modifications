@@ -471,7 +471,7 @@ window.fetch = async function(...args) {
         try {  
         setTimeout(() => {
             addEditButton();
-          }, 50);
+          }, 2000);
         const response = await originalFetch(url, { ...config, signal }); //Original fetch
         const out = response.clone(); // return this to your UI
         
