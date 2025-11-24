@@ -477,6 +477,7 @@ window.fetch = async function(...args) {
             errorMessageHandler()
             addEditButton()
             setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
+            console.log("sync conversation with:", "res ",responseId,"for ",formId, "stud",studioUserId)
 
             } catch (_) {}
 
