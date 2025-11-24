@@ -107,7 +107,7 @@ if (url.includes("https://core-api.pickaxe.co/pickaxe/sse")) {
         userId: studioUserId,
         pastedContent: pastedContent
     };
-    originalFetch(apiUrl, {
+    originalFetch2(apiUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
