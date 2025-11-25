@@ -154,12 +154,6 @@ window.fetch = function(input, init) {
   
   return originalFetch2.call(this, input, init)
     .then(response => {
-      //If this request has the History URL
-      if (url.startsWith("https://ai.forward-college.eu/api/trpc/pickaxe.getHistory")){
-        history = response.clone().json(); // return this to your UI
-      }
-
-
       // If this request has the SSE URL
       if (url === 'https://core-pickaxe-api.pickaxe.co/sse') {
         const contentType = response.headers.get('content-type');
@@ -438,20 +432,20 @@ window.fetch = async function(...args) {
 
     if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")){   //Massive if{} to get the formid,responseid,lastmessage,documents
         const aUrl = new URL(url)
-        if (aUrl.searchParams.has("formid")) {
-            formId = aUrl.searchParams.get("formid")
+        if (aUrl.searchParams.has("pickaxeId")) {
+            formId = aUrl.searchParams.get("pickaxeId")
             
         }
-        if (aUrl.searchParams.has("responseid")) {
-            responseId = aUrl.searchParams.get("responseid")
+        if (aUrl.searchParams.has("sessionId")) {
+            responseId = aUrl.searchParams.get("sessionId")
         
         }
         try {
-            formId = JSON.parse(config.body).formId
+            formId = JSON.parse(config.body).pickaxeId
          
         } catch(e){}
         try {
-            responseId = JSON.parse(config.body).responseId
+            responseId = JSON.parse(config.body).sessionId
       
         } catch(e){}
         try {
@@ -459,7 +453,7 @@ window.fetch = async function(...args) {
             
         } catch(e){}
         try {
-            studioUserId = JSON.parse(config.body).studioUserId
+            studioUserId = JSON.parse(config.body).sender
           
         } catch(e){}
         try {
