@@ -98,6 +98,7 @@ let currentAbortController = null;
 
 // syncing with database
 function syncConversation(responseId,formId,studioUserId,pastedContent,url){
+console.log("syncStart")
 if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")) {
     try {
     const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
@@ -107,7 +108,7 @@ if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")) {
         userId: studioUserId,
         pastedContent: pastedContent
     };
-    originalFetch(apiUrl, {
+    originalFetch2(apiUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
