@@ -147,12 +147,20 @@ function errorMessageHandler(){
 
 let originalFetch2 = window.fetch;
 
+let history = ""
+
 window.fetch = function(input, init) {
   const url = typeof input === 'string' ? input : input.url;
   
   return originalFetch2.call(this, input, init)
     .then(response => {
-      // Check if this is the specific SSE endpoint we want to log
+      //If this request has the History URL
+      if (url.startsWith("https://ai.forward-college.eu/api/trpc/pickaxe.getHistory")){
+        history = response.clone().json(); // return this to your UI
+      }
+
+
+      // If this request has the SSE URL
       if (url === 'https://core-pickaxe-api.pickaxe.co/sse') {
         const contentType = response.headers.get('content-type');
         
@@ -488,7 +496,7 @@ window.fetch = async function(...args) {
                 setTimeout(() => {
                     syncConversation(responseId, formId, studioUserId, pastedContent, url);
                 }, 2000);
-        
+                console.log(history)
             } catch (_) {}
         })();
 
@@ -656,7 +664,7 @@ XMLHttpRequest = function() {
       let originalResponse = Object.getOwnPropertyDescriptor(originalXHR2.prototype, 'responseText').get.call(this);
       
       // Check if this is from the chat conversation endpoint and we have a response
-      if (requestUrl && requestUrl.startsWith('https://core-api.pickaxe.co/pickaxe/chat/conversation') && originalResponse) {
+      if (requestUrl && requestUrl.startsWith('https://core-pickaxe-api.pickaxe.co/conversation') && originalResponse) {
         // Apply all pattern replacements using simple string replacement
         let modifiedResponse = originalResponse;
         for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
