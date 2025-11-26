@@ -148,8 +148,6 @@ function errorMessageHandler(){
 
 let originalFetch2 = window.fetch;
 
-let history = ""
-
 window.fetch = function(input, init) {
   const url = typeof input === 'string' ? input : input.url;
   
@@ -491,7 +489,7 @@ window.fetch = async function(...args) {
                 setTimeout(() => {
                     syncConversation(responseId, formId, studioUserId, pastedContent, url);
                 }, 2000);
-                console.log(history)
+                console.log("sync conversation with:", "res ",responseId,"for ",formId, "stud",studioUserId)
             } catch (_) {}
         })();
 
