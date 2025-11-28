@@ -98,8 +98,8 @@ let currentAbortController = null;
 
 // syncing with database
 function syncConversation(responseId,formId,studioUserId,pastedContent,url){
-if (url.includes('https://core-pickaxe-api.pickaxe.co/sse')) {
-//if (false){
+console.log("syncStart")
+if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")) {
     try {
     const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
     const payload = { 
@@ -153,7 +153,7 @@ window.fetch = function(input, init) {
   
   return originalFetch2.call(this, input, init)
     .then(response => {
-      // Check if this is the specific SSE endpoint we want to log
+      // If this request has the SSE URL
       if (url === 'https://core-pickaxe-api.pickaxe.co/sse') {
         const contentType = response.headers.get('content-type');
         
@@ -162,10 +162,12 @@ window.fetch = function(input, init) {
           // PATTERNS CONFIGURATION - Now a dictionary/object
 
           const PATTERN_REPLACEMENTS = {
+            /*
                 '\\[': '\n $$ \n',     // Replace \[ with $$
                 '\\]': '\n $$ \n',     // Replace \] with $$
                 '\\(': ' $$ ',     // Replace \( with $$
                 '\\)': ' $$ ',     // Replace \) with $$
+              */
                 '<think>':'<div id=\'reason\' class=\'reasoning\'>',
                 '</think>':'</div>',
           };
@@ -463,27 +465,36 @@ window.fetch = async function(...args) {
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
        
+    
+   
 
+    
         try {  
-       
+        setTimeout(() => {
+            addEditButton();
+          }, 2000);
         const response = await originalFetch(url, { ...config, signal }); //Original fetch
         const out = response.clone(); // return this to your UI
         
 
-        (async () => {
+       (async () => {
             try {
-            
-            const r = out.body.getReader();
-            while (!(await r.read()).done) {}
-            errorMessageHandler()
-            addEditButton()
-            setTimeout(() => {syncConversation(responseId, formId, studioUserId, pastedContent, url);}, 2000);
-            console.log("sync conversation with:", "res ",responseId,"for ",formId, "stud",studioUserId)
-
+                const r = out.body.getReader();
+                while (!(await r.read()).done) {}
+        
+                // *** IMPORTANT FIX ***
+                currentAbortController = null;
+        
+                errorMessageHandler();
+                setTimeout(() => {
+                    syncConversation(responseId, formId, studioUserId, pastedContent, url);
+                }, 2000);
+                console.log("sync conversation with:", "res ",responseId,"for ",formId, "stud",studioUserId)
             } catch (_) {}
-
-
         })();
+
+
+
 
         return response;
 
@@ -544,48 +555,71 @@ function stopStream() {
 }
 
 
-function addEditButton(){
-  var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
-        var lastMsg = allMsgs[allMsgs.length-1]
-        
-          // Select the message container (adjust selector as needed)
-        const messageDiv = lastMsg
-        // Create the HTML for the button section
-        const buttonHTML = `
-          <div class="flex h-4 items-center justify-end gap-3">
-            <button id=edit-button class="flex items-center gap-1 opacity-70 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100" style="color: rgb(0, 0, 0);">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 shrink-0">
-                <path fill="grey" d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"></path>
-              </svg>
-            </button>
-          </div>
-        `;
+function addEditButton() {
+    var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
+    var lastMsg = allMsgs[allMsgs.length - 1];
+ 
+    const messageDiv = lastMsg;
 
-        // Append it right after the message div
-        messageDiv.closest("div.flex.gap-x-3").classList.add('flex-col');
-        messageDiv.insertAdjacentHTML('afterend', buttonHTML);
-        const editButton = messageDiv.nextElementSibling.querySelector('#edit-button');
+    // Button container with fade-in animation
+    const buttonHTML = `
+      <div class="flex h-4 items-center justify-end gap-3 edit-btn-wrapper" 
+           style="">
+        <button id="edit-button" 
+          class="flex items-center gap-1 opacity-70 outline-none transition-opacity duration-300 ease-in-out hover:opacity-100"
+          style="color: rgb(0, 0, 0);">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-4 h-4 shrink-0">
+            <path fill="grey"
+              d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z">
+            </path>
+          </svg>
 
-        editButton.addEventListener('click', function () {
-            // Find the .pxe-markdown in the messageDiv
-            const markdownDiv = messageDiv.querySelector('.pxe-markdown');
-            if (!markdownDiv) return;
+        </button>
+      </div>
+    `;
 
-            // Get all text inside .pxe-markdown (e.g., from all paragraphs, lists, etc.)
-            const text = markdownDiv.innerText.trim();
-            // Find the textarea
-            const txtBox = document.querySelector('#studio-root textarea.resize-none');
-            if (txtBox) {
-                const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
-                    window.HTMLTextAreaElement.prototype,
-                    'value'
-                ).set;
-                nativeTextareaValueSetter.call(txtBox, text); // Insert extracted text
-                const inputEvent = new Event('input', { bubbles: true });
-                txtBox.dispatchEvent(inputEvent); // React etc. will now update state
-            }
+    messageDiv.closest("div.flex.gap-x-3").classList.add('flex-col');
+    messageDiv.insertAdjacentHTML('afterend', buttonHTML);
+
+    const wrapper = messageDiv.nextElementSibling;
+    const editButton = wrapper.querySelector('#edit-button');
+
+    // Fade it in
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            wrapper.classList.add("edit-btn-visible");
         });
+    });
+
+
+    editButton.addEventListener('click', function () {
+        const markdownDiv = messageDiv.querySelector('.pxe-markdown');
+          if (!markdownDiv) return;
+
+        const text = markdownDiv.innerText.trim();
+        const txtBox = document.querySelector('#studio-root textarea.resize-none');
+
+        if (txtBox) {
+            const setter = Object.getOwnPropertyDescriptor(
+                window.HTMLTextAreaElement.prototype,
+                'value'
+            ).set;
+            setter.call(txtBox, text);
+            txtBox.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        
+
+        // ---- NEW LOGIC ----
+        const messageStillGenerating = currentAbortController !== null;
+        if (messageStillGenerating) stopStream();
+    });
 }
+
+
+
+
+
 
 
 // ============= XHL Replacing Characters
@@ -597,10 +631,12 @@ XMLHttpRequest = function() {
   const xhr = new originalXHR2();
   
   const PATTERN_REPLACEMENTS = {
+    /*
     '\\\\[': '\\n $$ \\n',     // Replace \[ with $$
     '\\\\]': '\\n $$ \\n',     // Replace \] with $$
     '\\\\(': ' $$',     // Replace \( with $$
     '\\\\)': ' $$ ',     // Replace \) with $$
+    */
     '<think>':'<div id=\'reason\' class=\'reasoning\'>',
     '</think>':'</div>',
   };
@@ -621,7 +657,7 @@ XMLHttpRequest = function() {
       let originalResponse = Object.getOwnPropertyDescriptor(originalXHR2.prototype, 'responseText').get.call(this);
       
       // Check if this is from the chat conversation endpoint and we have a response
-      if (requestUrl && requestUrl.startsWith('https://core-api.pickaxe.co/pickaxe/chat/conversation') && originalResponse) {
+      if (requestUrl && requestUrl.startsWith('https://core-pickaxe-api.pickaxe.co/conversation') && originalResponse) {
         // Apply all pattern replacements using simple string replacement
         let modifiedResponse = originalResponse;
         for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
