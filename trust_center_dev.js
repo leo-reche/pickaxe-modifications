@@ -1,4 +1,3 @@
-<script>
 document.addEventListener('DOMContentLoaded', function () {
   // Only run script on this specific page
   const targetURL = "studio.pickaxe.co/STUDIOZZI1GRX9TOI3H1H/trust_cent";
@@ -48,4 +47,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
-</script>
+
