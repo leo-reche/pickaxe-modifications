@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   // Only run script on this specific page
-  const targetURL = "studio.pickaxe.co/STUDIOZZI1GRX9TOI3H1H/trust_cent";
+  const targetURL = "studio.pickaxe.co/STUDIOZZI1GRX9TOI3H1H/trust_center";
   if (!window.location.href.includes(targetURL)) {
     return; // Stop completely if not on the correct URL
   }
