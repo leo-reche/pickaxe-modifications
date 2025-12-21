@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     group.addEventListener('mouseleave', function () {
+      console.log("I was hovered")
       tooltip.classList.remove('visible');
       this.classList.remove('hovered');
     });
