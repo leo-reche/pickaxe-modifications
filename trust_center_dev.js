@@ -1,37 +1,66 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // 1. URL Check (Be careful with this during dev!)
   const targetURL = "/trust_center";
-  if (!window.location.href.includes(targetURL)) {
-    console.log("Not on the target page. Script aborted.");
-    return; 
+  let isInitialized = false;
+
+  // 1. THE MAIN CONTROLLER
+  function handleLocationChange() {
+    const currentPath = window.location.pathname;
+
+    if (currentPath.includes(targetURL)) {
+      console.log("On Trust Center path. Starting initialization...");
+      initFlowchart();
+    } else {
+      console.log("Not on target page. Monitoring for navigation...");
+      isInitialized = false; // Reset if user leaves the page
+    }
   }
 
-  // 2. The Robust Waiter
-  const maxAttempts = 20; // Try for 10 seconds total
+  // 2. THE ROBUST WAITER (Your existing polling logic)
   let attempts = 0;
-
   function initFlowchart() {
+    // Prevent multiple initializations on the same page instance
+    if (isInitialized) return;
+
     const nodeGroups = document.querySelectorAll('.node-group');
     const tooltip = document.getElementById('svg-tooltip');
     const svg = document.getElementById('flowchart-svg');
 
     if (svg && tooltip && nodeGroups.length > 0) {
-      console.log("Elements found! Initializing hover behaviors...");
+      console.log("Elements found! Setting up listeners.");
       setupHoverListeners(nodeGroups, tooltip, svg);
+      isInitialized = true; // Mark as done for this page load
+      attempts = 0; 
     } else {
       attempts++;
-      if (attempts < maxAttempts) {
-        console.log(`Elements not found yet. Attempt ${attempts}...`);
-        setTimeout(initFlowchart, 500); // Wait 500ms and try again
+      if (attempts < 20) { // Try for 10 seconds
+        setTimeout(initFlowchart, 500);
       } else {
-        console.error("Timed out: Trust Chart elements never appeared in the DOM.");
+        console.error("Timed out waiting for Trust Center elements.");
       }
     }
   }
 
+  // 3. THE NAVIGATION INTERCEPTOR
+  // This wraps the browser's navigation functions to trigger our check
+  const originalPushState = history.pushState;
+  history.pushState = function () {
+    originalPushState.apply(this, arguments);
+    handleLocationChange();
+  };
+
+  const originalReplaceState = history.replaceState;
+  history.replaceState = function () {
+    originalReplaceState.apply(this, arguments);
+    handleLocationChange();
+  };
+
+  // Listen for back/forward button clicks
+  window.addEventListener('popstate', handleLocationChange);
+
+  // 4. SETUP HOVER LISTENERS (Your core logic)
   function setupHoverListeners(nodeGroups, tooltip, svg) {
     nodeGroups.forEach(group => {
-      group.addEventListener('mouseenter', function(e) {
+      group.addEventListener('mouseenter', function (e) {
         const tooltipText = this.getAttribute('data-tooltip');
         if (!tooltipText) return;
 
@@ -39,10 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
         tooltip.classList.add('visible');
         this.classList.add('hovered');
 
-        // Position Logic
         const svgRect = svg.getBoundingClientRect();
         const rect = this.querySelector('rect');
-
         const x = parseFloat(rect.getAttribute('x'));
         const y = parseFloat(rect.getAttribute('y'));
         const width = parseFloat(rect.getAttribute('width'));
@@ -65,5 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  initFlowchart(); // Start the first check
+  // 5. RUN ON INITIAL LOAD
+  handleLocationChange();
 });
