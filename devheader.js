@@ -101,6 +101,11 @@ let currentSubmissionId = null;
 // syncing with database
 function syncConversation(responseId, formId, studioUserId, pastedContent, url) {
     console.log("syncStart");
+    console.log("URL:", url);
+    console.log("pastedContent:", pastedContent);
+    console.log("responseId:", responseId);
+    console.log("formId:", formId);
+    console.log("studioUserId:", studioUserId);
     if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
         try {
             const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
@@ -153,6 +158,7 @@ function stopButtonOff() {
 // ============= UNIFIED FETCH OVERRIDE =============
 window.fetch = async function(...args) {
     const [url, config] = args;
+    console.log("Flag 1")
 
     // ===== HANDLE /submit ENDPOINT =====
     if (url.includes("https://core-pickaxe-api.pickaxe.co/submit")) {
@@ -172,6 +178,9 @@ window.fetch = async function(...args) {
             documents = JSON.parse(config.body).documentIds;
         } catch (e) {}
 
+        console.log("Flag 2")
+
+
         try {
             const response = await originalFetch(url, config);
             const responseClone = response.clone();
@@ -189,6 +198,8 @@ window.fetch = async function(...args) {
             return await originalFetch(url, config);
         }
     }
+        console.log("Flag 3")
+
 
     // ===== HANDLE /stream ENDPOINT WITH PATTERN REPLACEMENT =====
     if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
@@ -202,6 +213,9 @@ window.fetch = async function(...args) {
 
             const response = await originalFetch(url, { ...config, signal });
             const contentType = response.headers.get('content-type');
+
+                console.log("Flag 3")
+
 
             // Check if this is an EventStream response
             if (contentType && contentType.includes('text/event-stream')) {
@@ -231,6 +245,9 @@ window.fetch = async function(...args) {
 
                 let mathBuffer = '';
 
+                    console.log("Flag 4")
+
+
                 const newStream = new ReadableStream({
                     async start(controller) {
                         async function pump() {
@@ -251,6 +268,9 @@ window.fetch = async function(...args) {
                                     console.log("sync conversation with:", "res", responseId, "for", formId, "stud", studioUserId);
                                     return;
                                 }
+
+                                    console.log("Flag 5")
+
 
                                 if (isAborted) return;
 
