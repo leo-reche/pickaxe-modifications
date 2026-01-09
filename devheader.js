@@ -102,10 +102,6 @@ let currentSubmissionId = null;
 function syncConversation(responseId, formId, studioUserId, pastedContent, url) {
     console.log("syncStart");
     console.log("URL:", url);
-    console.log("pastedContent:", pastedContent);
-    console.log("responseId:", responseId);
-    console.log("formId:", formId);
-    console.log("studioUserId:", studioUserId);
     if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
         try {
             const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
@@ -158,6 +154,8 @@ function stopButtonOff() {
 // ============= UNIFIED FETCH OVERRIDE =============
 window.fetch = async function(...args) {
     const [url, config] = args;
+
+    console.log(url)
     console.log("Flag 1")
 
     // ===== HANDLE /submit ENDPOINT =====
@@ -179,6 +177,7 @@ window.fetch = async function(...args) {
         } catch (e) {}
 
         console.log("Flag 2")
+      console.log(url)
 
 
         try {
@@ -199,6 +198,7 @@ window.fetch = async function(...args) {
         }
     }
         console.log("Flag 3")
+  console.log(url)
 
 
     // ===== HANDLE /stream ENDPOINT WITH PATTERN REPLACEMENT =====
@@ -215,6 +215,7 @@ window.fetch = async function(...args) {
             const contentType = response.headers.get('content-type');
 
                 console.log("Flag 3")
+          console.log(url)
 
 
             // Check if this is an EventStream response
@@ -246,6 +247,7 @@ window.fetch = async function(...args) {
                 let mathBuffer = '';
 
                     console.log("Flag 4")
+              console.log(url)
 
 
                 const newStream = new ReadableStream({
@@ -616,6 +618,7 @@ construct(target, args) {
 
     const originalSend = xhr.send;
     xhr.send = function(body) {
+
 
     if (interceptedUrl.includes("https://core-api.pickaxe.co/feedback")) {   
   
