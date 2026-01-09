@@ -83,6 +83,9 @@ history.pushState = function(...args) {
 };
  
 
+// Store original fetch BEFORE overriding
+let originalFetch = window.fetch;
+
 // ================ DB Sync
 
 let formId = null;
@@ -93,42 +96,40 @@ let documents = null;
 let wasStopped = false;
 let pastedContent = [""];
 let currentAbortController = null;
-
-
+let currentSubmissionId = null;
 
 // syncing with database
-function syncConversation(responseId,formId,studioUserId,pastedContent,url){
-console.log("syncStart")
-if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")) {
-    try {
-    const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
-    const payload = { 
-        responseId: responseId,
-        formId: formId,
-        userId: studioUserId,
-        pastedContent: pastedContent
-    };
-    originalFetch2(apiUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-    });
-    pastedContent.length = 0;
-    } catch (e) {
+function syncConversation(responseId, formId, studioUserId, pastedContent, url) {
+    console.log("syncStart");
+    if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
+        try {
+            const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
+            const payload = {
+                responseId: responseId,
+                formId: formId,
+                userId: studioUserId,
+                pastedContent: pastedContent
+            };
+            originalFetch(apiUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+            pastedContent.length = 0;
+        } catch (e) {
+            console.error("Sync error:", e);
+        }
     }
 }
-}
 
-function errorMessageHandler(){
-
-
-    setTimeout(function(){ //waits 50ms for the "error message" to load
-    var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
-    if (errBox){
-        const txtBox = document.querySelector('#studio-root textarea.resize-none');
-        if (txtBox) {  //Inserts last request back into input
+function errorMessageHandler() {
+    setTimeout(function() {
+        var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold');
+        if (errBox) {
+            const txtBox = document.querySelector('#studio-root textarea.resize-none');
+            if (txtBox) {
                 const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
                     window.HTMLTextAreaElement.prototype,
                     'value'
@@ -136,378 +137,263 @@ function errorMessageHandler(){
                 nativeTextareaValueSetter.call(txtBox, latestRequest);
                 const inputEvent = new Event('input', { bubbles: true });
                 txtBox.dispatchEvent(inputEvent);
+            }
+            errBox.textContent = "There has been an error. Please try sending your message again";
+            var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
+            allMsgs[allMsgs.length - 1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';
         }
-        errBox.textContent = "There has been an error. Please try sending your message again";
-        var allMsgs = document.querySelectorAll('div.gap-y-3.text-left')
-        allMsgs[allMsgs.length-1].style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
-    }
-    }, 50); 
-
+    }, 50);
 }
 
+function stopButtonOff() {
+    // Placeholder function to prevent errors
+    console.log("Stream stopped");
+}
 
-let originalFetch2 = window.fetch;
-
-window.fetch = function(input, init) {
-  const url = typeof input === 'string' ? input : input.url;
-  
-  return originalFetch2.call(this, input, init)
-    .then(response => {
-      // If this request has the SSE URL
-      if (url === 'https://core-pickaxe-api.pickaxe.co/sse') {
-        const contentType = response.headers.get('content-type');
-        
-        if (contentType && contentType.includes('text/event-stream')) {
-          
-          // PATTERNS CONFIGURATION - Now a dictionary/object
-
-          const PATTERN_REPLACEMENTS = {
-            /*
-                '\\[': '\n $$ \n',     // Replace \[ with $$
-                '\\]': '\n $$ \n',     // Replace \] with $$
-                '\\(': ' $$ ',     // Replace \( with $$
-                '\\)': ' $$ ',     // Replace \) with $$
-              */
-                '<think>':'<div id=\'reason\' class=\'reasoning\'>',
-                '</think>':'</div>',
-          };
-
-
-          // Get all patterns for partial detection
-          const ALL_PATTERNS = Object.keys(PATTERN_REPLACEMENTS);
-          
-          // Get the original response body stream
-          const originalStream = response.body;
-          const reader = originalStream.getReader();
-          const decoder = new TextDecoder();
-          const encoder = new TextEncoder();
-          
-          // Buffer to handle partial patterns across chunks
-          let partialBuffer = '';
-          
-          // Get the abort signal if it exists
-          const abortSignal = init?.signal;
-          let isAborted = false;
-          
-
-          
-          // Create a new ReadableStream that will process and pass through the data
-          const newStream = new ReadableStream({
-            async start(controller) {
-              
-              // Set up abort handler if signal exists
-              const handleAbort = () => {
-                isAborted = true;
-                
-                try {
-                  // Cancel the reader
-                  reader.cancel().catch(err => {
-                  });
-                  
-                  // Close the controller with an abort error
-                  controller.error(new DOMException('Aborted', 'AbortError'));
-                } catch (err) {
-                }
-              };
-              
-              if (abortSignal) {
-                if (abortSignal.aborted) {
-                  // Already aborted
-                  handleAbort();
-                  return;
-                }
-                
-                // Listen for abort event
-                abortSignal.addEventListener('abort', handleAbort);
-              }
-              
-              let mathBuffer = '';
-              async function pump() {
-                try {
-                  // Check if aborted before reading
-                  if (isAborted) {;
-                    return;
-                  }
-                  
-                  const { done, value } = await reader.read();
-                  
-                  if (done) {
-
-                    // Clean up abort listener if it exists
-                    if (abortSignal) {
-                      abortSignal.removeEventListener('abort', handleAbort);
-                    }
-                    
-                    controller.close();
-                    return;
-                  }
-                  
-                  // Check again after read in case abort happened during read
-                  if (isAborted) {
-                    return;
-                  }
-                  
-                  // Decode the chunk
-                  const chunk = decoder.decode(value, { stream: true });
-                  
-                  // Parse the SSE lines and modify token content
-                  let mathModeOn = false
-                  let modifiedChunk = '';
-                  const lines = chunk.split('\n');
-                  
-                  lines.forEach(line => {
-                    if (line.startsWith('data: ')) {
-                      const jsonStr = line.slice(6);
-                      try {
-                        const parsed = JSON.parse(jsonStr);
-                        if (parsed.token) {
-                          // Combine with partial buffer for pattern detection
-                          let tokenToProcess = partialBuffer + parsed.token;
-                          
-                          // Replace all pattern instances with their specific replacements
-                          let modifiedToken = tokenToProcess;
-                          let patternsFound = false;
-
-                          if (modifiedToken.includes("$")){
-                            mathModeOn = true
-                          }
-
-                          // substitute on the modified token
-                          Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
-                            if (modifiedToken.includes(pattern)) {
-                              
-                              patternsFound = true;
-                              // Replace all instances of the pattern with its specific replacement
-                              modifiedToken = modifiedToken.split(pattern).join(replacement);
-                            }
-                          });
-
-                          // Handle partial patterns at the end
-                          partialBuffer = '';
-                          let longestPartial = '';
-                          
-                          ALL_PATTERNS.forEach(pattern => {
-                            for (let i = pattern.length - 1; i > 0; i--) {
-                              const partialPattern = pattern.substring(0, i);
-                              if (modifiedToken.endsWith(partialPattern)) {
-                                if (partialPattern.length > longestPartial.length) {
-                                  longestPartial = partialPattern;
-                                }
-                              }
-                            }
-                          });
-                          
-                          if (longestPartial) {
-                            // Remove the partial from the token and store it in buffer
-                            partialBuffer = longestPartial;
-                            modifiedToken = modifiedToken.slice(0, -longestPartial.length);
-                          }
-                          
-                          // Reconstruct the data line with modified token
-                          parsed.token = modifiedToken;
-                          modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
-
-                        } else {
-                          // Non-token data, pass through unchanged
-                          modifiedChunk += line + '\n';
-                        }
-                      } catch (e) {
-                        // Non-JSON lines, pass through unchanged
-                        modifiedChunk += line + '\n';
-                      }
-                    } else {
-                      // Non-data lines, pass through unchanged
-                      modifiedChunk += line + '\n';
-                    }
-                  });
-                  
-                  // Remove the extra newline at the end if present
-                  if (modifiedChunk.endsWith('\n\n')) {
-                    modifiedChunk = modifiedChunk.slice(0, -1);
-                  } else if (chunk.endsWith('\n') && !modifiedChunk.endsWith('\n')) {
-                    modifiedChunk += '\n';
-                  }
-
-
-                  
-                  const mathBufferlines = modifiedChunk.split('\n');
-
-                  mathBufferlines.forEach(line => {
-                    if (line.startsWith('data: ')) {
-                      const jsonStr = line.slice(6);
-                      try {
-                        const parsed = JSON.parse(jsonStr);
-                        if (parsed.token) {
-                          mathBuffer = mathBuffer + parsed.token;
-                        }
-                      } catch {
-
-                      }
-                    }
-                  })  
-
-                  if (mathModeOn || mathBuffer.includes('$')){
-                    
-                    if (mathBuffer.length < 250 && !mathBuffer.includes("[DONE]")){
-                      //just keep reading to keep adding to the maths buffer
-                    } else {
-                      mathBuffer = mathBuffer.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
-                      if (mathBuffer.includes("[DONE]")){
-                        mathBuffer = mathBuffer.replace("[DONE]","")
-                      }
-                      let mathModifiedChunk = '\nevent:delta\ndata: {\"token\": '+JSON.stringify(mathBuffer)+'}\n\n';
-                      controller.enqueue(encoder.encode(mathModifiedChunk));
-               
-                      mathBuffer = '';
-                    }
-
-                  } else {
-                    // Encode and send the modified chunk
-                    controller.enqueue(encoder.encode(modifiedChunk));
-         
-                    mathBuffer = '';
-                  }
-                  
-
-                    
-                    // Continue reading
-                  pump();
-                } catch (error) {
-              
-                  // Clean up abort listener if it exists
-                  if (abortSignal) {
-                    abortSignal.removeEventListener('abort', handleAbort);
-                  }
-                  
-                  // Propagate the error
-                  if (error.name === 'AbortError' || isAborted) {
-                    controller.error(new DOMException('Aborted', 'AbortError'));
-                  } else {
-                    controller.error(error);
-                  }
-                }
-              }
-              
-              pump();
-            },
-            
-            cancel(reason) {
-      
-              isAborted = true;
-              
-              // Cancel the underlying reader
-              return reader.cancel(reason).catch(err => {
-          
-              });
-            }
-          });
-          
-          // Create a new Response with our stream and the original headers
-          const newResponse = new Response(newStream, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: response.headers
-          });
-          
-     
-          return newResponse;
-        }
-      }
-      
-      // Return the original response for non-SSE endpoints
-      return response;
-    });
-};
-
-
-let originalFetch = window.fetch;
-
-// Overwrite the global fetch function
+// ============= UNIFIED FETCH OVERRIDE =============
 window.fetch = async function(...args) {
-
     const [url, config] = args;
 
-   
+    // ===== HANDLE /submit ENDPOINT =====
+    if (url.includes("https://core-pickaxe-api.pickaxe.co/submit")) {
+        try {
+            formId = JSON.parse(config.body).pickaxeId;
+        } catch (e) {}
+        try {
+            responseId = JSON.parse(config.body).sessionId;
+        } catch (e) {}
+        try {
+            latestRequest = JSON.parse(config.body).value;
+        } catch (e) {}
+        try {
+            studioUserId = JSON.parse(config.body).sender;
+        } catch (e) {}
+        try {
+            documents = JSON.parse(config.body).documentIds;
+        } catch (e) {}
 
-    if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")){   //Massive if{} to get the formid,responseid,lastmessage,documents
-        const aUrl = new URL(url)
-        if (aUrl.searchParams.has("pickaxeId")) {
-            formId = aUrl.searchParams.get("pickaxeId")
-            
-        }
-        if (aUrl.searchParams.has("sessionId")) {
-            responseId = aUrl.searchParams.get("sessionId")
-        
-        }
         try {
-            formId = JSON.parse(config.body).pickaxeId
-         
-        } catch(e){}
-        try {
-            responseId = JSON.parse(config.body).sessionId
-      
-        } catch(e){}
-        try {
-            latestRequest = JSON.parse(config.body).value
-            
-        } catch(e){}
-        try {
-            studioUserId = JSON.parse(config.body).sender
-          
-        } catch(e){}
-        try {
-            documents = JSON.parse(config.body).documentIds
-            
-        } catch(e){}
-     
+            const response = await originalFetch(url, config);
+            const responseClone = response.clone();
 
-    
+            // Extract submissionId from response
+            const responseData = await responseClone.json();
+            if (responseData.submissionId) {
+                currentSubmissionId = responseData.submissionId;
+                console.log("Captured submissionId:", currentSubmissionId);
+            }
+
+            return response;
+        } catch (error) {
+            console.error("Error in /submit:", error);
+            return await originalFetch(url, config);
+        }
+    }
+
+    // ===== HANDLE /stream ENDPOINT WITH PATTERN REPLACEMENT =====
+    if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
-       
-    
-   
 
-    
-        try {  
-        setTimeout(() => {
-            addEditButton();
-          }, 2000);
-        const response = await originalFetch(url, { ...config, signal }); //Original fetch
-        const out = response.clone(); // return this to your UI
-        
+        try {
+            setTimeout(() => {
+                addEditButton();
+            }, 2000);
 
-       (async () => {
-            try {
-                const r = out.body.getReader();
-                while (!(await r.read()).done) {}
-        
-                // *** IMPORTANT FIX ***
-                currentAbortController = null;
-        
-                errorMessageHandler();
-                setTimeout(() => {
-                    syncConversation(responseId, formId, studioUserId, pastedContent, url);
-                }, 2000);
-                console.log("sync conversation with:", "res ",responseId,"for ",formId, "stud",studioUserId)
-            } catch (_) {}
-        })();
+            const response = await originalFetch(url, { ...config, signal });
+            const contentType = response.headers.get('content-type');
 
+            // Check if this is an EventStream response
+            if (contentType && contentType.includes('text/event-stream')) {
+                const PATTERN_REPLACEMENTS = {
+                    '<think>': '<div id=\'reason\' class=\'reasoning\'>',
+                    '</think>': '</div>',
+                };
 
+                const ALL_PATTERNS = Object.keys(PATTERN_REPLACEMENTS);
+                const originalStream = response.body;
+                const reader = originalStream.getReader();
+                const decoder = new TextDecoder();
+                const encoder = new TextEncoder();
 
+                let partialBuffer = '';
+                let isAborted = false;
 
-        return response;
+                const handleAbort = () => {
+                    isAborted = true;
+                    reader.cancel().catch(err => {});
+                };
+
+                if (signal.aborted) {
+                    handleAbort();
+                }
+                signal.addEventListener('abort', handleAbort);
+
+                let mathBuffer = '';
+
+                const newStream = new ReadableStream({
+                    async start(controller) {
+                        async function pump() {
+                            try {
+                                if (isAborted) return;
+
+                                const { done, value } = await reader.read();
+
+                                if (done) {
+                                    signal.removeEventListener('abort', handleAbort);
+                                    controller.close();
+
+                                    currentAbortController = null;
+                                    errorMessageHandler();
+                                    setTimeout(() => {
+                                        syncConversation(responseId, formId, studioUserId, pastedContent, url);
+                                    }, 2000);
+                                    console.log("sync conversation with:", "res", responseId, "for", formId, "stud", studioUserId);
+                                    return;
+                                }
+
+                                if (isAborted) return;
+
+                                const chunk = decoder.decode(value, { stream: true });
+                                let mathModeOn = false;
+                                let modifiedChunk = '';
+                                const lines = chunk.split('\n');
+
+                                lines.forEach(line => {
+                                    if (line.startsWith('data: ')) {
+                                        const jsonStr = line.slice(6);
+                                        try {
+                                            const parsed = JSON.parse(jsonStr);
+                                            if (parsed.token) {
+                                                let tokenToProcess = partialBuffer + parsed.token;
+                                                let modifiedToken = tokenToProcess;
+
+                                                if (modifiedToken.includes("$")) {
+                                                    mathModeOn = true;
+                                                }
+
+                                                Object.entries(PATTERN_REPLACEMENTS).forEach(([pattern, replacement]) => {
+                                                    if (modifiedToken.includes(pattern)) {
+                                                        modifiedToken = modifiedToken.split(pattern).join(replacement);
+                                                    }
+                                                });
+
+                                                partialBuffer = '';
+                                                let longestPartial = '';
+
+                                                ALL_PATTERNS.forEach(pattern => {
+                                                    for (let i = pattern.length - 1; i > 0; i--) {
+                                                        const partialPattern = pattern.substring(0, i);
+                                                        if (modifiedToken.endsWith(partialPattern)) {
+                                                            if (partialPattern.length > longestPartial.length) {
+                                                                longestPartial = partialPattern;
+                                                            }
+                                                        }
+                                                    }
+                                                });
+
+                                                if (longestPartial) {
+                                                    partialBuffer = longestPartial;
+                                                    modifiedToken = modifiedToken.slice(0, -longestPartial.length);
+                                                }
+
+                                                parsed.token = modifiedToken;
+                                                modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
+                                            } else {
+                                                modifiedChunk += line + '\n';
+                                            }
+                                        } catch (e) {
+                                            modifiedChunk += line + '\n';
+                                        }
+                                    } else {
+                                        modifiedChunk += line + '\n';
+                                    }
+                                });
+
+                                if (modifiedChunk.endsWith('\n\n')) {
+                                    modifiedChunk = modifiedChunk.slice(0, -1);
+                                } else if (chunk.endsWith('\n') && !modifiedChunk.endsWith('\n')) {
+                                    modifiedChunk += '\n';
+                                }
+
+                                const mathBufferlines = modifiedChunk.split('\n');
+                                mathBufferlines.forEach(line => {
+                                    if (line.startsWith('data: ')) {
+                                        const jsonStr = line.slice(6);
+                                        try {
+                                            const parsed = JSON.parse(jsonStr);
+                                            if (parsed.token) {
+                                                mathBuffer = mathBuffer + parsed.token;
+                                            }
+                                        } catch {}
+                                    }
+                                });
+
+                                if (mathModeOn || mathBuffer.includes('$')) {
+                                    if (mathBuffer.length < 250 && !mathBuffer.includes("[DONE]")) {
+                                        // Keep buffering
+                                    } else {
+                                        mathBuffer = mathBuffer.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
+                                        if (mathBuffer.includes("[DONE]")) {
+                                            mathBuffer = mathBuffer.replace("[DONE]", "");
+                                        }
+                                        let mathModifiedChunk = '\nevent:delta\ndata: {"token": ' + JSON.stringify(mathBuffer) + '}\n\n';
+                                        controller.enqueue(encoder.encode(mathModifiedChunk));
+                                        mathBuffer = '';
+                                    }
+                                } else {
+                                    controller.enqueue(encoder.encode(modifiedChunk));
+                                    mathBuffer = '';
+                                }
+
+                                pump();
+                            } catch (error) {
+                                signal.removeEventListener('abort', handleAbort);
+                                if (error.name === 'AbortError' || isAborted) {
+                                    controller.error(new DOMException('Aborted', 'AbortError'));
+                                } else {
+                                    controller.error(error);
+                                }
+                            }
+                        }
+
+                        pump();
+                    },
+
+                    cancel(reason) {
+                        isAborted = true;
+                        return reader.cancel(reason).catch(err => {});
+                    }
+                });
+
+                const newResponse = new Response(newStream, {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers
+                });
+
+                return newResponse;
+            } else {
+                // Not an EventStream, return original response
+                const out = response.clone();
+                (async () => {
+                    try {
+                        const r = out.body.getReader();
+                        while (!(await r.read()).done) {}
+                        currentAbortController = null;
+                    } catch (_) {}
+                })();
+                return response;
+            }
 
         } catch (error) {
-
-      
-        stopButtonOff()
-
+            console.error("Error in /stream:", error);
+            stopButtonOff();
         }
-    
-    } else {
-        return await originalFetch(url, {...config});
     }
+
+    // Default: pass through other requests
+    return await originalFetch(url, config);
 };
 
 
