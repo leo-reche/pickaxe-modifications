@@ -1,6 +1,3 @@
-
-
-
 /*/ =============== Banner
 
 
@@ -93,13 +90,14 @@ let documents = null;
 let wasStopped = false;
 let pastedContent = [""];
 let currentAbortController = null;
+let currentSubmissionId = null; //This will store the Submission ID
 
 
 
 // syncing with database
 function syncConversation(responseId,formId,studioUserId,pastedContent,url){
 console.log("syncStart")
-if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")) {
+if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
     try {
     const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
     const payload = { 
@@ -122,8 +120,6 @@ if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")) {
 }
 
 function errorMessageHandler(){
-
-
     setTimeout(function(){ //waits 50ms for the "error message" to load
     var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
     if (errBox){
@@ -154,7 +150,7 @@ window.fetch = function(input, init) {
   return originalFetch2.call(this, input, init)
     .then(response => {
       // If this request has the SSE URL
-      if (url === 'https://core-pickaxe-api.pickaxe.co/sse') {
+      if (url === 'https://core-pickaxe-api.pickaxe.co/stream') {
         const contentType = response.headers.get('content-type');
         
         if (contentType && contentType.includes('text/event-stream')) {
@@ -429,46 +425,51 @@ window.fetch = async function(...args) {
 
    
 
-    if (url.includes("https://core-pickaxe-api.pickaxe.co/sse")){   //Massive if{} to get the formid,responseid,lastmessage,documents
-        const aUrl = new URL(url)
-        if (aUrl.searchParams.has("pickaxeId")) {
-            formId = aUrl.searchParams.get("pickaxeId")
-            
-        }
-        if (aUrl.searchParams.has("sessionId")) {
-            responseId = aUrl.searchParams.get("sessionId")
-        
-        }
+    if (url.includes("https://core-pickaxe-api.pickaxe.co/submit")){   //Massive if{} to get the formid,responseid,lastmessage,documents
+
         try {
+            // Extract from request body
             formId = JSON.parse(config.body).pickaxeId
-         
         } catch(e){}
         try {
             responseId = JSON.parse(config.body).sessionId
-      
         } catch(e){}
         try {
             latestRequest = JSON.parse(config.body).value
-            
         } catch(e){}
         try {
             studioUserId = JSON.parse(config.body).sender
-          
         } catch(e){}
         try {
             documents = JSON.parse(config.body).documentIds
-            
         } catch(e){}
+
+
+        try {
+            const response = await originalFetch(url, config);
+            const responseClone = response.clone();
+            
+            // Extract submissionId from response
+            const responseData = await responseClone.json();
+            if (responseData.submissionId) {
+                currentSubmissionId = responseData.submissionId;
+                console.log("Captured submissionId:", currentSubmissionId);
+            }
+            
+            return response;
+        } catch (error) {
+            console.error("Error in /submit:", error);
+            return await originalFetch(url, config);
+        }
+    }
      
+    if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")){
 
     
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
        
-    
-   
 
-    
         try {  
         setTimeout(() => {
             addEditButton();
@@ -505,7 +506,8 @@ window.fetch = async function(...args) {
 
         }
     
-    } else {
+    } 
+    else {
         return await originalFetch(url, {...config});
     }
 };
