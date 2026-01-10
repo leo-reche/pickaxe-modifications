@@ -1,6 +1,3 @@
-
-
-
 /*/ =============== Banner
 
 
@@ -109,7 +106,7 @@ if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
         userId: studioUserId,
         pastedContent: pastedContent
     };
-    originalFetch(apiUrl, {
+    originalFetch2(apiUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -145,10 +142,8 @@ function errorMessageHandler(){
 }
 
 
-/*
 let originalFetch2 = window.fetch;
 
-if (false) {
 window.fetch = function(input, init) {
   const url = typeof input === 'string' ? input : input.url;
   
@@ -163,12 +158,12 @@ window.fetch = function(input, init) {
           // PATTERNS CONFIGURATION - Now a dictionary/object
 
           const PATTERN_REPLACEMENTS = {
-            //
+            /*
                 '\\[': '\n $$ \n',     // Replace \[ with $$
                 '\\]': '\n $$ \n',     // Replace \] with $$
                 '\\(': ' $$ ',     // Replace \( with $$
                 '\\)': ' $$ ',     // Replace \) with $$
-              //
+              */
                 '<think>':'<div id=\'reason\' class=\'reasoning\'>',
                 '</think>':'</div>',
           };
@@ -418,180 +413,103 @@ window.fetch = function(input, init) {
       // Return the original response for non-SSE endpoints
       return response;
     });
-    }
 };
-*/
 
-const originalFetch = window.fetch;
 
-// Keep stream pattern replacements local to fetch logic
-const STREAM_PATTERNS = {
-  '<think>':'<div id=\'reason\' class=\'reasoning\'>',
-  '</think>':'</div>'
-};
-const STREAM_ALL_PATTERNS = Object.keys(STREAM_PATTERNS);
+let originalFetch = window.fetch;
 
-function safeParseJSON(s) { try { return JSON.parse(s); } catch(e) { return null; } }
-
-async function handleSubmit(resource, config) {
-  if (config && config.body) {
-    const body = safeParseJSON(config.body);
-    if (body) {
-      formId = body.pickaxeId ?? formId;
-      responseId = body.sessionId ?? responseId;
-      latestRequest = body.value ?? latestRequest;
-      studioUserId = body.sender ?? studioUserId;
-      documents = body.documentIds ?? documents;
-    }
-  }
-
-  try {
-    const response = await originalFetch(resource, config);
-    try {
-      const cloned = response.clone();
-      const json = await cloned.json();
-      if (json && json.submissionId) {
-        currentSubmissionId = json.submissionId;
-        console.log('Captured submissionId:', currentSubmissionId);
-      }
-    } catch(e) {}
-    return response;
-  } catch(e) {
-    console.error('Error in /submit:', e);
-    return await originalFetch(resource, config);
-  }
-}
-
-function stopButtonOff() { console.log('stream stopped or failed'); }
-
-function transformEventStream(response, signal) {
-  const originalStream = response.body;
-  const reader = originalStream.getReader();
-  const decoder = new TextDecoder();
-  const encoder = new TextEncoder();
-
-  let partialBuffer = '';
-  let isAborted = false;
-
-  const handleAbort = () => { isAborted = true; try { reader.cancel().catch(() => {}); } catch(e) {} };
-  if (signal) { if (signal.aborted) handleAbort(); signal.addEventListener('abort', handleAbort); }
-
-  let mathBuffer = '';
-
-  const newStream = new ReadableStream({
-    async start(controller) {
-      async function pump() {
-        try {
-          if (isAborted) return;
-          const { done, value } = await reader.read();
-          if (done) { if (signal) signal.removeEventListener('abort', handleAbort); controller.close(); return; }
-          if (isAborted) return;
-
-          const chunk = decoder.decode(value, { stream: true });
-          let mathModeOn = false;
-          let modifiedChunk = '';
-          const lines = chunk.split('\n');
-
-          lines.forEach(line => {
-            if (line.startsWith('data: ')) {
-              const jsonStr = line.slice(6);
-              try {
-                const parsed = JSON.parse(jsonStr);
-                if (parsed.token) {
-                  let tokenToProcess = partialBuffer + parsed.token;
-                  let modifiedToken = tokenToProcess;
-                  if (modifiedToken.includes('$')) mathModeOn = true;
-                  Object.entries(STREAM_PATTERNS).forEach(([pattern, replacement]) => { if (modifiedToken.includes(pattern)) modifiedToken = modifiedToken.split(pattern).join(replacement); });
-                  partialBuffer = '';
-                  let longestPartial = '';
-                  STREAM_ALL_PATTERNS.forEach(pattern => { for (let i = pattern.length - 1; i > 0; i--) {
-                    const partialPattern = pattern.substring(0, i);
-                    if (modifiedToken.endsWith(partialPattern) && partialPattern.length > longestPartial.length) longestPartial = partialPattern;
-                  }});
-                  if (longestPartial) { partialBuffer = longestPartial; modifiedToken = modifiedToken.slice(0, -longestPartial.length); }
-                  parsed.token = modifiedToken;
-                  modifiedChunk += 'data: ' + JSON.stringify(parsed) + '\n';
-                } else { modifiedChunk += line + '\n'; }
-              } catch(e) { modifiedChunk += line + '\n'; }
-            } else { modifiedChunk += line + '\n'; }
-          });
-
-          if (modifiedChunk.endsWith('\n\n')) modifiedChunk = modifiedChunk.slice(0, -1);
-          else if (chunk.endsWith('\n') && !modifiedChunk.endsWith('\n')) modifiedChunk += '\n';
-
-          const mathBufferlines = modifiedChunk.split('\n');
-          mathBufferlines.forEach(line => { if (line.startsWith('data: ')) { const jsonStr = line.slice(6); try { const parsed = JSON.parse(jsonStr); if (parsed.token) mathBuffer += parsed.token; } catch(e){} } });
-
-          if (mathModeOn || mathBuffer.includes('$')) {
-            if (mathBuffer.length < 250 && !mathBuffer.includes('[DONE]')) {
-              // keep buffering
-            } else {
-              mathBuffer = mathBuffer.replace(/([\s.(,"'])\$([^$]+)\$([\s.),"])/g, '$1$$$$$2$$$$$3');
-              if (mathBuffer.includes('[DONE]')) mathBuffer = mathBuffer.replace('[DONE]','');
-              const mathModifiedChunk = '\nevent:delta\ndata: {"token": ' + JSON.stringify(mathBuffer) + '}\n\n';
-              controller.enqueue(encoder.encode(mathModifiedChunk));
-              mathBuffer = '';
-            }
-          } else {
-            controller.enqueue(encoder.encode(modifiedChunk));
-            mathBuffer = '';
-          }
-
-          pump();
-        } catch (error) {
-          if (signal) signal.removeEventListener('abort', handleAbort);
-          if (error.name === 'AbortError' || isAborted) controller.error(new DOMException('Aborted', 'AbortError'));
-          else controller.error(error);
-        }
-      }
-
-      pump();
-    },
-    cancel(reason) { isAborted = true; return reader.cancel(reason).catch(() => {}); }
-  });
-
-  return new Response(newStream, { status: response.status, statusText: response.statusText, headers: response.headers });
-}
-
-async function handleStream(resource, config) {
-  const url = typeof resource === 'string' ? resource : resource.url;
-  currentAbortController = new AbortController();
-  const signal = currentAbortController.signal;
-
-  try {
-    setTimeout(() => addEditButton(), 2000);
-    const response = await originalFetch(resource, { ...config, signal });
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('text/event-stream')) {
-      return transformEventStream(response, signal);
-    } else {
-      const out = response.clone();
-      (async () => {
-        try {
-          const r = out.body.getReader();
-          while (!(await r.read()).done) {}
-          currentAbortController = null;
-          errorMessageHandler();
-          setTimeout(() => syncConversation(responseId, formId, studioUserId, pastedContent, url), 2000);
-          console.log('sync conversation with:', 'res ', responseId, 'for ', formId, 'stud', studioUserId);
-        } catch(_) {}
-      })();
-      return response;
-    }
-  } catch (e) {
-    console.error('Error in /stream:', e);
-    stopButtonOff();
-  }
-}
-
-// Unified fetch handler
+// Overwrite the global fetch function
 window.fetch = async function(...args) {
-  const [resource, config] = args;
-  const url = typeof resource === 'string' ? resource : resource.url;
 
-  if (url.includes('https://core-pickaxe-api.pickaxe.co/submit')) return await handleSubmit(resource, config);
-  if (url.includes('https://core-pickaxe-api.pickaxe.co/stream')) return await handleStream(resource, config);
-  return await originalFetch(resource, config || {});
+    const [url, config] = args;
+
+   
+
+    if (url.includes("https://core-pickaxe-api.pickaxe.co/submit")){   //Massive if{} to get the formid,responseid,lastmessage,documents
+
+        try {
+            // Extract from request body
+            formId = JSON.parse(config.body).pickaxeId
+        } catch(e){}
+        try {
+            responseId = JSON.parse(config.body).sessionId
+        } catch(e){}
+        try {
+            latestRequest = JSON.parse(config.body).value
+        } catch(e){}
+        try {
+            studioUserId = JSON.parse(config.body).sender
+        } catch(e){}
+        try {
+            documents = JSON.parse(config.body).documentIds
+        } catch(e){}
+
+
+        try {
+            const response = await originalFetch(url, config);
+            const responseClone = response.clone();
+            
+            // Extract submissionId from response
+            const responseData = await responseClone.json();
+            if (responseData.submissionId) {
+                currentSubmissionId = responseData.submissionId;
+                console.log("Captured submissionId:", currentSubmissionId);
+            }
+            
+            return response;
+        } catch (error) {
+            console.error("Error in /submit:", error);
+            return await originalFetch(url, config);
+        }
+    }
+     
+    if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")){
+
+    
+        currentAbortController = new AbortController();
+        const signal = currentAbortController.signal;
+       
+
+        try {  
+        setTimeout(() => {
+            addEditButton();
+          }, 2000);
+        const response = await originalFetch(url, { ...config, signal }); //Original fetch
+        const out = response.clone(); // return this to your UI
+        
+
+       (async () => {
+            try {
+                const r = out.body.getReader();
+                while (!(await r.read()).done) {}
+        
+                // *** IMPORTANT FIX ***
+                currentAbortController = null;
+        
+                errorMessageHandler();
+                setTimeout(() => {
+                    syncConversation(responseId, formId, studioUserId, pastedContent, url);
+                }, 2000);
+                console.log("sync conversation with:", "res ",responseId,"for ",formId, "stud",studioUserId)
+            } catch (_) {}
+        })();
+
+
+
+
+        return response;
+
+        } catch (error) {
+
+      
+        stopButtonOff()
+
+        }
+    
+    } 
+    else {
+        return await originalFetch(url, {...config});
+    }
 };
 
 
@@ -700,9 +618,16 @@ function addEditButton() {
     });
 }
 
+
+
+
+
+
+
 // ============= XHL Replacing Characters
 
 const originalXHR2 = XMLHttpRequest;
+
 
 XMLHttpRequest = function() {
   const xhr = new originalXHR2();
@@ -756,6 +681,10 @@ XMLHttpRequest = function() {
 };
 
 
+
+
+
+
 //Event listener for the click on expand thinging
 document.addEventListener('click', function(e) {
     if (e.target.classList.contains('reasoning')) {
@@ -764,8 +693,10 @@ document.addEventListener('click', function(e) {
 });
 
 
+
 // Overwrite the global xml object
 const OriginalXHR = XMLHttpRequest;
+
 
 XMLHttpRequest = new Proxy(OriginalXHR, {
 construct(target, args) {
