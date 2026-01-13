@@ -1,4 +1,4 @@
-/*/ =============== Banner
+// =============== Banner
 
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
   
-/*/
 
 //=========== Pricing Redirect
 
