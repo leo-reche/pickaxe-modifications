@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
   banner.setAttribute("aria-live", "polite");
   banner.innerHTML = `
     <span>
-      Pickaxe is experiencing a server errors today. We're already in contact with them, and apologize for any inconveniences!
+      Pickaxe is experiencing a server error today. We're already in contact with them, and apologize for any inconveniences!
     </span>
     <button class="fc-banner__close" type="button" aria-label="Dismiss announcement">×</button>
   `;
