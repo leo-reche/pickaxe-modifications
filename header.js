@@ -1,6 +1,6 @@
 // =============== Banner
 
-
+/*
 document.addEventListener("DOMContentLoaded", function() {
   const banner = document.createElement("div");
   banner.className = "fc-banner";
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 });
-
+*/
   
 
 //=========== Pricing Redirect
