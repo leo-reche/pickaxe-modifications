@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
       banner.addEventListener('transitionend', () => banner.remove(), { once: true });
     }
 
-    const timer = setTimeout(hideBanner, 5000);
+    const timer = setTimeout(hideBanner, 10000);
 
     banner.addEventListener('click', function (e) {
       if (e.target.closest('.fc-banner__close')) {
