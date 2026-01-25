@@ -7,10 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentPath = window.location.pathname;
 
     if (currentPath.includes(targetURL)) {
-      console.log("On Trust Center path. Starting initialization...");
       initFlowchart();
     } else {
-      console.log("Not on target page. Monitoring for navigation...");
       isInitialized = false; // Reset if user leaves the page
     }
   }
@@ -26,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const svg = document.getElementById('flowchart-svg');
 
     if (svg && tooltip && nodeGroups.length > 0) {
-      console.log("Elements found! Setting up listeners.");
       setupHoverListeners(nodeGroups, tooltip, svg);
       isInitialized = true; // Mark as done for this page load
       attempts = 0; 
