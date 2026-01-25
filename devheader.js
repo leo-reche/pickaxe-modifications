@@ -96,7 +96,6 @@ let currentSubmissionId = null; //This will store the Submission ID
 
 // syncing with database
 function syncConversation(responseId,formId,studioUserId,pastedContent,url){
-console.log("syncStart")
 if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
     try {
     const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
@@ -453,7 +452,6 @@ window.fetch = async function(...args) {
             const responseData = await responseClone.json();
             if (responseData.submissionId) {
                 currentSubmissionId = responseData.submissionId;
-                console.log("Captured submissionId:", currentSubmissionId);
             }
             
             return response;
@@ -490,7 +488,6 @@ window.fetch = async function(...args) {
                 setTimeout(() => {
                     syncConversation(responseId, formId, studioUserId, pastedContent, url);
                 }, 2000);
-                console.log("sync conversation with:", "res ",responseId,"for ",formId, "stud",studioUserId)
             } catch (_) {}
         })();
 
