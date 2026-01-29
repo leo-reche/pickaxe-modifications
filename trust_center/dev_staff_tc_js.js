@@ -1,5 +1,5 @@
     (function() {
-      const targetURL = '/trust_center';
+      const targetURL = '/';
       let isInitialized = false;
       let attempts = 0;
 
@@ -44,47 +44,47 @@
       function initTrustCenter() {
         if (isInitialized) return;
 
-        const nodeGroups = document.querySelectorAll('.node-group');
-        const tooltip = document.getElementById('svg-tooltip');
-        const svg = document.getElementById('flowchart-svg') || document.querySelector('.flowchart-svg');
+        const nodeGroups = document.querySelectorAll('.staff-node-group');
+        const tooltip = document.getElementById('staff-svg-tooltip');
+        const svg = document.getElementById('staff-flowchart-svg') || document.querySelector('.staff-flowchart-svg');
 
         if (svg && tooltip && nodeGroups.length > 0) {
           setupHoverListeners(nodeGroups, tooltip, svg);
 
-          var firstSection = document.querySelector('.db-section');
+          var firstSection = document.querySelector('.staff-db-section');
           if (firstSection) {
-            var firstToggle = firstSection.querySelector('.db-section-toggle');
-            var firstContent = firstSection.querySelector('.db-section-content');
+            var firstToggle = firstSection.querySelector('.staff-db-section-toggle');
+            var firstContent = firstSection.querySelector('.staff-db-section-content');
             if (firstToggle && firstContent) {
               firstContent.classList.add('open');
               firstToggle.classList.add('active');
             }
           }
 
-          var jsonTreeSection = document.querySelector('.database-entry-viewer--json-tree');
+          var jsonTreeSection = document.querySelector('.staff-database-entry-viewer--json-tree');
           if (jsonTreeSection) {
-            jsonTreeSection.querySelectorAll('.json-tree-btn:not(.json-tree-invisible)').forEach(function(btn) {
+            jsonTreeSection.querySelectorAll('.staff-json-tree-btn:not(.staff-json-tree-invisible)').forEach(function(btn) {
               btn.addEventListener('click', function() {
-                var row = this.closest('.json-tree-row');
-                if (!row || !row.classList.contains('json-tree-expandable')) return;
-                var isExpanded = row.classList.contains('json-tree-expanded');
-                row.classList.toggle('json-tree-expanded', !isExpanded);
-                row.classList.toggle('json-tree-collapsed', isExpanded);
-                this.classList.toggle('json-tree-expanded', !isExpanded);
-                this.classList.toggle('json-tree-collapsed', isExpanded);
+                var row = this.closest('.staff-json-tree-row');
+                if (!row || !row.classList.contains('staff-json-tree-expandable')) return;
+                var isExpanded = row.classList.contains('staff-json-tree-expanded');
+                row.classList.toggle('staff-json-tree-expanded', !isExpanded);
+                row.classList.toggle('staff-json-tree-collapsed', isExpanded);
+                this.classList.toggle('staff-json-tree-expanded', !isExpanded);
+                this.classList.toggle('staff-json-tree-collapsed', isExpanded);
               });
             });
           }
 
-          var flowMobile = document.querySelector('.flow-mobile');
+          var flowMobile = document.querySelector('.staff-flow-mobile');
           if (flowMobile) {
-            flowMobile.querySelectorAll('.flow-step-inner').forEach(function(inner) {
+            flowMobile.querySelectorAll('.staff-flow-step-inner').forEach(function(inner) {
               function revealNext() {
-                var step = inner.closest('.flow-step');
+                var step = inner.closest('.staff-flow-step');
                 if (!step) return;
                 step.classList.add('opened');
                 var nextStep = step.nextElementSibling;
-                if (nextStep && nextStep.classList.contains('flow-step')) {
+                if (nextStep && nextStep.classList.contains('staff-flow-step')) {
                   nextStep.classList.add('revealed');
                 }
               }
@@ -127,8 +127,8 @@
 
     // Database Entry Viewer Toggle Functionality
     function toggleSection(button) {
-      const section = button.closest('.db-section');
-      const content = section.querySelector('.db-section-content');
+      const section = button.closest('.staff-db-section');
+      const content = section.querySelector('.staff-db-section-content');
       const isOpen = content.classList.contains('open');
       
       if (isOpen) {
