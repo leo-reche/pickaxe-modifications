@@ -32,7 +32,7 @@ body{
   color: #222;
   line-height: 1.6;
 }
-.site-header{
+.staff-site-header{
   min-height:calc(100vh - 80px);
   display:flex;
   align-items:center;
@@ -51,14 +51,14 @@ body{
   flex-direction:column;
   justify-content:center;
 }
-.site-header h1{
+.staff-site-header h1{
   margin:0 0 16px 0;
   font-size:56px;
   font-weight:600;
   line-height:5rem;
   color:#000;
 }
-.site-header p{
+.staff-site-header p{
   margin:0 0 24px 0;
   font-size:16px;
   color:#000;
@@ -67,7 +67,7 @@ body{
 }
 
 /* Pickaxe Trustus: lock h1 appearance to avoid builder font overrides */
-.pickaxe-trustus-h1 {
+.staff-pickaxe-trustus-h1 {
   font-family: Inter, 'Segoe UI', system-ui, Arial, sans-serif !important;
   font-weight: 700 !important;
   color: var(--normal);
@@ -75,7 +75,7 @@ body{
   line-height: 1.2;
   font-size: 2rem;
 }
-.header-button{
+.staff-header-button{
   display:flex;
   align-items:center;
   justify-content:center;
@@ -91,16 +91,16 @@ body{
   width:fit-content;
   transition:opacity 300ms ease;
 }
-.header-button:hover{
+.staff-header-button:hover{
   opacity:0.7;
 }
-.header-button:active{
+.staff-header-button:active{
   opacity:1;
 }
-.container{max-width:1100px;margin:18px auto;padding:0 16px}
+.staff-container{max-width:1100px;margin:18px auto;padding:0 16px}
 
 /* Cards grid for desktop/tablet */
-.cards-grid{
+.staff-cards-grid{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 8px;
@@ -108,7 +108,7 @@ body{
   align-items: start;
 }
 
-.card{
+.staff-card{
   background: transparent;
   border-radius: var(--radius);
   width: 100%;
@@ -119,12 +119,12 @@ body{
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.card:hover {
+.staff-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.card-inner{
+.staff-card-inner{
   position: relative;
   inset: 0;
   width: 100%;
@@ -133,13 +133,13 @@ body{
   transform-style: preserve-3d;
 }
 
-.card:hover .card-inner,
-.card:focus-within .card-inner{
+.staff-card:hover .staff-card-inner,
+.staff-card:focus-within .staff-card-inner{
   transform: rotateY(180deg);
 }
 
-.card-front,
-.card-back{
+.staff-card-front,
+.staff-card-back{
   position: absolute;
   inset: 0;
   border-radius: var(--radius);
@@ -150,25 +150,25 @@ body{
   padding: 16px;
 }
 
-.card-front{
+.staff-card-front{
   box-shadow: 0 4px 10px rgba(20,30,60,0.06);
   border: 1px solid rgba(85, 85, 85, 0.2);
   background: white;
   transition: border-color 0.2s ease;
 }
 
-.card:hover .card-front {
+.staff-card:hover .staff-card-front {
   border-color: var(--accent);
 }
 
-.card-front h2{
+.staff-card-front h2{
   margin: 0;
   font-size: 1.05rem;
   color: var(--normal);
   font-weight: 600;
 }
 
-.card-back{
+.staff-card-back{
   background: white;
   border: 1px solid var(--fc-muted);
   transform: rotateY(180deg);
@@ -177,29 +177,29 @@ body{
   text-align: justify;
 }
 
-.card-back p{
+.staff-card-back p{
   margin: 0;
   font-size: 0.9rem;
   line-height: 1.6;
 }
 
 /* Mobile accordion */
-.accordion{
+.staff-accordion{
   display: none;
   margin-bottom: 24px;
 }
 
-.accordion-form{
+.staff-accordion-form{
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.accordion-form input[type="radio"]{
+.staff-accordion-form input[type="radio"]{
   display: none;
 }
 
-.accordion-form label{
+.staff-accordion-form label{
   background: var(--card);
   padding: 14px 16px;
   border-radius: 12px;
@@ -212,19 +212,19 @@ body{
   border: 1px solid rgba(85, 85, 85, 0.1);
 }
 
-.accordion-form label:hover {
+.staff-accordion-form label:hover {
   background: #f8f9fa;
   box-shadow: 0 4px 12px rgba(10,20,40,0.08);
   transform: translateY(-1px);
 }
 
-.accordion-form input[type="radio"]:checked + label {
+.staff-accordion-form input[type="radio"]:checked + label {
   background: var(--accent);
   color: white;
   border-color: var(--accent);
 }
 
-.acc-panel{
+.staff-acc-panel{
   max-height: 0;
   overflow: hidden;
   background: transparent;
@@ -234,23 +234,23 @@ body{
   color: var(--muted);
 }
 
-.acc-panel p{
+.staff-acc-panel p{
   margin: 12px 0;
   line-height: 1.6;
 }
 
-.accordion-form input[type="radio"]:checked + label + .acc-panel{
+.staff-accordion-form input[type="radio"]:checked + label + .staff-acc-panel{
   max-height: 500px;
   padding: 16px;
   background: #fafafa;
 }
 
 /* Policy area */
-.policy {
+.staff-policy {
   margin: 40px 0;
 }
 
-.policy details{
+.staff-policy details{
   background: var(--card);
   padding: 20px 24px;
   box-shadow: 0 2px 8px rgba(10,20,40,0.06);
@@ -259,11 +259,11 @@ body{
   transition: all 0.2s ease;
 }
 
-.policy details:hover {
+.staff-policy details:hover {
   box-shadow: 0 4px 12px rgba(10,20,40,0.08);
 }
 
-.policy summary{
+.staff-policy summary{
   font-weight: 700;
   cursor: pointer;
   color: var(--normal);
@@ -272,11 +272,11 @@ body{
   transition: color 0.2s ease;
 }
 
-.policy summary:hover {
+.staff-policy summary:hover {
   color: var(--accent);
 }
 
-.policy pre{
+.staff-policy pre{
   white-space: pre-wrap;
   margin-top: 16px;
   color: var(--muted);
@@ -289,7 +289,7 @@ body{
   overflow-x: auto;
 }
 
-.site-footer{
+.staff-site-footer{
   text-align: center;
   padding: 32px 16px;
   color: var(--muted);
@@ -297,13 +297,13 @@ body{
   border-top: 1px solid rgba(85, 85, 85, 0.1);
 }
 
-.site-footer a{
+.staff-site-footer a{
   color: var(--accent);
   text-decoration: none;
   transition: opacity 0.2s ease;
 }
 
-.site-footer a:hover {
+.staff-site-footer a:hover {
   opacity: 0.8;
   text-decoration: underline;
 }
@@ -312,56 +312,56 @@ body{
 /* Layout tuning for common breakpoints */
 @media (min-width:1100px){
   /* let columns adapt and grow — cards will resize with the grid */
-  .cards-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+  .staff-cards-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
 }
 @media (min-width:700px) and (max-width:1099px){
-  .cards-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px}
+  .staff-cards-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px}
 }
 @media (max-width:1024px){
-  .site-header h1{
+  .staff-site-header h1{
     font-size:48px;
     line-height:4rem;
   }
 }
 @media (max-width:899px){
-  .site-header h1{
+  .staff-site-header h1{
     font-size:28px;
     line-height:2rem;
   }
-  .header-button{
+  .staff-header-button{
     width:100%;
     min-height:48px;
   }
 }
 @media (max-width:768px){
   /* hide desktop cards, show mobile accordion */
-  .cards-grid{display:none}
-  .accordion{display:block}
-  .container{padding:0 16px}
+  .staff-cards-grid{display:none}
+  .staff-accordion{display:block}
+  .staff-container{padding:0 16px}
   
-  .pickaxe-trustus-h1 {
+  .staff-pickaxe-trustus-h1 {
     font-size: 1.35rem;
     margin-bottom: 16px;
   }
   
-  .trust-chart {
+  .staff-trust-chart {
     padding: 24px 16px;
   }
   
-  .hover-cards {
+  .staff-hover-cards {
     padding: 24px 16px;
   }
 }
 
 /* small touch affordance */
 @media (hover:none){
-  .card{cursor:default}
-  .card-inner{transform:none !important}
+  .staff-card{cursor:default}
+  .staff-card-inner{transform:none !important}
 }
 
 
 /* Trust Chart / Flowchart Styles */
-.trust-chart {
+.staff-trust-chart {
   padding: 40px 24px;
   text-align: left;
   background: var(--card);
@@ -373,11 +373,11 @@ body{
   transition: box-shadow 0.2s ease;
 }
 
-.trust-chart:hover {
+.staff-trust-chart:hover {
   box-shadow: 0 4px 12px rgba(10, 20, 40, 0.08);
 }
 
-.hover-cards {
+.staff-hover-cards {
   padding: 32px 24px;
   margin: 40px 0;
   background: white;
@@ -387,11 +387,11 @@ body{
 }
 
 
-.svg-pos{
+.staff-svg-pos{
   margin-left: 60px;
 }
 
-.trust-chart h2 {
+.staff-trust-chart h2 {
   font-size: 1.8rem;
   margin-bottom: 30px;
   color: var(--normal);
@@ -419,20 +419,20 @@ body{
 }
 
 /* Flow mobile (touch-friendly step list); shown only on phone */
-.flow-mobile {
+.staff-flow-mobile {
   display: none;
 }
 
-.flow-mobile .flow-step {
+.staff-flow-mobile .staff-flow-step {
   margin-bottom: 8px;
 }
 
 /* Progressive reveal: only first step visible until user clicks through */
-.flow-mobile .flow-step:not(:first-child) {
+.staff-flow-mobile .staff-flow-step:not(:first-child) {
   display: none;
 }
 
-.flow-mobile .flow-step.revealed {
+.staff-flow-mobile .staff-flow-step.revealed {
   display: block;
   animation: flowStepAppear 0.4s ease-out forwards;
 }
@@ -449,7 +449,7 @@ body{
 }
 
 /* Flow step card: left = accent (icon + title), right = description */
-.flow-mobile .flow-step-inner {
+.staff-flow-mobile .staff-flow-step-inner {
   display: flex;
   min-height: 44px;
   border-radius: 12px;
@@ -460,11 +460,11 @@ body{
   transition: box-shadow 0.2s ease;
 }
 
-.flow-mobile .flow-step-inner:hover {
+.staff-flow-mobile .staff-flow-step-inner:hover {
   box-shadow: 0 2px 12px rgba(10, 20, 40, 0.08);
 }
 
-.flow-mobile .flow-step-left {
+.staff-flow-mobile .staff-flow-step-left {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -477,19 +477,19 @@ body{
   color: white;
 }
 
-.flow-mobile .flow-step-left .flow-step-icon {
+.staff-flow-mobile .staff-flow-step-left .staff-staff-flow-step-icon {
   font-size: 1.75rem;
   line-height: 1;
 }
 
-.flow-mobile .flow-step-left .flow-step-title {
+.staff-flow-mobile .staff-flow-step-left .staff-flow-step-title {
   font-weight: 600;
   font-size: 0.9rem;
   text-align: center;
   line-height: 1.2;
 }
 
-.flow-mobile .flow-step-right {
+.staff-flow-mobile .staff-flow-step-right {
   flex: 1;
   padding: 12px 14px;
   display: flex;
@@ -499,22 +499,22 @@ body{
   color: var(--muted);
 }
 
-.flow-mobile .flow-step-desc {
+.staff-flow-mobile .staff-flow-step-desc {
   margin: 0;
 }
 
-.flow-mobile .flow-step-next {
+.staff-flow-mobile .staff-flow-step-next {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease;
   padding-left: 16px;
 }
 
-.flow-mobile .flow-step.open .flow-step-next {
+.staff-flow-mobile .staff-flow-step.open .staff-flow-step-next {
   max-height: 200px;
 }
 
-.flow-mobile .flow-step-next-inner {
+.staff-flow-mobile .staff-flow-step-next-inner {
   padding: 12px 16px 16px 44px;
   display: flex;
   align-items: center;
@@ -524,13 +524,13 @@ body{
   font-size: 0.95rem;
 }
 
-.flow-mobile .flow-step-next-inner .flow-arrow {
+.staff-flow-mobile .staff-flow-step-next-inner .staff-flow-arrow {
   color: var(--accent);
   font-size: 0.9rem;
 }
 
 /* Bobbing arrow under each step (hidden after step is opened); last step has no arrow */
-.flow-step-bob-arrow {
+.staff-flow-step-bob-arrow {
   display: flex;
   justify-content: center;
   padding: 8px 0 4px;
@@ -539,7 +539,7 @@ body{
   animation: flowBob 1.2s ease-in-out infinite;
 }
 
-.flow-step.opened .flow-step-bob-arrow {
+.staff-flow-step.opened .staff-flow-step-bob-arrow {
   animation: none;
   transform: translateY(0);
 }
@@ -564,7 +564,7 @@ body{
   border: 1px solid rgba(85, 85, 85, 0.1);
 }
 
-.mermaid {
+.staff-mermaid {
   display: flex;
   justify-content: center;
 }
@@ -588,37 +588,37 @@ body{
   height: auto;
 }
 
-.node-group {
+.staff-node-group {
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.node-group:hover rect {
+.staff-node-group:hover rect {
   fill: #f8f9fa;
   stroke: var(--accent);
   stroke-width: 3;
   filter: drop-shadow(0 4px 8px rgba(232, 94, 52, 0.2));
 }
 
-.node-group:hover text {
+.staff-node-group:hover text {
   font-weight: bold;
   fill: var(--accent);
 }
 
 /* also support programmatic hover (class toggled from JS) */
-.node-group.hovered rect {
+.staff-node-group.hovered rect {
   fill: #f8f9fa;
   stroke: var(--accent);
   stroke-width: 3;
   filter: drop-shadow(0 4px 8px rgba(232, 94, 52, 0.2));
 }
 
-.node-group.hovered text {
+.staff-node-group.hovered text {
   font-weight: bold;
   fill: var(--accent);
 }
 
-.svg-tooltip {
+.staff-svg-tooltip {
   position: fixed;
   background: white;
   border: 2px solid var(--accent);
@@ -638,7 +638,7 @@ body{
   background: linear-gradient(to bottom, white, #fafafa);
 }
 
-.svg-tooltip::before {
+.staff-svg-tooltip::before {
   content: '';
   position: absolute;
   top: -10px;
@@ -658,7 +658,7 @@ body{
 
 
 
-.svg-tooltip.visible {
+.staff-svg-tooltip.visible {
   display: block;
 }
 
@@ -675,7 +675,7 @@ body{
 
 /* Responsive for smaller screens */
 @media (max-width: 900px) {
-  .trust-chart h2 {
+  .staff-trust-chart h2 {
     font-size: 1.4rem;
   }
   
@@ -684,7 +684,7 @@ body{
     padding: 16px;
   }
   
-  .svg-pos {
+  .staff-svg-pos {
     margin-left: 0;
     overflow-x: auto;
   }
@@ -695,7 +695,7 @@ body{
 }
 
 /* Database Entry Viewer Styles */
-.database-entry-viewer {
+.staff-database-entry-viewer {
   background: var(--card);
   border-radius: var(--radius);
   box-shadow: 0 4px 12px rgba(10, 20, 40, 0.08);
@@ -704,7 +704,7 @@ body{
   max-width: 1100px;
 }
 
-.db-header {
+.staff-db-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -715,13 +715,13 @@ body{
   gap: 16px;
 }
 
-.db-user-info {
+.staff-db-user-info {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.db-avatar {
+.staff-db-avatar {
   width: 64px;
   height: 64px;
   border-radius: 50%;
@@ -733,47 +733,47 @@ body{
   box-shadow: 0 4px 12px rgba(232, 94, 52, 0.2);
 }
 
-.db-user-id {
+.staff-db-user-id {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--normal);
 }
 
-.db-studio-id {
+.staff-db-studio-id {
   margin: 4px 0 0 0;
   font-size: 0.9rem;
   color: var(--muted);
 }
 
-.db-last-updated {
+.staff-db-last-updated {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
 }
 
-.db-label {
+.staff-db-label {
   font-size: 0.85rem;
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.db-value {
+.staff-db-value {
   font-size: 1rem;
   font-weight: 600;
   color: var(--normal);
 }
 
-.db-stats-grid {
+.staff-db-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
 
-.db-stat-card {
+.staff-db-stat-card {
   background: linear-gradient(135deg, #f8f9fa, #ffffff);
   border: 1px solid #e0e0e0;
   border-radius: 12px;
@@ -784,13 +784,13 @@ body{
   transition: all 0.3s ease;
 }
 
-.db-stat-card:hover {
+.staff-db-stat-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-color: var(--accent);
 }
 
-.db-stat-icon {
+.staff-db-stat-icon {
   font-size: 2rem;
   width: 60px;
   height: 60px;
@@ -801,11 +801,11 @@ body{
   border-radius: 12px;
 }
 
-.db-stat-content {
+.staff-db-stat-content {
   flex: 1;
 }
 
-.db-stat-value {
+.staff-db-stat-value {
   font-size: 2rem;
   font-weight: 700;
   color: var(--accent);
@@ -813,12 +813,12 @@ body{
   margin-bottom: 4px;
 }
 
-.db-stat-label {
+.staff-db-stat-label {
   font-size: 0.9rem;
   color: var(--muted);
 }
 
-.db-section {
+.staff-db-section {
   margin-bottom: 16px;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
@@ -826,7 +826,7 @@ body{
   background: #fafafa;
 }
 
-.db-section-toggle {
+.staff-db-section-toggle {
   width: 100%;
   background: white;
   border: none;
@@ -842,52 +842,52 @@ body{
   color: var(--normal);
 }
 
-.db-section-toggle:hover {
+.staff-db-section-toggle:hover {
   background: #f8f9fa;
 }
 
-.db-section-toggle.active {
+.staff-db-section-toggle.active {
   background: var(--accent);
   color: white;
 }
 
-.db-section-toggle.active .db-section-arrow {
+.staff-db-section-toggle.active .staff-db-section-arrow {
   transform: rotate(180deg);
 }
 
-.db-section-icon {
+.staff-db-section-icon {
   font-size: 1.5rem;
 }
 
-.db-section-title {
+.staff-db-section-title {
   flex: 1;
 }
 
-.db-section-arrow {
+.staff-db-section-arrow {
   transition: transform 0.3s ease;
   font-size: 0.9rem;
 }
 
-.db-section-content {
+.staff-db-section-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.4s ease;
   background: white;
 }
 
-.db-section-content.open {
+.staff-db-section-content.open {
   max-height: 2000px;
   padding: 24px;
 }
 
-.db-metrics-grid {
+.staff-db-metrics-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
 
-.db-metric-item {
+.staff-db-metric-item {
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -896,12 +896,12 @@ body{
   border-left: 4px solid var(--accent);
 }
 
-.db-metric-item.highlight {
+.staff-db-metric-item.highlight {
   background: linear-gradient(135deg, rgba(232, 94, 52, 0.1), rgba(255, 167, 142, 0.1));
   border-left-color: var(--accent);
 }
 
-.db-metric-label {
+.staff-db-metric-label {
   font-size: 0.85rem;
   color: var(--muted);
   margin-bottom: 8px;
@@ -909,34 +909,34 @@ body{
   letter-spacing: 0.5px;
 }
 
-.db-metric-value {
+.staff-db-metric-value {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--accent);
 }
 
-.db-subsection {
+.staff-db-subsection {
   margin-bottom: 32px;
 }
 
-.db-subsection:last-child {
+.staff-db-subsection:last-child {
   margin-bottom: 0;
 }
 
-.db-subsection-title {
+.staff-db-subsection-title {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--normal);
   margin: 0 0 16px 0;
 }
 
-.db-subsection-desc {
+.staff-db-subsection-desc {
   font-size: 0.9rem;
   color: var(--muted);
   margin: 8px 0 0 0;
 }
 
-.db-progress-container {
+.staff-db-progress-container {
   background: #e0e0e0;
   border-radius: 12px;
   height: 32px;
@@ -945,7 +945,7 @@ body{
   margin-bottom: 8px;
 }
 
-.db-progress-bar {
+.staff-db-progress-bar {
   background: linear-gradient(90deg, var(--accent), var(--muted-accent));
   height: 100%;
   border-radius: 12px;
@@ -955,19 +955,19 @@ body{
   transition: width 0.6s ease;
 }
 
-.db-progress-value {
+.staff-db-progress-value {
   color: white;
   font-weight: 700;
   font-size: 0.9rem;
 }
 
-.db-tag-list {
+.staff-db-tag-list {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.db-tag {
+.staff-db-tag {
   background: rgba(232, 94, 52, 0.1);
   color: var(--accent);
   padding: 8px 16px;
@@ -977,26 +977,26 @@ body{
   border: 1px solid rgba(232, 94, 52, 0.2);
 }
 
-.db-assistance-grid {
+.staff-db-assistance-grid {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.db-assistance-item {
+.staff-db-assistance-item {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.db-assistance-label {
+.staff-db-assistance-label {
   min-width: 140px;
   font-size: 0.9rem;
   color: var(--muted);
   font-weight: 500;
 }
 
-.db-bar-chart {
+.staff-db-bar-chart {
   flex: 1;
   background: #e0e0e0;
   border-radius: 8px;
@@ -1005,7 +1005,7 @@ body{
   overflow: hidden;
 }
 
-.db-bar {
+.staff-db-bar {
   background: linear-gradient(90deg, var(--accent), var(--muted-accent));
   height: 100%;
   display: flex;
@@ -1018,26 +1018,26 @@ body{
   transition: width 0.6s ease;
 }
 
-.db-distribution {
+.staff-db-distribution {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.db-dist-item {
+.staff-db-dist-item {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-.db-dist-label {
+.staff-db-dist-label {
   min-width: 80px;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--normal);
 }
 
-.db-dist-bar {
+.staff-db-dist-bar {
   flex: 1;
   background: #e0e0e0;
   border-radius: 8px;
@@ -1046,7 +1046,7 @@ body{
   overflow: hidden;
 }
 
-.db-dist-fill {
+.staff-db-dist-fill {
   height: 100%;
   display: flex;
   align-items: center;
@@ -1057,25 +1057,25 @@ body{
   transition: width 0.6s ease;
 }
 
-.db-dist-fill.medium {
+.staff-db-dist-fill.medium {
   background: linear-gradient(90deg, #4CAF50, #66BB6A);
 }
 
-.db-dist-fill.high {
+.staff-db-dist-fill.high {
   background: linear-gradient(90deg, #2196F3, #42A5F5);
 }
 
-.db-dist-fill.low {
+.staff-db-dist-fill.low {
   background: linear-gradient(90deg, #FF9800, #FFB74D);
 }
 
-.db-tool-list {
+.staff-db-tool-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.db-tool-item {
+.staff-db-tool-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1085,17 +1085,17 @@ body{
   border-left: 4px solid var(--accent);
 }
 
-.db-tool-name {
+.staff-db-tool-name {
   font-weight: 600;
   color: var(--normal);
 }
 
-.db-tool-count {
+.staff-db-tool-count {
   color: var(--muted);
   font-size: 0.9rem;
 }
 
-.db-model-item {
+.staff-db-model-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1105,24 +1105,24 @@ body{
   border-left: 4px solid var(--accent);
 }
 
-.db-model-name {
+.staff-db-model-name {
   font-family: 'Courier New', monospace;
   font-weight: 600;
   color: var(--normal);
 }
 
-.db-model-count {
+.staff-db-model-count {
   color: var(--muted);
   font-size: 0.9rem;
 }
 
-.db-env-grid {
+.staff-db-env-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
 }
 
-.db-env-card {
+.staff-db-env-card {
   background: linear-gradient(135deg, #f8f9fa, #ffffff);
   border: 1px solid #e0e0e0;
   border-radius: 12px;
@@ -1132,7 +1132,7 @@ body{
   gap: 20px;
 }
 
-.db-env-icon {
+.staff-db-env-icon {
   font-size: 3rem;
   width: 80px;
   height: 80px;
@@ -1143,35 +1143,35 @@ body{
   border-radius: 50%;
 }
 
-.db-env-content {
+.staff-db-env-content {
   flex: 1;
 }
 
-.db-env-value {
+.staff-db-env-value {
   font-size: 1.8rem;
   font-weight: 700;
   color: #4CAF50;
   margin-bottom: 4px;
 }
 
-.db-env-label {
+.staff-db-env-label {
   font-size: 1rem;
   font-weight: 600;
   color: var(--normal);
   margin-bottom: 4px;
 }
 
-.db-env-desc {
+.staff-db-env-desc {
   font-size: 0.85rem;
   color: var(--muted);
 }
 
-.db-timeline {
+.staff-db-timeline {
   position: relative;
   padding-left: 32px;
 }
 
-.db-timeline::before {
+.staff-db-timeline::before {
   content: '';
   position: absolute;
   left: 11px;
@@ -1181,7 +1181,7 @@ body{
   background: #e0e0e0;
 }
 
-.db-timeline-item {
+.staff-db-timeline-item {
   position: relative;
   margin-bottom: 24px;
   display: flex;
@@ -1189,11 +1189,11 @@ body{
   gap: 16px;
 }
 
-.db-timeline-item:last-child {
+.staff-db-timeline-item:last-child {
   margin-bottom: 0;
 }
 
-.db-timeline-dot {
+.staff-db-timeline-dot {
   position: absolute;
   left: -21px;
   width: 20px;
@@ -1204,7 +1204,7 @@ body{
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.db-timeline-content {
+.staff-db-timeline-content {
   flex: 1;
   padding: 12px 16px;
   background: #f8f9fa;
@@ -1212,25 +1212,25 @@ body{
   border-left: 3px solid var(--accent);
 }
 
-.db-timeline-time {
+.staff-db-timeline-time {
   font-size: 1rem;
   font-weight: 600;
   color: var(--normal);
   margin-bottom: 4px;
 }
 
-.db-timeline-date {
+.staff-db-timeline-date {
   font-size: 0.85rem;
   color: var(--muted);
 }
 
-.db-id-list {
+.staff-db-id-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.db-id-item {
+.staff-db-id-item {
   display: block;
   padding: 12px 16px;
   background: #f8f9fa;
@@ -1241,7 +1241,7 @@ body{
   border: 1px solid #e0e0e0;
 }
 
-.db-footer-note {
+.staff-db-footer-note {
   margin-top: 32px;
   padding: 20px;
   background: rgba(232, 94, 52, 0.05);
@@ -1249,32 +1249,32 @@ body{
   border-radius: 8px;
 }
 
-.db-footer-note p {
+.staff-db-footer-note p {
   margin: 0;
   color: var(--muted);
   line-height: 1.6;
 }
 
-.db-footer-note strong {
+.staff-db-footer-note strong {
   color: var(--normal);
 }
 
-/* JSON tree viewer (second database-entry-viewer) */
-.database-entry-viewer--json-tree .json-tree {
+/* JSON tree viewer (second staff-database-entry-viewer) */
+.staff-database-entry-viewer--json-tree .staff-json-tree {
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
   font-size: 14px;
   line-height: 1.5;
   color: var(--normal);
 }
 
-.database-entry-viewer--json-tree .json-tree-inner {
+.staff-database-entry-viewer--json-tree .staff-json-tree-inner {
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 8px;
   padding: 12px 0;
   background: var(--card);
 }
 
-.database-entry-viewer--json-tree .json-tree-row {
+.staff-database-entry-viewer--json-tree .staff-json-tree-row {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1282,23 +1282,31 @@ body{
   min-height: 24px;
 }
 
-.database-entry-viewer--json-tree .json-tree-row[data-depth="0"] {
+.staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="0"] {
   margin-left: 0;
 }
 
-.database-entry-viewer--json-tree .json-tree-row[data-depth="1"] {
+.staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="1"] {
   margin-left: 24px;
 }
 
-.database-entry-viewer--json-tree .json-tree-row[data-depth="2"] {
+.staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="2"] {
   margin-left: 48px;
 }
 
-.database-entry-viewer--json-tree .json-tree-row:hover {
+.staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="3"] {
+  margin-left: 72px;
+}
+
+.staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="4"] {
+  margin-left: 96px;
+}
+
+.staff-database-entry-viewer--json-tree .staff-json-tree-row:hover {
   background: rgba(0, 0, 0, 0.03);
 }
 
-.database-entry-viewer--json-tree .json-tree-btn {
+.staff-database-entry-viewer--json-tree .staff-json-tree-btn {
   width: 20px;
   height: 20px;
   padding: 0;
@@ -1311,7 +1319,7 @@ body{
   justify-content: center;
 }
 
-.database-entry-viewer--json-tree .json-tree-btn::before {
+.staff-database-entry-viewer--json-tree .staff-json-tree-btn::before {
   content: '';
   width: 0;
   height: 0;
@@ -1321,67 +1329,67 @@ body{
   transition: transform 0.15s ease;
 }
 
-.database-entry-viewer--json-tree .json-tree-btn.json-tree-expanded::before {
+.staff-database-entry-viewer--json-tree .staff-json-tree-btn.staff-json-tree-expanded::before {
   transform: rotate(90deg);
 }
 
-.database-entry-viewer--json-tree .json-tree-btn.json-tree-invisible {
+.staff-database-entry-viewer--json-tree .staff-json-tree-btn.staff-json-tree-invisible {
   visibility: hidden;
   pointer-events: none;
 }
 
-.database-entry-viewer--json-tree .json-tree-type {
+.staff-database-entry-viewer--json-tree .staff-json-tree-type {
   color: var(--muted);
   font-size: 13px;
 }
 
-.database-entry-viewer--json-tree .json-tree-field,
-.database-entry-viewer--json-tree .json-tree-index {
+.staff-database-entry-viewer--json-tree .staff-json-tree-field,
+.staff-database-entry-viewer--json-tree .staff-json-tree-index {
   color: var(--accent);
   font-weight: 500;
 }
 
-.database-entry-viewer--json-tree .json-tree-sep {
+.staff-database-entry-viewer--json-tree .staff-json-tree-sep {
   color: var(--muted);
 }
 
-.database-entry-viewer--json-tree .json-tree-value.json-tree-string {
+.staff-database-entry-viewer--json-tree .staff-json-tree-value.staff-json-tree-string {
   color: #0a7c42;
 }
 
-.database-entry-viewer--json-tree .json-tree-value.json-tree-number {
+.staff-database-entry-viewer--json-tree .staff-json-tree-value.staff-json-tree-number {
   color: #1a1a9e;
 }
 
-.database-entry-viewer--json-tree .json-tree-preview {
+.staff-database-entry-viewer--json-tree .staff-json-tree-preview {
   color: var(--muted);
   font-size: 13px;
 }
 
-.database-entry-viewer--json-tree .json-tree-children {
+.staff-database-entry-viewer--json-tree .staff-json-tree-children {
   display: block;
 }
 
-.database-entry-viewer--json-tree .json-tree-row.json-tree-expandable + .json-tree-children {
+.staff-database-entry-viewer--json-tree .staff-json-tree-row.staff-json-tree-expandable + .staff-json-tree-children {
   display: none;
 }
 
-.database-entry-viewer--json-tree .json-tree-row.json-tree-expanded + .json-tree-children {
+.staff-database-entry-viewer--json-tree .staff-json-tree-row.staff-json-tree-expanded + .staff-json-tree-children {
   display: block;
 }
 
 /* Responsive adjustments (phone) */
 @media (max-width: 768px) {
-  .container {
+  .staff-container {
     padding: 0 12px;
   }
 
-  .site-header {
+  .staff-site-header {
     padding: 32px 12px;
     min-height: auto;
   }
 
-  .site-header h1 {
+  .staff-site-header h1 {
     font-size: 1.75rem;
     line-height: 1.3;
   }
@@ -1390,80 +1398,88 @@ body{
     max-width: 100%;
   }
 
-  .trust-chart .svg-container {
+  .staff-trust-chart .staff-svg-container {
     display: none;
   }
 
-  .trust-chart .attention {
+  .staff-trust-chart .staff-attention {
     display: none;
   }
 
-  .flow-mobile {
+  .staff-flow-mobile {
     display: block;
   }
 
-  .accordion-form label {
+  .staff-accordion-form label {
     padding: 14px 16px;
     min-height: 44px;
     font-size: 0.95rem;
   }
 
-  .acc-panel {
+  .staff-acc-panel {
     padding: 0 16px;
   }
 
-  .database-entry-viewer {
+  .staff-database-entry-viewer {
     padding: 20px 16px;
     margin: 24px 0;
   }
 
-  .db-header {
+  .staff-db-header {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .db-last-updated {
+  .staff-db-last-updated {
     align-items: flex-start;
   }
 
-  .db-stats-grid {
+  .staff-db-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .db-metrics-grid {
+  .staff-db-metrics-grid {
     grid-template-columns: 1fr;
   }
 
-  .db-env-grid {
+  .staff-db-env-grid {
     grid-template-columns: 1fr;
   }
 
-  .db-section-toggle {
+  .staff-db-section-toggle {
     min-height: 44px;
     padding: 12px 16px;
   }
 
-  .database-entry-viewer--json-tree .json-tree {
+  .staff-database-entry-viewer--json-tree .staff-json-tree {
     font-size: 13px;
   }
 
-  .database-entry-viewer--json-tree .json-tree-inner {
+  .staff-database-entry-viewer--json-tree .staff-json-tree-inner {
     padding: 8px 0;
   }
 
-  .database-entry-viewer--json-tree .json-tree-row {
+  .staff-database-entry-viewer--json-tree .staff-json-tree-row {
     padding: 2px 8px;
   }
 
-  .database-entry-viewer--json-tree .json-tree-row[data-depth="1"] {
+  .staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="1"] {
     margin-left: 16px;
   }
 
-  .database-entry-viewer--json-tree .json-tree-row[data-depth="2"] {
+  .staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="2"] {
     margin-left: 32px;
   }
 
-  .site-footer {
+  .staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="3"] {
+    margin-left: 48px;
+  }
+
+  .staff-database-entry-viewer--json-tree .staff-json-tree-row[data-depth="4"] {
+    margin-left: 64px;
+  }
+
+  .staff-site-footer {
     padding: 24px 16px;
     font-size: 0.9rem;
   }
@@ -1471,219 +1487,219 @@ body{
 
 
   </style>
-  <main class="container">
+  <main class="staff-container">
     <!-- Data Flow Diagram -->
      
-    <section class="trust-chart">
-    <h1 class="pickaxe-trustus-h1">Architecture Overview</h1>
-    <div class="flow-mobile" aria-label="Data flow steps">
-      <div class="flow-step">
-        <div class="flow-step-inner" role="button" tabindex="0">
-          <div class="flow-step-left">
-            <span class="flow-step-icon" aria-hidden="true">📄</span>
-            <span class="flow-step-title">User Input</span>
+    <section class="staff-trust-chart">
+    <h1 class="staff-pickaxe-trustus-h1">Architecture Overview</h1>
+    <div class="staff-flow-mobile" aria-label="Data flow steps">
+      <div class="staff-flow-step">
+        <div class="staff-flow-step-inner" role="button" tabindex="0">
+          <div class="staff-flow-step-left">
+            <span class="staff-staff-flow-step-icon" aria-hidden="true">📄</span>
+            <span class="staff-flow-step-title">User Input</span>
           </div>
-          <div class="flow-step-right"><p class="flow-step-desc">Interface for staff queries, uploads, and forms. All inputs are confidential.</p></div>
+          <div class="staff-flow-step-right"><p class="staff-flow-step-desc">Interface for staff queries, uploads, and forms. All inputs are confidential.</p></div>
         </div>
-        <div class="flow-step-bob-arrow" aria-hidden="true">▼</div>
-        <div class="flow-step-next"><div class="flow-step-next-inner"><span class="flow-arrow">▼</span> Next: Pickaxe</div></div>
+        <div class="staff-flow-step-bob-arrow" aria-hidden="true">▼</div>
+        <div class="staff-flow-step-next"><div class="staff-flow-step-next-inner"><span class="staff-flow-arrow">▼</span> Next: Pickaxe</div></div>
       </div>
-      <div class="flow-step">
-        <div class="flow-step-inner" role="button" tabindex="0">
-          <div class="flow-step-left">
-            <span class="flow-step-icon" aria-hidden="true">🛡️</span>
-            <span class="flow-step-title">Pickaxe</span>
+      <div class="staff-flow-step">
+        <div class="staff-flow-step-inner" role="button" tabindex="0">
+          <div class="staff-flow-step-left">
+            <span class="staff-staff-flow-step-icon" aria-hidden="true">🛡️</span>
+            <span class="staff-flow-step-title">Pickaxe</span>
           </div>
-          <div class="flow-step-right"><p class="flow-step-desc">Your data is not used for model training. Your intellectual property stays secure.</p></div>
+          <div class="staff-flow-step-right"><p class="staff-flow-step-desc">Your data is not used for model training. Your intellectual property stays secure.</p></div>
         </div>
-        <div class="flow-step-bob-arrow" aria-hidden="true">▼</div>
-        <div class="flow-step-next"><div class="flow-step-next-inner"><span class="flow-arrow">▼</span> Next: Pseudonymization</div></div>
+        <div class="staff-flow-step-bob-arrow" aria-hidden="true">▼</div>
+        <div class="staff-flow-step-next"><div class="staff-flow-step-next-inner"><span class="staff-flow-arrow">▼</span> Next: Pseudonymization</div></div>
       </div>
-      <div class="flow-step">
-        <div class="flow-step-inner" role="button" tabindex="0">
-          <div class="flow-step-left">
-            <span class="flow-step-icon" aria-hidden="true">🆔</span>
-            <span class="flow-step-title">Pseudonymization</span>
+      <div class="staff-flow-step">
+        <div class="staff-flow-step-inner" role="button" tabindex="0">
+          <div class="staff-flow-step-left">
+            <span class="staff-staff-flow-step-icon" aria-hidden="true">🆔</span>
+            <span class="staff-flow-step-title">Pseudonymization</span>
           </div>
-          <div class="flow-step-right"><p class="flow-step-desc">Identity is decoupled from session data; accounts use internal IDs for analytics without exposing who you are.</p></div>
+          <div class="staff-flow-step-right"><p class="staff-flow-step-desc">Identity is decoupled from session data; accounts use internal IDs for analytics without exposing who you are.</p></div>
         </div>
-        <div class="flow-step-bob-arrow" aria-hidden="true">▼</div>
-        <div class="flow-step-next"><div class="flow-step-next-inner"><span class="flow-arrow">▼</span> Next: Secure Database</div></div>
+        <div class="staff-flow-step-bob-arrow" aria-hidden="true">▼</div>
+        <div class="staff-flow-step-next"><div class="staff-flow-step-next-inner"><span class="staff-flow-arrow">▼</span> Next: Secure Database</div></div>
       </div>
-      <div class="flow-step">
-        <div class="flow-step-inner" role="button" tabindex="0">
-          <div class="flow-step-left">
-            <span class="flow-step-icon" aria-hidden="true">🗄️</span>
-            <span class="flow-step-title">Secure Database</span>
+      <div class="staff-flow-step">
+        <div class="staff-flow-step-inner" role="button" tabindex="0">
+          <div class="staff-flow-step-left">
+            <span class="staff-staff-flow-step-icon" aria-hidden="true">🗄️</span>
+            <span class="staff-flow-step-title">Secure Database</span>
           </div>
-          <div class="flow-step-right"><p class="flow-step-desc">Encrypted storage; access limited to three administrators. Only metrics logged; conversations not stored.</p></div>
+          <div class="staff-flow-step-right"><p class="staff-flow-step-desc">Encrypted storage; access limited to three administrators. Only metrics logged; conversations not stored.</p></div>
         </div>
-        <div class="flow-step-next"><div class="flow-step-next-inner"><span class="flow-arrow">▼</span> End</div></div>
+        <div class="staff-flow-step-next"><div class="staff-flow-step-next-inner"><span class="staff-flow-arrow">▼</span> End</div></div>
       </div>
     </div>
      <p class="attention">Hover over the elements to learn more</p>
       <!-- SVG placed directly in the section at its original size -->
        <div class="svg-container">
-        <div class="svg-pos">
-      <svg id="flowchart-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" class="flowchart-svg">
-  <g class="node-group" data-tooltip="The primary interface for staff queries, document uploads, and structured form data. All inputs are treated as confidential institutional data. <br><br><strong>Example:</strong> I'm John Doe drafting a curriculum for the PS1234 class.">
+        <div class="staff-svg-pos">
+      <svg id="staff-flowchart-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" class="flowchart-svg">
+  <g class="staff-node-group" data-tooltip="The primary interface for staff queries, document uploads, and structured form data. All inputs are treated as confidential institutional data. <br><br><strong>Example:</strong> I'm John Doe drafting a curriculum for the PS1234 class.">
     <rect x="50" y="50" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
     <text x="140" y="85" text-anchor="middle" font-size="30" font-weight="bold">📄</text>          
     <text x="140" y="105" text-anchor="middle" font-size="14" font-weight="bold">User Input</text>
   </g>
   
-  <g class="node-group" data-tooltip="Unlike consumer AI, our agreements with Pickaxe prohibits the use of your data for model training. Your intellectual property remains secure.">
+  <g class="staff-node-group" data-tooltip="Unlike consumer AI, our agreements with Pickaxe prohibits the use of your data for model training. Your intellectual property remains secure.">
     <rect x="300" y="150" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
     <text x="390" y="185" text-anchor="middle" font-size="30" font-weight="bold">🛡️</text>          
     <text x="390" y="205" text-anchor="middle" font-size="14" font-weight="bold">Pickaxe</text>          
   </g>
 
-  <g class="node-group" data-tooltip="<strong>Identity Decoupling:</strong> Personal identifying information is separated from session data. Accounts are mapped to unique internal IDs (e.g., USER1234) to allow for analytics without exposing individual identities to the processing layer.">
+  <g class="staff-node-group" data-tooltip="<strong>Identity Decoupling:</strong> Personal identifying information is separated from session data. Accounts are mapped to unique internal IDs (e.g., USER1234) to allow for analytics without exposing individual identities to the processing layer.">
     <rect x="550" y="250" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
     <text x="640" y="290" text-anchor="middle" font-size="30" font-weight="bold">🆔</text>          
     <text x="640" y="310" text-anchor="middle" font-size="14" font-weight="bold">Pseudonymization</text>
   </g>
   
-  <g class="node-group" data-tooltip="Encrypted storage with access limited to three designated AI System Administrators for auditing. Only general metrics (number of exchanges, AI-assistance category) is logged. Staff conversations are neither saved nor processed further.<br><br>Fellows, general staff, and leadership tiers do NOT have access to these raw logs.">
+  <g class="staff-node-group" data-tooltip="Encrypted storage with access limited to three designated AI System Administrators for auditing. Only general metrics (number of exchanges, AI-assistance category) is logged. Staff conversations are neither saved nor processed further.<br><br>Fellows, general staff, and leadership tiers do NOT have access to these raw logs.">
     <rect x="800" y="350" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
     <text x="890" y="385" text-anchor="middle" font-size="25" font-weight="bold">🗄️</text>          
     <text x="890" y="405" text-anchor="middle" font-size="14" font-weight="bold">Secure Database</text>
   </g>
   
-  <path d="M 140 130 L 140 190 L 300 190" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 140 130 L 140 190 L 300 190" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#staff-arrowhead)"/>
   <text x="150" y="180" font-size="11" fill="#e85e34" font-weight="bold">Message</text>
   
-  <path d="M 390 230 L 390 290 L 550 290" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 390 230 L 390 290 L 550 290" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#staff-arrowhead)"/>
   <text x="400" y="280" font-size="11" fill="#e85e34" font-weight="bold">Identity Masking</text>
   
-  <path d="M 640 330 L 640 390 L 800 390" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 640 330 L 640 390 L 800 390" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#staff-arrowhead)"/>
   <text x="650" y="380" font-size="11" fill="#e85e34" font-weight="bold">Storing</text>
 
-  <path d="M 390 150 L 390 90 L 230 90" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 390 150 L 390 90 L 230 90" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#staff-arrowhead)"/>
   <text x="280" y="85" font-size="11" fill="#e85e34" font-weight="bold">Response</text>
 
   <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+    <marker id="staff-arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <polygon points="0 0, 10 3, 0 6" fill="#e85e34"/>
     </marker>
   </defs>
 </svg>
         <!-- Tooltip container -->
-        <div id="svg-tooltip" class="svg-tooltip"></div>
-      <!-- end trust-chart svg -->
+        <div id="staff-svg-tooltip" class="staff-svg-tooltip"></div>
+      <!-- end staff-trust-chart svg -->
        </div>
        </div>
      </section>
 
- <section class="hover-cards" aria-label="Staff Data Governance & Privacy">
-  <h1 class="pickaxe-trustus-h1">Information Governance & Data Privacy</h1>
-  <div class="cards-grid">
+ <section class="staff-hover-cards" aria-label="Staff Data Governance & Privacy">
+  <h1 class="staff-pickaxe-trustus-h1">Information Governance & Data Privacy</h1>
+  <div class="staff-cards-grid">
     
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>1. What is the Staff AI Hub?</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>It is the institution's secure gateway to enterprise-grade AI. It provides faculty and staff with protected access to advanced models (GPT-4o, Claude) for administrative and academic productivity.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>2. Professional Activation</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>Upon review of the AI Governance & Usage Agreement, your account is provisioned. This ensures all staff are aligned on the ethical and secure use of AI within our professional framework.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>3. What can I use it for?</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>Use it for curriculum design, administrative drafting, and research assistance. Usage must comply with institutional data handling policies and professional codes of conduct.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>4. What data is processed?</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>We process your staff credentials, the tools used, and timing of requests. Unlike students, your actual message content is treated as ephemeral and is not logged in our long-term database.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>5. Is my data confidential?</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>Yes. Our Enterprise API agreements strictly prohibit providers from using your data to train their models. Your prompts and intellectual property remain isolated within our secure instance.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>6. Who has oversight?</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>Access is restricted to three AI System Administrators bound by confidentiality. Leadership and colleagues do not have access to your individual usage metadata or session history.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>7. Why is usage tracked?</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>Aggregated metrics (not content) allow the college to monitor resource allocation, system performance, and the environmental impact (CO2/Water) of AI across different departments.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>8. Data Residency</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>All processing occurs on secure, GDPR-compliant servers based in Europe. We maintain strict protocols to ensure institutional interactions remain within a sovereign digital environment.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front"> 
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front"> 
           <h2>9. Professional Rights</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>You maintain full rights to access your metadata or request account deletion. For any governance-related queries, please contact <a href="mailto:ai@forward-college.eu">ai@forward-college.eu</a>.</p>
         </div>
       </div>
     </article>
 
-    <article class="card" tabindex="0">
-      <div class="card-inner">
-        <div class="card-front">
+    <article class="staff-card" tabindex="0">
+      <div class="staff-card-inner">
+        <div class="staff-card-front">
           <h2>10. Policy Evolution</h2>
         </div>
-        <div class="card-back">
+        <div class="staff-card-back">
           <p>Updates to the AI Governance Framework are communicated via official staff briefings. The latest Data Protection Impact Assessment (DPIA) is always accessible via the Hub.</p>
         </div>
       </div>
@@ -1693,166 +1709,449 @@ body{
 </section>
 
     <!-- Mobile: Accordion (touch-friendly) -->
-<section class="accordion" aria-label="Staff Data Governance & Privacy (Mobile)">
-  <form class="accordion-form" aria-hidden="true">
+<section class="staff-accordion" aria-label="Staff Data Governance & Privacy (Mobile)">
+  <form class="staff-accordion-form" aria-hidden="true">
     
-    <input type="radio" name="acc" id="acc1" checked>
-    <label for="acc1">1. What is the Staff AI Hub?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc1" checked>
+    <label for="staff-acc1">1. What is the Staff AI Hub?</label>
+    <div class="staff-acc-panel">
       <p>It is the institution's secure gateway to enterprise-grade AI. It provides faculty and staff with access to advanced models (GPT-4o, Claude, etc.) within a protected environment, ensuring departmental data is never leaked to public training sets.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc2">
-    <label for="acc2">2. What comes with activating my account?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc2">
+    <label for="staff-acc2">2. What comes with activating my account?</label>
+    <div class="staff-acc-panel">
       <p>Staff must review and sign the <strong>AI Data Governance Agreement</strong>. This ensures all users are aligned on the professional, ethical, and secure use of AI tools within our institutional framework.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc3">
-    <label for="acc3">3. What are the approved use cases?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc3">
+    <label for="staff-acc3">3. What are the approved use cases?</label>
+    <div class="staff-acc-panel">
       <p>The Hub is designed for administrative efficiency, curriculum development, research assistance, and drafting feedback. It should be used in alignment with our institutional data handling and IP policies.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc4">
-    <label for="acc4">4. How is my privacy handled?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc4">
+    <label for="staff-acc4">4. How is my privacy handled?</label>
+    <div class="staff-acc-panel">
       <p>Privacy is heightened for staff: <strong>the content of your messages and prompts is not stored in our long-term database.</strong> We only track high-level metadata (e.g., number of exchanges) for institutional impact reporting.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc5">
-    <label for="acc5">5. Is my data used to train AI models?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc5">
+    <label for="staff-acc5">5. Is my data used to train AI models?</label>
+    <div class="staff-acc-panel">
       <p><strong>No.</strong> We use Enterprise API agreements. Unlike consumer versions of AI, providers (OpenAI, Google, etc.) are contractually prohibited from using any data processed through our Hub to train their models.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc6">
-    <label for="acc6">6. Who has oversight of my activity?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc6">
+    <label for="staff-acc6">6. Who has oversight of my activity?</label>
+    <div class="staff-acc-panel">
       <p>Oversight is limited to three designated AI System Administrators for system auditing. Individual message content is not accessible to colleagues, leadership, or the AI team, as it is not retained in the raw logs.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc7">
-    <label for="acc7">7. Why is usage data tracked?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc7">
+    <label for="staff-acc7">7. Why is usage data tracked?</label>
+    <div class="staff-acc-panel">
       <p>Aggregated metrics (not content) help us understand system utility, manage resource allocation, and measure our environmental footprint (CO2 and water usage) per department.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc8">
-    <label for="acc8">8. How and where is data processed?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc8">
+    <label for="staff-acc8">8. How and where is data processed?</label>
+    <div class="staff-acc-panel">
       <p>The Hub operates on secure, GDPR-compliant servers within Europe. While session metadata is kept for auditing, your professional prompts are treated as ephemeral and are not archived.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc9">
-    <label for="acc9">9. What control do I have?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc9">
+    <label for="staff-acc9">9. What control do I have?</label>
+    <div class="staff-acc-panel">
       <p>You have the right to access your usage metrics or request a summary of your account metadata. For inquiries regarding data governance, contact the team at <a href="mailto:ai@forward-college.eu">ai@forward-college.eu</a>.</p>
     </div>
 
-    <input type="radio" name="acc" id="acc10">
-    <label for="acc10">10. How are policy changes managed?</label>
-    <div class="acc-panel">
+    <input type="radio" name="acc" id="staff-acc10">
+    <label for="staff-acc10">10. How are policy changes managed?</label>
+    <div class="staff-acc-panel">
       <p>Significant updates to the AI Governance Framework are communicated via official staff briefings. The latest version of our Data Protection Impact Assessment (DPIA) is always available on the Hub.</p>
     </div>
 
   </form>
 </section>
     
-    <h1 class="pickaxe-trustus-h1">For complete transparency, below you may find an example database entry</h1>
+    <h1 class="staff-pickaxe-trustus-h1">For complete transparency, below you may find an example database entry</h1>
     
 
 
-    <section class="database-entry-viewer database-entry-viewer--json-tree">
-      <div class="json-tree">
-        <div class="json-tree-inner">
-          <div class="json-tree-row json-tree-expandable json-tree-expanded" data-depth="0">
-            <button type="button" class="json-tree-btn json-tree-expanded" title="Click to expand/collapse"></button>
-            <span class="json-tree-type">object</span>
-            <span class="json-tree-preview" title="object containing 7 items">{7}</span>
+    <section class="staff-database-entry-viewer staff-database-entry-viewer--json-tree">
+      <div class="staff-json-tree">
+        <div class="staff-json-tree-inner">
+          <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-expanded" data-depth="0">
+            <button type="button" class="staff-json-tree-btn staff-json-tree-expanded" title="Click to expand/collapse"></button>
+            <span class="staff-json-tree-type">object</span>
+            <span class="staff-json-tree-preview" title="object containing 7 items">{7}</span>
           </div>
-          <div class="json-tree-children">
-            <div class="json-tree-row json-tree-expandable json-tree-collapsed" data-depth="1">
-              <button type="button" class="json-tree-btn json-tree-collapsed" title="Click to expand/collapse"></button>
-              <span class="json-tree-field">Total</span>
-              <span class="json-tree-preview" title="object containing 15 items">{15}</span>
+          <div class="staff-json-tree-children">
+            <!-- Total (object, 15 items) -->
+            <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="1">
+              <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+              <span class="staff-json-tree-field">Total</span>
+              <span class="staff-json-tree-preview" title="object containing 15 items">{15}</span>
             </div>
-            <div class="json-tree-children">
-              <div class="json-tree-row" data-depth="2">
-                <button type="button" class="json-tree-btn json-tree-invisible"></button>
-                <span class="json-tree-field">Exchanges</span>
-                <span class="json-tree-sep">:</span>
-                <span class="json-tree-value json-tree-number">15</span>
+            <div class="staff-json-tree-children">
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">Images_Generated</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
               </div>
-              <div class="json-tree-row" data-depth="2">
-                <button type="button" class="json-tree-btn json-tree-invisible"></button>
-                <span class="json-tree-field">Conversations</span>
-                <span class="json-tree-sep">:</span>
-                <span class="json-tree-value json-tree-number">3</span>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">Number_of_Conversations</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">Water</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">Assistant_Words</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                <span class="staff-json-tree-field">Message_Times</span>
+                <span class="staff-json-tree-preview" title="array containing 3 items">[3]</span>
+              </div>
+              <div class="staff-json-tree-children">
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-index">0</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19"</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-index">1</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19"</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-index">2</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19"</span>
+                </div>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">Documents_Uploaded</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                <span class="staff-json-tree-field">Forms</span>
+                <span class="staff-json-tree-preview" title="object containing 3 items">{3}</span>
+              </div>
+              <div class="staff-json-tree-children">
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Form_A</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Form_B</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">2</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Form_C</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">3</span>
+                </div>
+              </div>
+              <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                <span class="staff-json-tree-field">Models</span>
+                <span class="staff-json-tree-preview" title="object containing 2 items">{2}</span>
+              </div>
+              <div class="staff-json-tree-children">
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Model_A</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Model_B</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">2</span>
+                </div>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">User_AI_Ratio</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">Assistant_Chars</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">Co2</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">User_Words</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                <span class="staff-json-tree-field">Form_Ids</span>
+                <span class="staff-json-tree-preview" title="object containing 2 items">{2}</span>
+              </div>
+              <div class="staff-json-tree-children">
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">FORM001</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">FORM002</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">2</span>
+                </div>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">User_Chars</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-field">Number_of_Exchanges</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-number">1</span>
               </div>
             </div>
-            <div class="json-tree-row json-tree-expandable json-tree-collapsed" data-depth="1">
-              <button type="button" class="json-tree-btn json-tree-collapsed" title="Click to expand/collapse"></button>
-              <span class="json-tree-field">Exchanges</span>
-              <span class="json-tree-preview" title="array containing 2 items">[2]</span>
+            <!-- Exchanges (array, 3 items) -->
+            <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="1">
+              <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+              <span class="staff-json-tree-field">Exchanges</span>
+              <span class="staff-json-tree-preview" title="array containing 3 items">[3]</span>
             </div>
-            <div class="json-tree-children">
-              <div class="json-tree-row" data-depth="2">
-                <button type="button" class="json-tree-btn json-tree-invisible"></button>
-                <span class="json-tree-index">0</span>
-                <span class="json-tree-sep">:</span>
-                <span class="json-tree-value json-tree-string">"1999-12-12_CONV7890_0001"</span>
+            <div class="staff-json-tree-children">
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-index">0</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19_EXCHANGE_001"</span>
               </div>
-              <div class="json-tree-row" data-depth="2">
-                <button type="button" class="json-tree-btn json-tree-invisible"></button>
-                <span class="json-tree-index">1</span>
-                <span class="json-tree-sep">:</span>
-                <span class="json-tree-value json-tree-string">"1999-12-12_CONV7890_0002"</span>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-index">1</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19_EXCHANGE_002"</span>
               </div>
-            </div>
-            <div class="json-tree-row json-tree-expandable json-tree-collapsed" data-depth="1">
-              <button type="button" class="json-tree-btn json-tree-collapsed" title="Click to expand/collapse"></button>
-              <span class="json-tree-field">Conversations</span>
-              <span class="json-tree-preview" title="array containing 1 items">[1]</span>
-            </div>
-            <div class="json-tree-children">
-              <div class="json-tree-row" data-depth="2">
-                <button type="button" class="json-tree-btn json-tree-invisible"></button>
-                <span class="json-tree-index">0</span>
-                <span class="json-tree-sep">:</span>
-                <span class="json-tree-value json-tree-string">"CONV7890"</span>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-index">2</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19_EXCHANGE_003"</span>
               </div>
             </div>
-            <div class="json-tree-row json-tree-expandable json-tree-collapsed" data-depth="1">
-              <button type="button" class="json-tree-btn json-tree-collapsed" title="Click to expand/collapse"></button>
-              <span class="json-tree-field">Months</span>
-              <span class="json-tree-preview" title="object containing 1 items">{1}</span>
+            <!-- Conversations (array, 2 items) -->
+            <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="1">
+              <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+              <span class="staff-json-tree-field">Conversations</span>
+              <span class="staff-json-tree-preview" title="array containing 2 items">[2]</span>
             </div>
-            <div class="json-tree-children">
-              <div class="json-tree-row" data-depth="2">
-                <button type="button" class="json-tree-btn json-tree-invisible"></button>
-                <span class="json-tree-field">December_1999</span>
-                <span class="json-tree-sep">:</span>
-                <span class="json-tree-value json-tree-number">1</span>
+            <div class="staff-json-tree-children">
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-index">0</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-string">"CONVERSATION_001"</span>
+              </div>
+              <div class="staff-json-tree-row" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                <span class="staff-json-tree-index">1</span>
+                <span class="staff-json-tree-sep">:</span>
+                <span class="staff-json-tree-value staff-json-tree-string">"CONVERSATION_002"</span>
               </div>
             </div>
-            <div class="json-tree-row" data-depth="1">
-              <button type="button" class="json-tree-btn json-tree-invisible"></button>
-              <span class="json-tree-field">Studio_Id</span>
-              <span class="json-tree-sep">:</span>
-              <span class="json-tree-value json-tree-string">"STUDIO123"</span>
+            <!-- Months (object, 1 item) -->
+            <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="1">
+              <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+              <span class="staff-json-tree-field">Months</span>
+              <span class="staff-json-tree-preview" title="object containing 1 items">{1}</span>
             </div>
-            <div class="json-tree-row" data-depth="1">
-              <button type="button" class="json-tree-btn json-tree-invisible"></button>
-              <span class="json-tree-field">Last_Updated</span>
-              <span class="json-tree-sep">:</span>
-              <span class="json-tree-value json-tree-string">"1999.19.19"</span>
+            <div class="staff-json-tree-children">
+              <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="2">
+                <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                <span class="staff-json-tree-field">1999.19.19</span>
+                <span class="staff-json-tree-preview" title="object containing 15 items">{15}</span>
+              </div>
+              <div class="staff-json-tree-children">
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Number_of_Conversations</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Images_Generated</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Water</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Assistant_Words</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                  <span class="staff-json-tree-field">Message_Times</span>
+                  <span class="staff-json-tree-preview" title="array containing 2 items">[2]</span>
+                </div>
+                <div class="staff-json-tree-children">
+                  <div class="staff-json-tree-row" data-depth="4">
+                    <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                    <span class="staff-json-tree-index">0</span>
+                    <span class="staff-json-tree-sep">:</span>
+                    <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19"</span>
+                  </div>
+                  <div class="staff-json-tree-row" data-depth="4">
+                    <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                    <span class="staff-json-tree-index">1</span>
+                    <span class="staff-json-tree-sep">:</span>
+                    <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19"</span>
+                  </div>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Documents_Uploaded</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                  <span class="staff-json-tree-field">Forms</span>
+                  <span class="staff-json-tree-preview" title="object containing 1 items">{1}</span>
+                </div>
+                <div class="staff-json-tree-children">
+                  <div class="staff-json-tree-row" data-depth="4">
+                    <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                    <span class="staff-json-tree-field">Form_A</span>
+                    <span class="staff-json-tree-sep">:</span>
+                    <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                  </div>
+                </div>
+                <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                  <span class="staff-json-tree-field">Models</span>
+                  <span class="staff-json-tree-preview" title="object containing 1 items">{1}</span>
+                </div>
+                <div class="staff-json-tree-children">
+                  <div class="staff-json-tree-row" data-depth="4">
+                    <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                    <span class="staff-json-tree-field">Model_A</span>
+                    <span class="staff-json-tree-sep">:</span>
+                    <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                  </div>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">User_AI_Ratio</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Assistant_Chars</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Co2</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">User_Words</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row staff-json-tree-expandable staff-json-tree-collapsed" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-collapsed" title="Click to expand/collapse"></button>
+                  <span class="staff-json-tree-field">Form_Ids</span>
+                  <span class="staff-json-tree-preview" title="object containing 1 items">{1}</span>
+                </div>
+                <div class="staff-json-tree-children">
+                  <div class="staff-json-tree-row" data-depth="4">
+                    <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                    <span class="staff-json-tree-field">FORM001</span>
+                    <span class="staff-json-tree-sep">:</span>
+                    <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                  </div>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">User_Chars</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+                <div class="staff-json-tree-row" data-depth="3">
+                  <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+                  <span class="staff-json-tree-field">Number_of_Exchanges</span>
+                  <span class="staff-json-tree-sep">:</span>
+                  <span class="staff-json-tree-value staff-json-tree-number">1</span>
+                </div>
+              </div>
             </div>
-            <div class="json-tree-row" data-depth="1">
-              <button type="button" class="json-tree-btn json-tree-invisible"></button>
-              <span class="json-tree-field">User_Id</span>
-              <span class="json-tree-sep">:</span>
-              <span class="json-tree-value json-tree-string">"USER1243"</span>
+            <div class="staff-json-tree-row" data-depth="1">
+              <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+              <span class="staff-json-tree-field">Studio_Id</span>
+              <span class="staff-json-tree-sep">:</span>
+              <span class="staff-json-tree-value staff-json-tree-string">"STUDIO123"</span>
+            </div>
+            <div class="staff-json-tree-row" data-depth="1">
+              <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+              <span class="staff-json-tree-field">Last_Updated</span>
+              <span class="staff-json-tree-sep">:</span>
+              <span class="staff-json-tree-value staff-json-tree-string">"1999.19.19"</span>
+            </div>
+            <div class="staff-json-tree-row" data-depth="1">
+              <button type="button" class="staff-json-tree-btn staff-json-tree-invisible"></button>
+              <span class="staff-json-tree-field">User_Id</span>
+              <span class="staff-json-tree-sep">:</span>
+              <span class="staff-json-tree-value staff-json-tree-string">"USER1243"</span>
             </div>
           </div>
         </div>
@@ -1862,7 +2161,7 @@ body{
 
   </main>
 
-  <footer class="site-footer">
+  <footer class="staff-site-footer">
     <p>Questions? Contact the AI Team: <a href="mailto:ai@forward-college.eu">ai@forward-college.eu</a></p>
   </footer>
  
