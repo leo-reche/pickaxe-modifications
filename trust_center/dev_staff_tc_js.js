@@ -1,5 +1,5 @@
     (function() {
-      const targetURL = '/';
+      const targetURL = '/trust_center';
       let isInitialized = false;
       let attempts = 0;
 
