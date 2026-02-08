@@ -81,41 +81,6 @@ history.pushState = function(...args) {
 
 // ================ DB Sync
 
-let formId = null;
-let responseId = null;
-let studioUserId = null;
-let latestRequest = null;
-let documents = null;
-let wasStopped = false;
-let pastedContent = [""];
-let currentAbortController = null;
-let currentSubmissionId = null; //This will store the Submission ID
-
-
-
-// syncing with database
-function syncConversation(responseId,formId,studioUserId,pastedContent,url){
-if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
-    try {
-    const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
-    const payload = { 
-        responseId: responseId,
-        formId: formId,
-        userId: studioUserId,
-        pastedContent: pastedContent
-    };
-    originalFetch2(apiUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-    });
-    pastedContent.length = 0;
-    } catch (e) {
-    }
-}
-}
 
 function errorMessageHandler(){
     setTimeout(function(){ //waits 50ms for the "error message" to load
@@ -420,45 +385,6 @@ let originalFetch = window.fetch;
 window.fetch = async function(...args) {
 
     const [url, config] = args;
-
-   
-
-    if (url.includes("https://core-pickaxe-api.pickaxe.co/submit")){   //Massive if{} to get the formid,responseid,lastmessage,documents
-
-        try {
-            // Extract from request body
-            formId = JSON.parse(config.body).pickaxeId
-        } catch(e){}
-        try {
-            responseId = JSON.parse(config.body).sessionId
-        } catch(e){}
-        try {
-            latestRequest = JSON.parse(config.body).value
-        } catch(e){}
-        try {
-            studioUserId = JSON.parse(config.body).sender
-        } catch(e){}
-        try {
-            documents = JSON.parse(config.body).documentIds
-        } catch(e){}
-
-
-        try {
-            const response = await originalFetch(url, config);
-            const responseClone = response.clone();
-            
-            // Extract submissionId from response
-            const responseData = await responseClone.json();
-            if (responseData.submissionId) {
-                currentSubmissionId = responseData.submissionId;
-            }
-            
-            return response;
-        } catch (error) {
-            console.error("Error in /submit:", error);
-            return await originalFetch(url, config);
-        }
-    }
      
     if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")){
 
@@ -471,6 +397,7 @@ window.fetch = async function(...args) {
         setTimeout(() => {
             addEditButton();
           }, 2000);
+          
         const response = await originalFetch(url, { ...config, signal }); //Original fetch
         const out = response.clone(); // return this to your UI
         
@@ -484,9 +411,6 @@ window.fetch = async function(...args) {
                 currentAbortController = null;
         
                 errorMessageHandler();
-                setTimeout(() => {
-                    syncConversation(responseId, formId, studioUserId, pastedContent, url);
-                }, 2000);
             } catch (_) {}
         })();
 
