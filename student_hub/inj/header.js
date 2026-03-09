@@ -425,8 +425,7 @@ function checkPricingRedirect() {
       const [url, config] = args;
   
      
-      console.log(url)
-      if (url.includes("https://test-core-pickaxe-api.pickaxe.co/submit")){   //Massive if{} to get the formid,responseid,lastmessage,documents
+      if (url.includes("https://test-core-api.pickaxe.co/submit")){   //Massive if{} to get the formid,responseid,lastmessage,documents
       console.log("submit")
           try {
               // Extract from request body
@@ -463,7 +462,7 @@ function checkPricingRedirect() {
           }
       }
        
-      if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")){
+      if (url.includes("https://test-core-api.pickaxe.co/stream")){
   
       
           currentAbortController = new AbortController();
