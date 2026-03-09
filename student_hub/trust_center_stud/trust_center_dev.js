@@ -1,97 +1,153 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const targetURL = "/trust_center";
-  let isInitialized = false;
+<script>
+  (function() {
+    var lastPathname = '';
 
-  // 1. THE MAIN CONTROLLER
-  function handleLocationChange() {
-    const currentPath = window.location.pathname;
-
-    if (currentPath.includes(targetURL)) {
-      console.log("On Trust Center path. Starting initialization...");
-      initFlowchart();
-    } else {
-      console.log("Not on target page. Monitoring for navigation...");
-      isInitialized = false; // Reset if user leaves the page
+    function isStudentTrustCenterPage() {
+      var path = typeof window.location.pathname !== 'undefined'
+        ? window.location.pathname
+        : (window.location.pathname || '');
+      return path === '/student_trust_center' || path.endsWith('/student_trust_center');
     }
-  }
 
-  // 2. THE ROBUST WAITER (Your existing polling logic)
-  let attempts = 0;
-  function initFlowchart() {
-    // Prevent multiple initializations on the same page instance
-    if (isInitialized) return;
-
-    const nodeGroups = document.querySelectorAll('.node-group');
-    const tooltip = document.getElementById('svg-tooltip');
-    const svg = document.getElementById('flowchart-svg');
-
-    if (svg && tooltip && nodeGroups.length > 0) {
-      console.log("Elements found! Setting up listeners.");
-      setupHoverListeners(nodeGroups, tooltip, svg);
-      isInitialized = true; // Mark as done for this page load
-      attempts = 0; 
-    } else {
-      attempts++;
-      if (attempts < 20) { // Try for 10 seconds
-        setTimeout(initFlowchart, 500);
-      } else {
-        console.error("Timed out waiting for Trust Center elements.");
+    function initStudentFlowMobile() {
+      var wrap = document.querySelector('.student-flow-carousel-wrap');
+      var prevBtn = document.querySelector('.student-flow-carousel-arrow.prev');
+      var nextBtn = document.querySelector('.student-flow-carousel-arrow.next');
+      var container = document.querySelector('.student-flow-mobile');
+      if (!wrap || !prevBtn || !nextBtn || !container) {
+        console.log('[Student Trust Center] Carousel: not mounted (missing elements)');
+        return;
       }
+      console.log('[Student Trust Center] Carousel: mounted');
+
+      function getScrollAmount() {
+        return wrap.clientWidth;
+      }
+
+      prevBtn.addEventListener('click', function() {
+        wrap.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+      });
+      nextBtn.addEventListener('click', function() {
+        wrap.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+      });
+
+      var scrollEndTimer;
+      wrap.addEventListener('scroll', function() {
+        container.classList.add('is-scrolling');
+        clearTimeout(scrollEndTimer);
+        scrollEndTimer = setTimeout(function() {
+          container.classList.remove('is-scrolling');
+        }, 150);
+      });
     }
-  }
 
-  // 3. THE NAVIGATION INTERCEPTOR
-  // This wraps the browser's navigation functions to trigger our check
-  const originalPushState = history.pushState;
-  history.pushState = function () {
-    originalPushState.apply(this, arguments);
-    handleLocationChange();
-  };
+    function initSvgTooltips() {
+      var nodeGroups = document.querySelectorAll('.node-group');
+      var tooltip = document.getElementById('svg-tooltip');
+      var svg = document.getElementById('flowchart-svg') || document.querySelector('.flowchart-svg');
+      if (!nodeGroups.length || !tooltip || !svg) {
+        console.log('[Student Trust Center] SVG tooltips: not mounted (missing elements)');
+        return;
+      }
+      console.log('[Student Trust Center] SVG tooltips: mounted (' + nodeGroups.length + ' nodes)');
 
-  const originalReplaceState = history.replaceState;
-  history.replaceState = function () {
-    originalReplaceState.apply(this, arguments);
-    handleLocationChange();
-  };
-
-  // Listen for back/forward button clicks
-  window.addEventListener('popstate', handleLocationChange);
-
-  // 4. SETUP HOVER LISTENERS (Your core logic)
-  function setupHoverListeners(nodeGroups, tooltip, svg) {
-    nodeGroups.forEach(group => {
-      group.addEventListener('mouseenter', function (e) {
-        const tooltipText = this.getAttribute('data-tooltip');
-        if (!tooltipText) return;
-
-        tooltip.innerHTML = tooltipText;
-        tooltip.classList.add('visible');
-        this.classList.add('hovered');
-
-        const svgRect = svg.getBoundingClientRect();
-        const rect = this.querySelector('rect');
-        const x = parseFloat(rect.getAttribute('x'));
-        const y = parseFloat(rect.getAttribute('y'));
-        const width = parseFloat(rect.getAttribute('width'));
-        const height = parseFloat(rect.getAttribute('height'));
-
-        const scaleX = svgRect.width / 1000;
-        const scaleY = svgRect.height / 600;
-
-        const elemCenterX = svgRect.left + (x + width / 2) * scaleX;
-        const elemBottomY = svgRect.top + (y + height) * scaleY;
-
-        tooltip.style.left = (elemCenterX - tooltip.offsetWidth / 2) + 'px';
-        tooltip.style.top = (elemBottomY + 10) + 'px';
+      nodeGroups.forEach(function(group) {
+        group.addEventListener('mouseenter', function() {
+          var tooltipText = this.getAttribute('data-tooltip');
+          tooltip.innerHTML = tooltipText || '';
+          if (tooltipText) {
+            tooltip.classList.add('visible');
+            this.classList.add('hovered');
+            var svgRect = svg.getBoundingClientRect();
+            var rect = this.querySelector('rect');
+            if (rect) {
+              var x = parseFloat(rect.getAttribute('x')) || 0;
+              var y = parseFloat(rect.getAttribute('y')) || 0;
+              var width = parseFloat(rect.getAttribute('width')) || 0;
+              var height = parseFloat(rect.getAttribute('height')) || 0;
+              var scaleX = svgRect.width / 1000;
+              var scaleY = svgRect.height / 600;
+              var elemCenterX = svgRect.left + (x + width / 2) * scaleX;
+              var elemBottomY = svgRect.top + (y + height) * scaleY;
+              tooltip.style.left = (elemCenterX - tooltip.offsetWidth / 2) + 'px';
+              tooltip.style.top = (elemBottomY + 10) + 'px';
+            }
+          }
+        });
+        group.addEventListener('mouseleave', function() {
+          tooltip.classList.remove('visible');
+          this.classList.remove('hovered');
+        });
       });
+    }
 
-      group.addEventListener('mouseleave', function () {
-        tooltip.classList.remove('visible');
-        this.classList.remove('hovered');
-      });
+    function runInit() {
+      if (!isStudentTrustCenterPage()) {
+        lastPathname = window.location.pathname;
+        return;
+      }
+      if (window.location.pathname === lastPathname) {
+        return;
+      }
+      lastPathname = window.location.pathname;
+      console.log('[Student Trust Center] URL OK, initializing...');
+
+      var maxAttempts = 15;
+      var interval = 200;
+      var attempts = 0;
+      var carouselDone = false;
+      var tooltipsDone = false;
+
+      function tryMount() {
+        attempts++;
+        var wrap = document.querySelector('.student-flow-carousel-wrap');
+        var prevBtn = document.querySelector('.student-flow-carousel-arrow.prev');
+        var nextBtn = document.querySelector('.student-flow-carousel-arrow.next');
+        var container = document.querySelector('.student-flow-mobile');
+        var nodeGroups = document.querySelectorAll('.node-group');
+        var tooltip = document.getElementById('svg-tooltip');
+        var svg = document.getElementById('flowchart-svg') || document.querySelector('.flowchart-svg');
+
+        if (!carouselDone && wrap && prevBtn && nextBtn && container) {
+          initStudentFlowMobile();
+          carouselDone = true;
+        }
+        if (!tooltipsDone && nodeGroups.length && tooltip && svg) {
+          initSvgTooltips();
+          tooltipsDone = true;
+        }
+
+        if (carouselDone && tooltipsDone) {
+          return;
+        }
+        if (attempts < maxAttempts) {
+          setTimeout(tryMount, interval);
+        } else {
+          if (!carouselDone) console.log('[Student Trust Center] Carousel: not mounted after ' + maxAttempts + ' attempts');
+          if (!tooltipsDone) console.log('[Student Trust Center] SVG tooltips: not mounted after ' + maxAttempts + ' attempts');
+        }
+      }
+
+      tryMount();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!isStudentTrustCenterPage()) {
+        console.log('[Student Trust Center] Skipped (URL does not end with /student_trust_center). Path: ', window.location.pathname);
+        lastPathname = window.location.pathname;
+        return;
+      }
+      runInit();
     });
-  }
 
-  // 5. RUN ON INITIAL LOAD
-  handleLocationChange();
-});
+    window.addEventListener('popstate', runInit);
+
+    setInterval(function() {
+      if (!isStudentTrustCenterPage()) {
+        lastPathname = window.location.pathname;
+        return;
+      }
+      runInit();
+    }, 500);
+  })();
+</script>
