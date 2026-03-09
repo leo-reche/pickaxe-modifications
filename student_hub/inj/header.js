@@ -96,7 +96,7 @@ function checkPricingRedirect() {
   // syncing with database
   function syncConversation(responseId,formId,studioUserId,pastedContent,url){
   console.log("trying to stream 1");
-  if (url.includes("https://test-core-pickaxe-api.pickaxe.co/stream")) {
+  if (url.includes("https://test-core-api.pickaxe.co/stream")) {
       try {
       const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
       const payload = { 
