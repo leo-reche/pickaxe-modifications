@@ -5,7 +5,7 @@
       var path = typeof window.location.pathname !== 'undefined'
         ? window.location.pathname
         : (window.location.pathname || '');
-      return path === '/student_trust_center' || path.endsWith('/student_trust_center');
+      return path === '/trust_center' || path.endsWith('/trust_center');
     }
 
     function initStudentFlowMobile() {
