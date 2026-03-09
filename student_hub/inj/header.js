@@ -425,7 +425,7 @@ function checkPricingRedirect() {
       const [url, config] = args;
   
      
-  
+      console.log(url)
       if (url.includes("https://test-core-pickaxe-api.pickaxe.co/submit")){   //Massive if{} to get the formid,responseid,lastmessage,documents
       console.log("submit")
           try {
