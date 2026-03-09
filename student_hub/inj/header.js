@@ -151,7 +151,7 @@ function checkPricingRedirect() {
     return originalFetch2.call(this, input, init)
       .then(response => {
         // If this request has the SSE URL
-        if (url === 'https://test-core-pickaxe-api.pickaxe.co/stream') {
+        if (url === 'https://test-core-api.pickaxe.co/stream') {
           const contentType = response.headers.get('content-type');
           
           if (contentType && contentType.includes('text/event-stream')) {
@@ -658,7 +658,7 @@ function checkPricingRedirect() {
         let originalResponse = Object.getOwnPropertyDescriptor(originalXHR2.prototype, 'responseText').get.call(this);
         
         // Check if this is from the chat conversation endpoint and we have a response
-        if (requestUrl && requestUrl.startsWith('https://core-pickaxe-api.pickaxe.co/conversation') && originalResponse) {
+        if (requestUrl && requestUrl.startsWith('https://test-core-api.pickaxe.co/conversation') && originalResponse) {
           // Apply all pattern replacements using simple string replacement
           let modifiedResponse = originalResponse;
           for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
