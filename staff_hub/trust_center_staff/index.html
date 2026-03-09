@@ -1,746 +1,1009 @@
-﻿<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Forward Trust Center</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
+<div class="staff-body">
+    <style>
+       
+        :root{
+      --bg:  background-color: rgb(246, 248, 250);
+      --card:#ffffff;
+      --accent:#e85e34;
+      --fc-muted:#e85e34;
+      --muted-accent:#ffa78e;
+      --muted:#555;
+      --normal:#000;
+      --radius:24px;
+    }
+
+    .staff-card-back-link{
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .staff-card-back-link:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+    .staff-links-description-link{
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .staff-links-description-link:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+
+    *{box-sizing:border-box}
     
-    :root{
-  --bg:white;
-  --card:#ffffff;
-  --accent:#e85e34;
-  --fc-muted:#e85e34;
-  --muted-accent:#ffa78e;
-  --muted:#555;
-  --normal:#000;
-  --radius:24px;
-}
+    .staff-body > a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
 
-*{box-sizing:border-box}
+    
+    .staff-body > a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+    
+    .staff-body{
+      font-family: Inter, 'Segoe UI', system-ui, Arial, sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: #222;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-width: 0;
+    }
+    /* Pickaxe Trustus: lock h1 appearance to avoid builder font overrides */
+    .staff-pickaxe-trustus-h1 {
+      font-family: Inter, 'Segoe UI', system-ui, Arial, sans-serif !important;
+      font-weight: 700 !important;
+      color: var(--normal);
+      margin: 0 0 clamp(16px, 2vw, 24px) 0;
+      line-height: 1.2;
+      font-size: clamp(1.35rem, 3vw + 0.5rem, 2rem);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .staff-container {
+      max-width: 1100px;
+      margin: 18px auto;
+      padding: 0 clamp(12px, 2vw, 24px);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    /* Cards grid for desktop/tablet */
+    .staff-cards-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 14px;
+      margin-bottom: 12px;
+      align-items: start;
+      perspective: 1200px;
+    }
+    
+    .staff-card{
+      background: transparent;
+      border-radius: var(--radius);
+      width: 100%;
+      min-height: 0;
+      aspect-ratio: 1/1;
+      overflow: visible;
+      display: block;
+      perspective: 1000px;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+    }
+    
+    .staff-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.12), 0 4px 12px rgba(232, 94, 52, 0.15);
+    }
+    
+    .staff-card-inner{
+      position: relative;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .staff-card:hover .staff-card-inner,
+    .staff-card:focus-within .staff-card-inner{
+      transform: rotateY(180deg);
+    }
+    
+    .staff-card-front,
+    .staff-card-back{
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius);
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(10px, 1.5vw, 16px);
+      overflow: hidden;
+    }
+    
+    .staff-card-front{
+      box-shadow: 0 4px 10px rgba(20,30,60,0.06);
+      border: 1px solid rgba(85, 85, 85, 0.2);
+      background: white;
+      transition: border-color 0.2s ease;
+    }
+    
+    .staff-card:hover .staff-card-front {
+      border-color: var(--accent);
+    }
+    
+    .staff-card-front h2{
+      margin: 0;
+      font-size: clamp(0.8rem, 1.8vw + 0.5rem, 1.05rem);
+      color: var(--normal);
+      font-weight: 600;
+      line-height: 1.3;
+      text-align: center;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+    
+    .staff-card-back{
+      background: white;
+      border: 1px solid var(--fc-muted);
+      transform: rotateY(180deg);
+      box-shadow: 0 8px 20px rgba(20,30,60,0.08);
+      color: var(--muted);
+      text-align: justify;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    
+    .staff-card-back p{
+      margin: 0;
+      font-size: clamp(0.6rem, 1.2vw + 0.4rem, 0.7rem);
+      line-height: 1.5;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    /* Mobile accordion */
+    .staff-accordion{
+      display: none;
+      margin-bottom: 24px;
+    }
+    
+    .staff-accordion-form{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .staff-accordion-form input[type="radio"]{
+      display: none;
+    }
+    
+    .staff-accordion-form label{
+      background: var(--card);
+      padding: 14px 16px;
+      border-radius: 12px;
+      display: block;
+      font-weight: 600;
+      color: var(--accent);
+      box-shadow: 0 2px 8px rgba(10,20,40,0.06);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(85, 85, 85, 0.1);
+    }
+    
+    .staff-accordion-form label:hover {
+      background: #f8f9fa;
+      box-shadow: 0 4px 12px rgba(10,20,40,0.08);
+      transform: translateY(-1px);
+    }
+    
+    .staff-accordion-form input[type="radio"]:checked + label {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    
+    .staff-acc-panel{
+      max-height: 0;
+      overflow: hidden;
+      background: transparent;
+      padding: 0 16px;
+      border-radius: 0 0 12px 12px;
+      transition: max-height 0.4s ease;
+      color: var(--muted);
+    }
+    
+    .staff-acc-panel p{
+      margin: 12px 0;
+      line-height: 1.6;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    .staff-accordion-form input[type="radio"]:checked + label + .staff-acc-panel{
+      max-height: 500px;
+      padding: 16px;
+      background: #fafafa;
+    }
+    
+    .staff-site-footer{
+      text-align: center;
+      padding: clamp(24px, 3vw, 32px) clamp(16px, 2vw, 24px);
+      color: var(--muted);
+      margin-top: clamp(40px, 6vw, 60px);
+      border-top: 1px solid rgba(85, 85, 85, 0.1);
+      min-width: 0;
+    }
+    
+    .staff-site-footer a{
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    
+    .staff-site-footer a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+    
+    /* Responsive rules */
+    /* Layout tuning for common breakpoints */
+    @media (min-width: 1100px){
+      .staff-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+      }
+    }
+    @media (min-width: 900px) and (max-width: 1099px){
+      .staff-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+      }
+    }
+    @media (min-width: 700px) and (max-width: 899px){
+      .staff-cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+      }
+    }
+    @media (max-width:840px){
+      /* hide desktop cards, show mobile accordion */
+      .staff-cards-grid{display:none}
+      .staff-accordion{display:block}
+      .staff-container{padding:0 16px}
+      
+      .staff-pickaxe-trustus-h1 {
+        font-size: 1.35rem;
+        margin-bottom: 16px;
+      }
+      
+      .staff-hover-cards {
+        padding: 24px 16px;
+      }
+    }
+    
+    /* small touch affordance */
+    @media (hover:none){
+      .staff-card{cursor:default}
+      .staff-card-inner{transform:none !important}
+    }
+    
+    
+    .staff-hover-cards {
+      padding: clamp(20px, 3vw, 32px) clamp(16px, 2.5vw, 24px);
+      margin: clamp(24px, 4vw, 40px) 0;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(10, 20, 40, 0.08);
+      border: 1px solid rgba(85, 85, 85, 0.1);
+      min-width: 0;
+    }
+    
+    @media (max-width: 768px) {
+      .staff-container {
+        padding: 0 12px;
+      }
+      .staff-accordion-form label {
+        padding: 14px 16px;
+        min-height: 44px;
+        font-size: 0.95rem;
+      }
+      .staff-acc-panel {
+        padding: 0 16px;
+      }
+      .staff-site-footer {
+        padding: 24px 16px;
+        font-size: 0.9rem;
+      }
+      /* Hero: stack image above list */
+      .staff-hero-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 0;
+      }
+      .staff-hero-left {
+        min-height: 0;
+      }
+      .staff-hero-image-container {
+        height: min(40vh, 280px);
+        min-height: 0;
+        flex-shrink: 0;
+        overflow: hidden;
+        border-radius: var(--radius);
+      }
+      .staff-hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: var(--radius);
+      }
+      /* Links: stack Pickaxe above Custom Code */
+      .staff-links-container {
+        flex-direction: column;
+      }
+      .staff-links-right {
+        border-left: none;
+        border-top: 1px solid rgba(85, 85, 85, 0.1);
+        padding-top: 1.5rem;
+      }
+      .staff-links-left,
+      .staff-links-right {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      /* Contact: stack member cards */
+      .staff-site-footer-team {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .staff-site-member-card {
+        width: 100%;
+        max-width: 320px;
+      }
+      .staff-bevel-sm {
+        height: auto;
+        min-height: auto;
+      }
+      .staff-bevel {
+        height: auto;
+        min-height: auto;
+        padding: 1rem 1.25rem;
+      }
+      .staff-links.staff-bevel {
+        padding: 1rem 1.25rem;
+      }
+    }
+    .staff-bevel{
+      padding: clamp(1.25rem, 3vw, 2rem);
+      margin: 40px 0;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(10, 20, 40, 0.08);
+      border: 1px solid rgba(85, 85, 85, 0.1);
+      min-height: 0;
+    }
 
-a {
-  color: var(--accent)
-}
-body{font-family:Inter,Segoe UI,system-ui,Arial,sans-serif;margin:0;background:var(--bg);color:#222}
-.site-header{
-  min-height:calc(100vh - 80px);
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  padding:48px 16px;
-  background-image:url("https://pickaxe.co/resources/images/studio-hero/pickaxe-light-hero.jpg"),linear-gradient(to right,rgba(255,255,255,0.9),transparent);
-  background-position:left center;
-  background-size:cover;
-  background-blend-mode:overlay;
-  background-color: rgba(255, 255, 255, 0.2);
-  z-index: 1000;
-}
-.header-content{
-  max-width:632px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-.site-header h1{
-  margin:0 0 16px 0;
-  font-size:56px;
-  font-weight:600;
-  line-height:5rem;
-  color:#000;
-}
-.site-header p{
-  margin:0 0 24px 0;
-  font-size:16px;
-  color:#000;
-  line-height:1.5;
-  width: 80%
-}
-.header-button{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  padding:16px 32px;
-  background-color:#000;
-  color:#fff;
-  border:1px solid #000;
-  border-radius:var(--radius);
-  font-weight:600;
-  font-size:16px;
-  cursor:pointer;
-  width:fit-content;
-  transition:opacity 300ms ease;
-}
-.header-button:hover{
-  opacity:0.7;
-}
-.header-button:active{
-  opacity:1;
-}
-.container{max-width:1100px;margin:18px auto;padding:0 16px}
+    .staff-bevel-sm{
+      padding: 2rem 2rem;
+      margin: 40px 0;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(10, 20, 40, 0.08);
+      border: 1px solid rgba(85, 85, 85, 0.1);
+    }
 
-/* Cards grid for desktop/tablet */
-.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:4px;margin-bottom:12px;align-items:start}
-.card{
-    background:transparent;border-radius:var(--radius);width:100%;aspect-ratio:1/1;overflow:hidden;display:block;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-}
-.card-inner{position:relative;inset:0;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
-.card:hover .card-inner,.card:focus-within .card-inner{transform:rotateY(180deg)}
-.card-front,.card-back{position:absolute;inset:0;border-radius:var(--radius);backface-visibility:hidden;display:flex;align-items:center;justify-content:center;padding:16px}
-.card-front{
-    box-shadow:0 4px 10px rgba(20,30,60,0.06);
-    border: 1px solid var(--muted);
-}
-.card-front h2{margin:0;font-size:1.05rem;color:var(--normal)}
-.card-back{background: white; border: 1px solid var(--fc-muted); transform:rotateY(180deg);box-shadow:0 8px 20px rgba(20,30,60,0.08);color:var(--muted);text-align:justify}
-.card-back p{margin:0;font-size:0.95rem}
+    .staff-hero-container{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      gap: clamp(0.75rem, 2vw, 1rem);
+      width: 100%;
+      min-height: 0;
+    }
+    .staff-hero-left{
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      width: 100%;
+    }
+    .staff-hero-right{
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+    }
+    .staff-hero-list{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      gap: clamp(1rem, 2vw, 2rem);
+      padding: clamp(0.5rem, 1vw, 1rem);
+      min-height: 0;
+    }
 
-/* Mobile accordion */
-.accordion{display:none;margin-bottom:24px}
-.accordion-form{display:flex;flex-direction:column;gap:8px}
-.accordion-form input[type="radio"]{display:none}
-.accordion-form label{background:var(--card);padding:12px 14px;border-radius:8px;display:block;font-weight:600;color:var(--accent);box-shadow:0 2px 6px rgba(10,20,40,0.04);cursor:pointer}
-.acc-panel{max-height:0;overflow:hidden;background:transparent;padding:0 12px;border-radius:0 0 8px 8px;transition:max-height .28s ease;color:var(--muted)}
-.acc-panel p{margin:10px 0}
-.accordion-form input[type="radio"]:checked + label + .acc-panel{max-height:420px}
-
-/* Policy area */
-.policy details{background:var(--card);padding:12px;box-shadow:0 2px 8px rgba(10,20,40,0.04)}
-.policy summary{font-weight:700;cursor:pointer}
-.policy pre{white-space:pre-wrap;margin-top:12px;color:var(--muted);font-size:0.9rem}
-
-.site-footer{text-align:center;padding:18px 16px;color:var(--muted)}
-.site-footer a{color:var(--accent);text-decoration:none}
-
-/* Responsive rules */
-/* Layout tuning for common breakpoints */
-@media (min-width:1100px){
-  /* let columns adapt and grow — cards will resize with the grid */
-  .cards-grid{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
-}
-@media (min-width:700px) and (max-width:1099px){
-  .cards-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px}
-}
-@media (max-width:1024px){
-  .site-header h1{
-    font-size:48px;
-    line-height:4rem;
+    .staff-hero-list-item{
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(85, 85, 85, 0.1);
+      border-left: 1px solid var(--accent);
+      padding: clamp(0.75rem, 1.5vw, 1rem);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      min-width: 0;
+    }
+    .staff-hero-list-item-title{
+      font-size: clamp(1.1rem, 2vw + 0.5rem, 1.5rem);
+      font-weight: 600;
+      color: var(--normal);
+      margin: 0;
+      line-height: 1.3;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .staff-hero-list-item-description{
+      font-size: clamp(0.875rem, 1vw + 0.5rem, 1rem);
+      color: var(--muted);
+      margin: 0.25em 0 0 0;
+      line-height: 1.5;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .staff-hero-image-container{
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+    .staff-hero-image{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius);
+    }
+    
+    .staff-links-container{
+      display: flex;
+      flex-direction: row;
+      gap: clamp(0.75rem, 2vw, 1rem);
+      padding: clamp(0.75rem, 1.5vw, 1rem);
+      min-width: 0;
+    }
+    .staff-links-left{
+      flex: 1;
+      min-width: 0;
+      padding: clamp(0.75rem, 1.5vw, 1rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: clamp(1rem, 2vw, 2rem);
+    }
+    .staff-links-right{
+      flex: 1;
+      min-width: 0;
+      border-left: 1px solid rgba(85, 85, 85, 0.1);
+      padding: clamp(0.75rem, 1.5vw, 1rem);
+      gap: clamp(1rem, 2vw, 2rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  .staff-links-title{
+    font-family: Inter, 'Segoe UI', system-ui, Arial, sans-serif !important;
+    font-weight: 700 !important;
+    color: var(--normal);
+    margin: 0 0 clamp(16px, 2vw, 24px) 0;
+    line-height: 1.2;
+    font-size: clamp(1.35rem, 3vw + 0.5rem, 2rem);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
-}
-@media (max-width:899px){
-  .site-header h1{
-    font-size:28px;
-    line-height:2rem;
-  }
-  .header-button{
-    width:100%;
-    min-height:48px;
-  }
-}
-@media (max-width:700px){
-  /* hide desktop cards, show mobile accordion */
-  .cards-grid{display:none}
-  .accordion{display:block}
-  .container{padding:0 12px}
-}
+    .staff-links-list-item{
+      display: flex;
+      flex-direction: row;
+      border: 1px solid rgba(85, 85, 85, 0.1);
+      border-left: 1px solid var(--accent);
+      padding: clamp(0.75rem, 1vw, 1rem);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      width: 100%;
+      min-width: 0;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .staff-links-list-item .staff-links-list-item-title {
+      min-width: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .staff-links-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .staff-links-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 2rem;
+      border-radius: var(--radius);
+      border: 2px solid var(--accent);
+      background: white;
+      color: var(--accent);
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+    .staff-links-btn .staff-links-arrow {
+      font-size: 1.25rem;
+      color: var(--accent);
+      transition: color 0.2s ease;
+    }
+    .staff-links-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+    .staff-links-btn:hover .staff-links-arrow {
+      color: white;
+    }
+    .staff-links-description{
+      font-size: clamp(0.9rem, 1vw + 0.5rem, 1rem);
+      color: var(--normal);
+      margin: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .staff-links-attention{
+      font-size: clamp(0.9rem, 1vw + 0.5rem, 1rem);
+      color: var(--muted);
+      margin: 0;
+      font-weight: 600;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .staff-site-footer-team{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: clamp(1rem, 2vw, 2rem);
+      gap: 1rem;
+      min-width: 0;
+    }
+    .staff-site-member-card{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        border: 1px solid rgba(85, 85, 85, 0.1);
+        border-radius: var(--radius);
+        padding: 1rem;
+        width: 80%;
+        height: 100%;
+    }
+    .staff-member-image-container{
+      width: 40%;
+      overflow: hidden;
+      aspect-ratio: 7 / 8;
+      border-radius: var(--radius);
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .staff-member-image{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--radius);
+      display: block;
+    }
 
-/* small touch affordance */
-@media (hover:none){
-  .card{cursor:default}
-  .card-inner{transform:none !important}
-}
+    .staff-member-name{
+      font-size: clamp(0.9rem, 1vw + 0.5rem, 1rem);
+      color: var(--normal);
+      margin: 0;
+      font-weight: 600;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      text-align: center;
+    }
+    .staff-member-contact{
+      font-size: clamp(0.75rem, 0.8vw + 0.4rem, 0.8rem);
+      color: var(--muted);
+      margin: 0;
+      font-weight: 400;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      text-align: center;
+    }
+    .staff-links-subtitle{
+      font-size: clamp(1rem, 1.2vw + 0.5rem, 1.2rem);
+      color: var(--normal);
+      margin: 0;
+      font-weight: 600;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
 
+    /* Hero, Links, Contact: responsive (must come after base styles) */
+    @media (max-width: 1024px) {
+      .staff-hero-container {
+        flex-direction: column;
+        height: auto;
+        align-items: stretch;
+      }
+      .staff-hero-left,
+      .staff-hero-right {
+        min-height: 0;
+      }
+      .staff-hero-image-container {
+        height: min(45vh, 320px);
+        max-height: min(45vh, 320px);
+        width: 100%;
+        overflow: hidden;
+        border-radius: var(--radius);
+      }
+      .staff-hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .staff-hero-list {
+        align-items: stretch;
+      }
+      .staff-links-container {
+        flex-direction: column;
+      }
+      .staff-links-right {
+        border-left: none;
+        border-top: 1px solid rgba(85, 85, 85, 0.1);
+        padding-top: 1.5rem;
+      }
+      .staff-site-footer-team {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .staff-site-member-card {
+        width: 100%;
+        max-width: 360px;
+      }
+      .staff-bevel {
+        height: auto;
+        min-height: auto;
+      }
+      .staff-bevel-sm {
+        height: auto;
+        min-height: auto;
+      }
+    }
 
-/* Trust Chart / Flowchart Styles */
-.trust-chart {
-  padding: 40px 16px;
-  text-align: left;
-  background:var(--card);padding:12px;border-radius:var(--radius);box-shadow:0 2px 8px rgba(10,20,40,0.04);
-  position: relative;
-}
+    @media (max-width: 768px) {
+      .staff-hero-container {
+        flex-direction: column;
+        height: auto;
+      }
+      .staff-hero-image-container {
+        height: min(40vh, 280px);
+        max-height: min(40vh, 280px);
+        overflow: hidden;
+        border-radius: var(--radius);
+      }
+      .staff-hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .staff-links-container {
+        flex-direction: column;
+      }
+      .staff-links-right {
+        border-left: none;
+        border-top: 1px solid rgba(85, 85, 85, 0.1);
+        padding-top: 1.5rem;
+      }
+      .staff-links-left,
+      .staff-links-right {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      .staff-site-footer-team {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .staff-site-member-card {
+        width: 100%;
+        max-width: 320px;
+      }
+      .staff-bevel-sm {
+        height: auto;
+        min-height: auto;
+      }
+      .staff-bevel {
+        height: auto;
+        min-height: auto;
+        padding: 1rem 1.25rem;
+      }
+      .staff-links.staff-bevel {
+        padding: 1rem 1.25rem;
+      }
+    }
+    .staff-member-title{
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin: 0;
+        font-weight: 700;
+    }
+      </style>
+      <main class="staff-container">
+        <!-- Data Flow Diagram -->
 
-.hover-cards {
-  padding: 20px 20px 16px 16px;
-  margin: 40px 0;
-  background: white;
-  border-radius: var(--radius);
-  box-shadow: 0 4px 12px rgba(10, 20, 40, 0.08);
-}
-
-
-.svg-pos{
-  margin-left: 60px;
-}
-
-.trust-chart h2 {
-  font-size: 1.8rem;
-  margin-bottom: 30px;
-  color: var(--normal);
-}
-
-.attention {
-  font-size: 1rem;
-  margin-top: -10px;
-  margin-bottom: 30px;
-  padding: 5px 30px;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  font-weight: 800;
-  box-sizing: content-box;
-  width: fit-content;
-  background-color: var(--accent);
-}
-
-
-
-#mermaid-diagram {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-  background: white;
-  padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.mermaid {
-  display: flex;
-  justify-content: center;
-}
-
-.diagram-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px auto;
-  background: white;
-  padding: 20px;
-  border-radius: var(--radius);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  max-width: 1100px;
-}
-
-.flowchart-svg {
-  width: 100%;
-  max-width: 1000px;
-  height: auto;
-}
-
-.node-group {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.node-group:hover rect {
-  fill: #f5f5f5;
-  stroke: var(--accent);
-  stroke-width: 3;
-}
-
-.node-group:hover text {
-  font-weight: bold;
-}
-
-/* also support programmatic hover (class toggled from JS) */
-.node-group.hovered rect {
-  fill: #f5f5f5;
-  stroke: var(--accent);
-  stroke-width: 3;
-}
-.node-group.hovered text {
-  font-weight: bold;
-}
-
-.svg-tooltip {
-  position: fixed;
-  background: white;
-  border: 2px solid var(--accent);
-  border-radius: var(--radius);
-  padding: 14px 18px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--normal);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.18);
-  z-index: 1000;
-  pointer-events: none;
-  max-width: 320px;
-  word-wrap: break-word;
-  display: none;
-  white-space: normal;
-  animation: slideDown 0.2s ease-out;
-  background: linear-gradient(to bottom, white, #fafafa);
-}
-
-.svg-tooltip::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 8px solid var(--accent);
-}
-
-[data-tooltip] {
-  white-space: pre-line;
-}
-
-
-
-
-.svg-tooltip.visible {
-  display: block;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsive for smaller screens */
-@media (max-width: 900px) {
-  .trust-chart h2 {
-    font-size: 1.4rem;
-  }
-  
-  #mermaid-diagram {
-    overflow-x: auto;
-  }
-}
-
-/* Pickaxe Trustus: lock h1 appearance to avoid builder font overrides */
-.pickaxe-trustus-h1 {
-  font-family: Inter, 'Segoe UI', system-ui, Arial, sans-serif !important;
-  font-weight: 700 !important;
-  color: var(--normal);
-  margin: 0 0 16px 0;
-  line-height: 1.1;
-  font-size: 2rem;
-}
-  </style>
-  
-</head>
-<body>
-  <header class="site-header">
-    <div class="header-content">
-      <h1 class="pickaxe-trustus-h1">Forward College AI Hub Trust Center</h1>
-      <p>This space is our transparency center designed to help you clearly understand how your data is processed and used when you interact with the AI Hub at Forward College.</p>
-    </div>
-  </header>
-
-  <main class="container">
-    <!-- Data Flow Diagram -->
-     
-    <section class="trust-chart">
-    <h1 class="pickaxe-trustus-h1">What is happening within the system..</h1>
-     <p class="attention">Hover over the elements to learn more</p>
-      <!-- SVG placed directly in the section at its original size -->
-       <div class="svg-container">
-        <div class="svg-pos">
-      <svg id="flowchart-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600" class="flowchart-svg">
-          <!-- Nodes with hover groups -->
-          <g class="node-group" data-tooltip="Your initial input to the system. E.g.: <br><br><strong class='bold'> (Anna's message) </strong><br> Dear Joe, <br> ... <br> Best, Anna">
-            <rect x="50" y="50" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
-            <text x="140" y="85" text-anchor="middle" font-size="30" font-weight="bold">💬</text>          
-            <text x="140" y="105" text-anchor="middle" font-size="14" font-weight="bold">User Messages</text>
-          </g>
-          
-          <g class="node-group" data-tooltip="Our AI tools process your request and try their best to be at your help. When you use the AI Hub, providers (OpenAI, Google, etc)  are <strong>NOT</strong> allowed to use your conversations to train models. Pickaxe stores and processes your data in order to provide you with the service">
-            <rect x="350" y="50" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
-            <text x="440" y="85" text-anchor="middle" font-size="30" font-weight="bold">⛏️</text>          
-            <text x="440" y="105" text-anchor="middle" font-size="14" font-weight="bold">Pickaxe x Forward AI Hub</text>          
-          </g>
-
-          <g class="node-group" data-tooltip="Your name is substituted with a generic user ID  and information to separate your identity from your data. E.g.: <br><br><strong class='bold'> (USER12345, Cohort Y3, Psychology)</strong> <br> Dear Joe, <br> ... <br> Best, Anna">
-            <rect x="650" y="50" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
-            <text x="740" y="85" text-anchor="middle" font-size="30" font-weight="bold">😶‍🌫️</text>          
-            <text x="740" y="105" text-anchor="middle" font-size="14" font-weight="bold">Pseudonymization</text>
-          </g>
-          
-          <g class="node-group" data-tooltip="An automated system that attempts to removenames, emails, phone numbers and other personal identifiers from your conversations. E.g.: <br><br><strong class='bold'> (USER12345, Cohort Y3, Psychology) </strong> <br> Dear &lt;\NAME&gt;, <br> ... <br> Best, &lt;\NAME&gt; <br> <br> <i class='smallscript'>Nonetheless, keep in mind to never share sensitive personal info in any of your conversations with any AI tools at your disposal!</i>">
-            <rect x="650" y="220" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
-            <text x="740" y="255" text-anchor="middle" font-size="30" font-weight="bold">☁️</text>          
-            <text x="740" y="275" text-anchor="middle" font-size="14" font-weight="bold">Anonymizer</text>
-          </g>
-          
-          <g class="node-group" data-tooltip="The pseudonimized and anonymized conversation is stored in a secure database. Only three AI team administrators have access to this raw data, and they are bound by confidentiality agreements. <br><br> Fellows, staff and the leadership team do <strong class='bold'> NOT </strong> have access to this database. 
-">
-            <rect x="350" y="220" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
-            <text x="440" y="255" text-anchor="middle" font-size="25" font-weight="bold">🏬</text>          
-            <text x="440" y="275" text-anchor="middle" font-size="14" font-weight="bold">FC Database</text>
-          </g>
-          
-          <g class="node-group" data-tooltip="Your personal activity page. You can see your conversation history, usage statistics, and activity on your personal dashboard. The data present here is available only to you.">
-            <rect x="150" y="390" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
-            <text x="240" y="425" text-anchor="middle" font-size="30" font-weight="bold">📊</text>          
-            <text x="240" y="445" text-anchor="middle" font-size="14" font-weight="bold">Dashboard</text>
-          </g>
-          
-          <g class="node-group" data-tooltip="Fellows and researchers affiliated with Forward College who have submitted well-defined research proposals may request approval to access select datasets for research purposes. <br><br><strong class='bold'> Forward maintains strict ethical standards for these research activities, particularly those involving student conversations or interactions. Every day interactions with the AI hub will never be used to profile, grade or invigilate students.</strong>">
-            <rect x="550" y="390" width="180" height="80" rx="8" fill="white" stroke="#333" stroke-width="2"/>
-            <text x="640" y="425" text-anchor="middle" font-size="30" font-weight="bold">🔬</text>          
-            <text x="640" y="445" text-anchor="middle" font-size="14" font-weight="bold">Research Datasets</text>
-          </g>
-          
-          <!-- Arrows -->
-          <!-- User to Pickaxe -->
-          <path d="M 230 100 L 350 100" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="255" y="95" font-size="11" fill="#e85e34" font-weight="bold">Processing</text>
-          
-          <!-- Pickaxe to Pseudonymization -->
-          <path d="M 530 90 L 650 90" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="555" y="85" font-size="11" fill="#e85e34" font-weight="bold">Anonymizing</text>
-          
-          <!-- Pickaxe to User (return) -->
-          <path d="M 350 70 L 230 70" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="275" y="65" font-size="11" fill="#e85e34" font-weight="bold">Return</text>
-          
-          <!-- Pseudonymization to Anonymizer -->
-          <path d="M 740 130 L 740 220" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="750" y="170" font-size="11" fill="#e85e34" font-weight="bold">Redacting</text>
-          
-          <!-- Anonymizer to FC Database -->
-          <path d="M 650 260 L 530 260" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="585" y="255" font-size="11" fill="#e85e34" font-weight="bold">Storing</text>
-          
-          <!-- FC Database to Dashboard -->
-          <path d="M 430 300 Q 400 330 330 390" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="335" y="330" font-size="11" fill="#e85e34" font-weight="bold">Accessing</text>
-          
-          <!-- FC Database to Joint Database -->
-          <path d="M 440 300 L 550 390" stroke="#e85e34" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-          <text x="490" y="330" font-size="11" fill="#e85e34" font-weight="bold">For Research</text>
-          
-          <!-- Arrow marker definition -->
-          <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-              <polygon points="0 0, 10 3, 0 6" fill="#e85e34"/>
-            </marker>
-          </defs>
-        </svg>
-        <!-- Tooltip container -->
-        <div id="svg-tooltip" class="svg-tooltip"></div>
-      <!-- end trust-chart svg -->
-       </div>
-       </div>
-     </section>
-
-    <section class="hover-cards" aria-label="Key privacy points">
-    <h1 class="pickaxe-trustus-h1">If you hold concerns with the process, such as.. </h1>
-    <div class="cards-grid" >
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>1. What is the AI Hub?</h2>
-          </div>
-          <div class="card-back">
-            <p>It's your college's web platform where you can access various AI tools, chatbots, and productivity assistants designed to support your learning and research.</p>
-          </div>
+    <section class="staff-hero staff-bevel">
+        <div class="staff-hero-container">
+            <div class="staff-hero-left">
+                <div class="staff-hero-image-container">
+                 <img loading="eager" src="https://raw.githubusercontent.com/leo-reche/pickaxe-modifications/main/staff_hub/trust_center_staff/assets/staff_hero.webp" alt="Staff AI Hub - secure gateway to enterprise-grade AI for faculty and staff" class="staff-hero-image" />
+                </div>
+                <!--
+                <h1 class="staff-hero-title">Staff AI Hub</h1>
+                <p class="staff-hero-description">The Staff AI Hub is a secure gateway to enterprise-grade AI. It provides faculty and staff with access to advanced models (GPT-4o, Claude) for administrative and academic productivity.</p>
+                -->
+            </div>
+            <div class="staff-hero-right">
+                <div class="staff-hero-list">
+                    <div class="staff-hero-list-item">
+                        <h3 class="staff-hero-list-item-title">No usage supervision</h3>
+                        <p class="staff-hero-list-item-description">When you use the AI Hub, Forward College does not collect, store or have access to any data from messages. Your activity is private and not used for monitoring or evaluation.</p>
+                    </div>
+                    <div class="staff-hero-list-item">
+                        <h3 class="staff-hero-list-item-title">An optional resource</h3>
+                        <p class="staff-hero-list-item-description">Usage of the AI Hub is optional. The AI Hub is available for all staff members as a free alternative to other AI services, but staff is encouraged to explore and use any AI tools that suit their professional tasks.</p>
+                    </div>
+                    <div class="staff-hero-list-item">
+                        <h3 class="staff-hero-list-item-title">Secure and confidential</h3>
+                        <p class="staff-hero-list-item-description">The AI Hub is safer to use than most free tools. Data inserted in the AI Hub is secure, not used by AI companies to train their models, and protected by low-data-retention or zero-data-retention agreements.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </article>
 
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>2. What comes with activating my account?</h2>
-          </div>
-          <div class="card-back">
-            <p>You'll need to fill out a Consent Form, and once a team member approves it, your account will be activated. This is a legal requirement and helps everyone understand how their data is used.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>3. What can I use it for?</h2>
-          </div>
-          <div class="card-back">
-            <p>Use it for learning, research, and studying with AI tools. Your usage must be in line with the code of conduct and with academic policies. Using AI to write your assessments is forbidden unless fellows explicitly allow it. </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>4. What data do I consent to?</h2>
-          </div>
-          <div class="card-back">
-            <p>Apart from the data collected by pickaxe to provide AI services we also collect your basic info (name, email), what you ask the AI and its responses, content you paste, some content from files you upload, your cohort year, your degree and your programme.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>5. Does consent make my data public?</h2>
-          </div>
-          <div class="card-back">
-            <p>No. Your conversations are stored anonymously and automatically cleaned of personal details. Only you and select members of the AI team can see your activity during database and AI Hub maintenance tasks.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>6. Who can see my data?</h2>
-          </div>
-          <div class="card-back">
-            <p>Only a small team of AI administrators who are bound by confidentiality agreements can see your data. No one with authority over you will get access to your personal data. Researchers and staff only get access to aggregate data (counts, averages, etc.) or to anonymized conversations. </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>7. Why is my data needed?</h2>
-          </div>
-          <div class="card-back">
-            <p>Your data helps us understand how AI best supports your learning and improves the Hub. Your conversations are never used to profile you, monitor you, or affect your grades. </p>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>8. How do you store my data?</h2>
-          </div>
-          <div class="card-back">
-            <p>Your data is kept safe on secure servers in Europe. We only keep your personal data as long as needed, though we may keep anonymized stats for research.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>9. What control do I have?</h2>
-          </div>
-          <div class="card-back">
-            <p>You have full control: see your data, correct it, delete it, or stop us from using it. Email <a href="mailto:ai@forward-college.eu">ai@forward-college.eu</a> to exercise any of these rights.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" tabindex="0">
-        <div class="card-inner">
-          <div class="card-front">
-            <h2>10. How will I know about policy changes?</h2>
-          </div>
-          <div class="card-back">
-            <p>We'll let you know about any important changes through email or notifications. You can always find the latest policy on the Hub.</p>
-          </div>
-        </div>
-      </article>
-    </div>
     </section>
+         
+    
+     <section class="staff-hover-cards" aria-label="Staff Data Governance & Privacy">
+      <h1 class="staff-pickaxe-trustus-h1">Information Governance & Data Privacy</h1>
+      <div class="staff-cards-grid">
+        
+        <article class="staff-card" tabindex="0">
+          <div class="staff-card-inner">
+            <div class="staff-card-front">
+              <h2>1. What is the Staff AI Hub?</h2>
+            </div>
+            <div class="staff-card-back">
+              <p>It's a platform that Forward uses to provide enterprise-grade AI access to all staff. In comparison to the regular AI Apps (ChatGPT, Claude, etc.) the AI Hub offers better security for handling sensitive data, unlimited and unrestricted access to AI models, and customized bots to meet specific staff needs.</p>
+            </div>
+          </div>
+        </article>
+    
+        <article class="staff-card" tabindex="0">
+          <div class="staff-card-inner">
+            <div class="staff-card-front">
+              <h2>2. How to activate my account?</h2>
+            </div>
+            <div class="staff-card-back">
+              <p>Simply register using your Forward Email account. Upon your registration, one of the AI Hub admins will receive a notification and will proceed with authorizing your account - which shouldn't last more than a day. </br>
 
-    <!-- Mobile: Accordion (touch-friendly) -->
-    <section class="accordion" aria-label="Key privacy points (mobile)">
-      <form class="accordion-form" aria-hidden="true">
-        <input type="radio" name="acc" id="acc1">
-        <label for="acc1">1. What is the AI Hub?</label>
-        <div class="acc-panel">
-          <p>It's your college's web platform where you can access various AI tools, chatbots, and productivity assistants designed to support your learning and research.</p>
+                Until we can verify you are a member of staff and activate your account, you will have access to 50 message credits to start testing the AI Hub. Once your account is activated, you will have unlimited access to the AI Hub.</p>
+            </div>
+          </div>
+        </article>
+    
+        <article class="staff-card" tabindex="0">
+          <div class="staff-card-inner">
+            <div class="staff-card-front">
+              <h2>3. What can I use it for?</h2>
+            </div>
+            <div class="staff-card-back">
+              <p>The AI Hub is available for staff to use for all professional and personal AI-related needs. Forward does not have any access to staff message content and does not monitor usage by staff.</p>
+            </div>
+          </div>
+        </article>
+    
+        <article class="staff-card" tabindex="0">
+          <div class="staff-card-inner">
+            <div class="staff-card-front">
+              <h2>4. Do I need to use the AI Hub?</h2>
+            </div>
+            <div class="staff-card-back">
+              <p>No, usage of the AI Hub is optional. The AI Hub is available for all staff members, but staff is encouraged to explore and use other AI tools that best support their personal efficiency and tasks.</p>
+            </div>
+          </div>
+        </article>
+    
+        <article class="staff-card" tabindex="0">
+          <div class="staff-card-inner">
+            <div class="staff-card-front">
+              <h2>5. Is my data confidential?</h2>
+            </div>
+            <div class="staff-card-back">
+              <p>Our AI provider (<a class="staff-card-back-link" href="https://pickaxe.co" target="_blank">pickaxe.co</a>) collects and stores messages and usage information to provide its services. Their service is <a class="staff-card-back-link" href="https://community.pickaxe.co/t/pickaxe-is-now-gdpr-compliant-gdpr-compliance-deep-dive/4760" target="_blank">GDPR</a> and <a class="staff-card-back-link" href="https://community.pickaxe.co/t/pickaxe-is-now-soc-2-compliant/7877" target="_blank">SOC2</a> compliant, and provides a <a class="staff-card-back-link" href="http://pickaxe.co/security" target="_blank">Trust Center</a> for transparency.
+              </br>The AI team itself does not collect, store or have access to any data from messages. Members of the AI team have also signed non-disclosure agreements and are strictly forbidden from pursuing access to staff data.
+                </p>
+            </div>
+          </div>
+        </article>
+    
+        <article class="staff-card" tabindex="0">
+          <div class="staff-card-inner">
+            <div class="staff-card-front">
+              <h2>6. Is my data used to train models?</h2>
+            </div>
+            <div class="staff-card-back">
+              <p>Your data is handled by our AI provider (<a class="staff-card-back-link" href="https://pickaxe.co" target="_blank">pickaxe.co</a>) according to their <a class="staff-card-back-link" href="https://pickaxe.co/terms" target="_blank">Terms of Service</a> and <a class="staff-card-back-link" href="https://pickaxe.co/privacy" target="_blank">Privacy Policy</a>. In it, you will find that external AI companies (such as OpenAI, Anthropic, Google) get access to your requests and documents to provide AI answers, but with commitments to no model training and data deletion.</p>
+            </div>
+          </div>
+        </article>
+    
+        <article class="staff-card" tabindex="0">
+          <div class="staff-card-inner">
+            <div class="staff-card-front">
+              <h2>7. Who has oversight?</h2>
+            </div>
+            <div class="staff-card-back">
+              <p>The AI Team Administrators (Devlin and Leo) are responsible for managing and maintaining Pickaxe. They do not have access to your messages and are supervising the health of the website through cost and usage metrics provided by <a class="staff-card-back-link" href="https://pickaxe.co" target="_blank">pickaxe.co</a>.</p>
+            </div>
+          </div>
+        </article>
+    
+        <article class="staff-card" tabindex="0">
+          <div class="staff-card-inner">
+            <div class="staff-card-front">
+              <h2>8. What control do I have?</h2>
+            </div>
+            <div class="staff-card-back">
+              <p>You maintain full rights to access your metadata or request account deletion. For any governance-related queries, please contact the team through our joint email account <a class="staff-card-back-link" href="mailto:ai@forward-college.eu">ai@forward-college.eu</a>.</p>
+            </div>
+          </div>
+        </article>
+    
+      </div>
+    </section>
+    
+        <!-- Mobile: Accordion (touch-friendly) -->
+    <section class="staff-accordion" aria-label="Staff Data Governance & Privacy (Mobile)">
+      <form class="staff-accordion-form" aria-hidden="true">
+        
+        <input type="radio" name="acc" id="staff-acc1" checked>
+        <label for="staff-acc1">1. What is the Staff AI Hub?</label>
+        <div class="staff-acc-panel">
+          <p>It's a platform that Forward uses to provide enterprise-grade AI access to all staff. In comparison to the regular AI Apps (ChatGPT, Claude, etc.) the AI Hub offers better security for handling sensitive data, unlimited and unrestricted access to AI models, and customized bots to meet specific staff needs.</p>
         </div>
-
-        <input type="radio" name="acc" id="acc2">
-        <label for="acc2">2. What comes with activating my account?</label>
-        <div class="acc-panel">
-          <p>You'll need to fill out a Consent Form, and once a team member approves it, your account will be activated. This ensures everyone understands how their data is used.</p>
+    
+        <input type="radio" name="acc" id="staff-acc2">
+        <label for="staff-acc2">2. How to activate my account?</label>
+        <div class="staff-acc-panel">
+          <p>Simply register using your Forward Email account. Upon your registration, one of the AI Hub admins will receive a notification and will proceed with authorizing your account - which shouldn't last more than a day.<br>Until we can verify you are a member of staff and activate your account, you will have access to 50 message credits to start testing the AI Hub. Once your account is activated, you will have unlimited access to the AI Hub.</p>
         </div>
-
-        <input type="radio" name="acc" id="acc3">
-        <label for="acc3">3. What can I use it for?</label>
-        <div class="acc-panel">
-          <p>Use it for learning, research, and studying with AI tools. However, you can't use it for dishonest purposes or to write assignments unless your teacher says it's okay.</p>
+    
+        <input type="radio" name="acc" id="staff-acc3">
+        <label for="staff-acc3">3. What can I use it for?</label>
+        <div class="staff-acc-panel">
+          <p>The AI Hub is available for staff to use for all professional and personal AI-related needs. Forward does not have any access to staff message content and does not monitor usage by staff.</p>
         </div>
-
-        <input type="radio" name="acc" id="acc4">
-        <label for="acc4">4. What data do I consent to?</label>
-        <div class="acc-panel">
-          <p>We collect your basic info (name, email), what you ask the AI and its responses, files you upload, and technical details like your device type. This helps us make the Hub better and safer.</p>
+    
+        <input type="radio" name="acc" id="staff-acc4">
+        <label for="staff-acc4">4. Do I need to use the AI Hub?</label>
+        <div class="staff-acc-panel">
+          <p>No, usage of the AI Hub is optional. The AI Hub is available for all staff members, but staff is encouraged to explore and use other AI tools that best support their personal efficiency and tasks.</p>
         </div>
-
-        <input type="radio" name="acc" id="acc5">
-        <label for="acc5">5. Does consent make my data public?</label>
-        <div class="acc-panel">
-          <p>No. Your conversations are stored anonymously and automatically cleaned of personal details. Only you can see your activity on your personal dashboard.</p>
+    
+        <input type="radio" name="acc" id="staff-acc5">
+        <label for="staff-acc5">5. Is my data confidential?</label>
+        <div class="staff-acc-panel">
+          <p>Our AI provider (<a class="staff-card-back-link" href="https://pickaxe.co" target="_blank">pickaxe.co</a>) collects and stores messages and usage information to provide its services. Their service is <a class="staff-card-back-link" href="https://community.pickaxe.co/t/pickaxe-is-now-gdpr-compliant-gdpr-compliance-deep-dive/4760" target="_blank">GDPR</a> and <a class="staff-card-back-link" href="https://community.pickaxe.co/t/pickaxe-is-now-soc-2-compliant/7877" target="_blank">SOC2</a> compliant, and provides a <a class="staff-card-back-link" href="http://pickaxe.co/security" target="_blank">Trust Center</a> for transparency.<br>The AI team itself does not collect, store or have access to any data from messages. Members of the AI team have also signed non-disclosure agreements and are strictly forbidden from pursuing access to staff data.</p>
         </div>
-
-        <input type="radio" name="acc" id="acc6">
-        <label for="acc6">6. Who can see my data?</label>
-        <div class="acc-panel">
-          <p>Only a small team of AI administrators who are bound by confidentiality agreements can see your data. Developers only get access to anonymized (nameless) information.</p>
+    
+        <input type="radio" name="acc" id="staff-acc6">
+        <label for="staff-acc6">6. Is my data used to train models?</label>
+        <div class="staff-acc-panel">
+          <p>Your data is handled by our AI provider (<a class="staff-card-back-link" href="https://pickaxe.co" target="_blank">pickaxe.co</a>) according to their <a class="staff-card-back-link" href="https://pickaxe.co/terms" target="_blank">Terms of Service</a> and <a class="staff-card-back-link" href="https://pickaxe.co/privacy" target="_blank">Privacy Policy</a>. In it, you will find that external AI companies (such as OpenAI, Anthropic, Google) get access to your requests and documents to provide AI answers, but with commitments to no model training and data deletion.</p>
         </div>
-
-        <input type="radio" name="acc" id="acc7">
-        <label for="acc7">7. Why is my data needed?</label>
-        <div class="acc-panel">
-          <p>Your data helps us understand how AI best supports your learning and improve the Hub. Your conversations are never used to grade you or affect your grades.</p>
+    
+        <input type="radio" name="acc" id="staff-acc7">
+        <label for="staff-acc7">7. Who has oversight?</label>
+        <div class="staff-acc-panel">
+          <p>The AI Team Administrators (Devlin and Leo) are responsible for managing and maintaining Pickaxe. They do not have access to your messages and are supervising the health of the website through cost and usage metrics provided by <a class="staff-card-back-link" href="https://pickaxe.co" target="_blank">pickaxe.co</a>.</p>
         </div>
-
-        <input type="radio" name="acc" id="acc8">
-        <label for="acc8">8. How do you store my data?</label>
-        <div class="acc-panel">
-          <p>Your data is kept safe on secure servers in Europe. We only keep your personal data as long as needed, though we may keep anonymized stats for research.</p>
+    
+        <input type="radio" name="acc" id="staff-acc8">
+        <label for="staff-acc8">8. What control do I have?</label>
+        <div class="staff-acc-panel">
+          <p>You maintain full rights to access your metadata or request account deletion. For any governance-related queries, please contact the team through our joint email account <a class="staff-card-back-link" href="mailto:ai@forward-college.eu">ai@forward-college.eu</a>.</p>
         </div>
-
-        <input type="radio" name="acc" id="acc9">
-        <label for="acc9">9. What control do I have?</label>
-        <div class="acc-panel">
-          <p>You have full control: see your data, correct it, delete it, or stop us from using it. Email <a href="mailto:ai@forward-college.eu">ai@forward-college.eu</a> to exercise any of these rights.</p>
-        </div>
-
-        <input type="radio" name="acc" id="acc10">
-        <label for="acc10">10. How will I know about policy changes?</label>
-        <div class="acc-panel">
-          <p>We'll let you know about any changes through email or notifications. You can always find the latest policy on the Hub.</p>
-        </div>
+    
       </form>
     </section>
 
-    <h1 class="pickaxe-trustus-h1">For further information, consult the policy bellow </h1>
+    <section class="staff-links staff-bevel">
+        <h1 class="staff-links-title">External Services & Privacy</h1>
+        <div class="staff-links-container">
+            <div class="staff-links-left">
+                <h2 class="staff-links-subtitle">Pickaxe AI</h2>
+                <p class="staff-links-description">Our AI provider (<a class="staff-links-description-link" href="https://pickaxe.co" target="_blank">pickaxe.co</a>) collects and stores messages and usage data to run the service. How they use that data is set out in the policies below.</p>
+                <div class="staff-links-list">
+                <div class="staff-links-list-item">
+                        <p class="staff-links-list-item-title">Pickaxe Terms of Service</p>
+                        <a href="https://pickaxe.co/terms" target="_blank" class="staff-links-btn"><span class="staff-links-arrow" aria-hidden="true">➜</span></a>
+                    </div>
+                    <div class="staff-links-list-item">
+                        <p class="staff-links-list-item-title">Pickaxe Privacy Policy</p>
+                        <a href="https://pickaxe.co/privacy"  target="_blank" class="staff-links-btn"><span class="staff-links-arrow" aria-hidden="true">➜</span></a>
+                    </div>
+                </div>
+                <p class="staff-links-attention">Forward College and the AI Team do not have access to this data and are not permitted to access staff messages or usage information from Pickaxe.</p>
+            </div>
+            <div class="staff-links-right">
+                <h2 class="staff-links-subtitle">Custom Code Injection</h2>
+                <p class="staff-links-description">The AI Team adds small code enhancements to the AI Hub (e.g. edit a message, press Enter to send). For transparency, the repository for these snippets is linked below.</p>
 
-    <section class="policy">
-      <details>
-        <summary>Forward College AI Hub – Usage and Data Processing Policy (August 2025)</summary>
-        <pre>
-Forward College AI Hub – Usage and Data Processing Policy
-August 2025
-
-1. Introduction and Scope
-This policy outlines how the AI Hub at Forward College may be used and how all associated data is processed. It applies to all users of the Student's AI Hub. It is designed to supplement Forward College’s core Data Protection Policy, Students’ Privacy Notice, and GDPR Policy.
-
-The “AI Hub” refers to the conjunction of artificial intelligence resources and tools provided by Forward College and, accessible through the AI Hub web platform (ai.forward-college.eu). This may include conversational chatbots using Large Language Models (LLMs) provided by third-party companies (such as OpenAI, Claude, Google, etc.), specific assistants with access to tools and resources developed by Forward College, automations and actions associated with those bots, productivity and research tools, usage dashboards  and other AI-powered applications. It also encompasses integrated third-party services such as Pickaxe, Firebase and Google Cloud, which provide the underlying infrastructure for certain features.
-
-2. Consent and Account Activation
-By using the AI Hub, you acknowledge and consent to your data being processed according to this policy and all related Forward College data protection policies.
-In order to get their account activated, students must register their consent and interest through the Consent Form. Each application will be reviewed by a member of the team which will then activate account.
-
-3. Acceptable Use
-The AI Hub is intended for educational, research, and official administrative purposes related to Forward College, as well as to support students in their daily academic tasks, learning activities, and overall educational development. It is also designed to help students better understand and use AI responsibly, fostering awareness of best practices in AI usage. 
-Users are prohibited from engaging in unlawful activities, attempts to bypass security measures, or creating and uploading disallowed content. All uploaded materials must comply with the Code of Conduct, meaning users must not submit infringing or unauthorized third-party content. In addition, any content generated through the AI Hub must adhere to the guidelines for generative AI usage outlined in the Plagiarism Policy. Using the AI Hub to produce assessment responses is strictly prohibited unless explicit permission has been granted.
-
-4. Data Collection
-The following data may be collected:
-Account details: Name, email.
-Interaction data: Prompts, responses, conversation history and pasted content.
-Uploaded content: Any files (documents, images) submitted to the Hub.
-Technical data: IP address, browser/device info.
-Data is collected at login, during usage, upon file upload, and via integrations.
-
-5. Pseudonymization and Interaction Privacy
-All conversation data is pseudonymized, meaning any personal identifiers are replaced with anonymous user IDs, for storage and processing. Conversations are logged based on these IDs and associated names and email addresses are decoupled upon collection.
-Conversations are further anonymized by an automated anonymization algorithm which removes email addresses and names from conversations. (Data Protection Policy, GDPR Principle 3: Data Minimisation).
-Your personal AI Hub activity data is private available only to you via your personal dashboard.
-The anonymous data collected might be coupled with academic and information such as major, courses taken and grades.
-Staff and fellows will only have access through a formal request to the AI Team, upon presentation of legitimate interest, precautions and ethical considerations.
-
-6. Data Sharing and Access
-Access to the raw data and processing will always be restricted to up to three AI Hub administrators, members of the AI Team, who hold no authority over students.
-All of the administrators with access to the data storage and processing, must sign NDA's with Forward College, strictly prohibiting sharing of any information contained in the data.
-Only pseudonymized data is available to the AI development team and for improvement of services. The matching sheet and conversion process is confidential, kept protected and separate from the main data.
-Data may be shared with external processors (e.g., cloud providers, LLM providers, Pickaxe), as permitted by policy and law, and always under strict agreements DPAs (Students’ Privacy Notice, “What information do we share and with whom?”).
-
-7. Usage of the data
-The data collected might be used for
-Conducting research to understand how AI can best support student learning and engagement.
-Improving, testing, and further developing the AI Hub to enhance functionality, reliability, and accessibility.
-Creating and maintaining student dashboards to help learners track and reflect on their AI usage and learning progress.
-Monitoring and improving the quality, accuracy, and fairness of AI responses.
-Supporting the development of new educational tools, resources, and features that benefit students and faculty.
-Ensuring system security.
-Performing anonymized or aggregated analytics to identify usage trends and inform institutional decision-making.
-Routine AI Hub interactions are never used for evaluation, academic progression decisions, or profiling (Data Protection Policy, GDPR Principle 2 & 3). Assessments including AI will be communicated to students beforehand.
-AI Hub interactions are not used for model training by any of the external processors and LLM providers, as per Data Processing Agreements signed between Forward and them.
-
-8. Storage Location and Retention
-Forward stores data securely on servers within the European Union.
-Retention period: Personal data is retained only as long as necessary; anonymized usage data may be kept for statistical purposes (Data Protection Policy, GDPR Principle 5: Storage Limitation).
-
-9. User Rights
-Under GDPR and Forward College policies, you have rights to:
-Access, rectify, or delete your data.
-Restrict or object to certain processing.
-Data portability.
-Withdraw consent at any time, where applicable. To exercise these rights, contact the AI Team at ai@forward-college.eu
-
-10. Policy Changes
-We will notify users of material changes to this policy via banner, email, or in-app notice. The latest version will always be available for consultation on the AI Hub and on the Intranet.
-        </pre>
-      </details>
-    </section>
-
-  </main>
-
-  <footer class="site-footer">
-    <p>Questions? Contact the AI Team: <a href="mailto:ai@forward-college.eu">ai@forward-college.eu</a></p>
-  </footer>
-
-  <script>
-    // SVG Tooltip Hover Behavior (svg is inline in the section)
-    document.addEventListener('DOMContentLoaded', function() {
-      const nodeGroups = document.querySelectorAll('.node-group');
-      const tooltip = document.getElementById('svg-tooltip');
-      const svg = document.getElementById('flowchart-svg') || document.querySelector('.flowchart-svg');
-
-      nodeGroups.forEach(group => {
-        group.addEventListener('mouseenter', function(e) {
-        const tooltipText = this.getAttribute('data-tooltip')
-        tooltip.innerHTML = tooltipText;
-          if (tooltipText) {
-            
-            tooltip.classList.add('visible');
-
-            // visual hover state
-            this.classList.add('hovered');
-
-            // Position tooltip below the element using the svg's client rect
-            const svgRect = svg.getBoundingClientRect();
-
-            // Get the rect element's position from SVG coordinates
-            const rect = this.querySelector('rect');
-            const x = parseFloat(rect.getAttribute('x'));
-            const y = parseFloat(rect.getAttribute('y'));
-            const width = parseFloat(rect.getAttribute('width'));
-            const height = parseFloat(rect.getAttribute('height'));
-
-            // Map viewBox (1000x600) coordinates to client pixels
-            const scaleX = svgRect.width / 1000;
-            const scaleY = svgRect.height / 600;
-            const elemCenterX = svgRect.left + (x + width / 2) * scaleX;
-            const elemBottomY = svgRect.top + (y + height) * scaleY;
-
-            tooltip.style.left = (elemCenterX - tooltip.offsetWidth / 2) + 'px';
-            tooltip.style.top = (elemBottomY + 10) + 'px';
-          }
-        });
-
-        group.addEventListener('mouseleave', function() {
-          tooltip.classList.remove('visible');
-          this.classList.remove('hovered');
-        });
-      });
-    });
-  </script>
-</body>
-</html>
-
+                <div class="staff-links-list">
+                <div class="staff-links-list-item">
+                        <p class="staff-links-list-item-title">Repository of code snippets</p>
+                        <a href="https://github.com/leo-reche/pickaxe-modifications" target="_blank" class="staff-links-btn"><span class="staff-links-arrow" aria-hidden="true">➜</span></a>
+                    </div>
+                </div>
+                <p class="staff-links-attention">This code only improves the service. For questions or concerns about it, contact the AI Team.</p>
+        </div>
+        </div>
+        </section>
+        
+        
+    
+        <section class="staff-site-footer staff-bevel-sm">
+            <p class="staff-site-footer-text">Questions? Contact the AI Team!</a></p>
+            <div class="staff-site-footer-team">
+                <article class="staff-site-member-card">
+                    <!--<div class="staff-member-image-container">
+                     <img src="https://raw.githubusercontent.com/leo-reche/pickaxe-modifications/main/staff_hub/trust_center_staff/assets/staff_hero.webp" alt="Devlin Lewis" class="staff-member-image" /> 
+                    </div>-->
+                    <div class="staff-member-name">Devlin Lewis</div>
+                    <div class="staff-member-title">Head of Acquisition and Data</div>
+                    <div class="staff-member-contact">devlin.lewis@forward-college.eu</div>
+                </article>
+                <article class="staff-site-member-card">
+                    <!--<div class="staff-member-image-container">
+                     <img src="https://raw.githubusercontent.com/leo-reche/pickaxe-modifications/main/staff_hub/trust_center_staff/assets/team_member_l.webp" alt="Leonardo Reche" class="staff-member-image" /> 
+                    </div>-->
+                    <div class="staff-member-name">Leonardo Reche</div>
+                    <div class="staff-member-title">AI & Automations Associate</div>
+                    <div class="staff-member-contact">leonardo.reche@forward-college.eu</div>
+                </article>
+            </div>
+        </section>
+      </main>
+     
+    </div>
+    
+    
+    
