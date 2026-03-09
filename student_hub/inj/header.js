@@ -95,6 +95,7 @@ function checkPricingRedirect() {
   
   // syncing with database
   function syncConversation(responseId,formId,studioUserId,pastedContent,url){
+  console.log("trying to stream 1");
   if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
       try {
       const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
@@ -104,6 +105,8 @@ function checkPricingRedirect() {
           userId: studioUserId,
           pastedContent: pastedContent
       };
+            console.log("trying to stream 2");
+
       originalFetch2(apiUrl, {
           method: "POST",
           headers: {
@@ -485,6 +488,7 @@ function checkPricingRedirect() {
           
                   errorMessageHandler();
                   setTimeout(() => {
+                        console.log("trying to stream -- START");
                       syncConversation(responseId, formId, studioUserId, pastedContent, url);
                   }, 2000);
               } catch (_) {}
