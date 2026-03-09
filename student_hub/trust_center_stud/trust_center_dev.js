@@ -1,4 +1,3 @@
-<script>
   (function() {
     var lastPathname = '';
 
@@ -150,4 +149,3 @@
       runInit();
     }, 500);
   })();
-</script>
