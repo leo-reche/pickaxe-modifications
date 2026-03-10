@@ -559,6 +559,9 @@ function checkPricingRedirect() {
   function addEditButton() {
       var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
       var lastMsg = allMsgs[allMsgs.length - 1];
+
+    console.log(lastMsg)
+    console.log(allMsgs)
    
       const messageDiv = lastMsg;
   
