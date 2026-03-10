@@ -601,8 +601,8 @@ function checkPricingRedirect() {
         console.log("isMarkdown")
   
           const text = markdownDiv.innerText.trim();
-          const txtBox = document.querySelector('#studio-root textarea.resize-none');
-          console.log(text)
+          const txtBox = document.querySelector('textarea[placeholder="Ready when you are!"]');          
+        console.log(text)
           console.log(txtBox)
   
           if (txtBox) {
