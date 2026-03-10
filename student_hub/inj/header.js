@@ -123,7 +123,7 @@ function checkPricingRedirect() {
       setTimeout(function(){ //waits 50ms for the "error message" to load
       var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
       if (errBox){
-          const txtBox = document.querySelector('#text-area textarea.resize-none');          
+          const txtBox = document.querySelector('textarea.resize-none');          
           if (txtBox) {  //Inserts last request back into input
                   const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
                       window.HTMLTextAreaElement.prototype,
@@ -514,7 +514,7 @@ function checkPricingRedirect() {
         currentAbortController.abort();
     }
 
-    const txtBox = document.querySelector('#text-area textarea.resize-none');
+    const txtBox = document.querySelector('textarea.resize-none');
     if (txtBox) {
         const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
             window.HTMLTextAreaElement.prototype,
@@ -622,7 +622,7 @@ function checkPricingRedirect() {
         const text = markdownDiv.innerText.trim();
 
         // C. Inject into Textarea
-        const txtBox = document.querySelector('#text-area textarea.resize-none');
+        const txtBox = document.querySelector('textarea.resize-none');
         if (txtBox) {
             const setter = Object.getOwnPropertyDescriptor(
                 window.HTMLTextAreaElement.prototype,

@@ -3,7 +3,7 @@ let bgcols = []
 
 function stopButtonOn(handleClick, toggleHover){
 
-    const txtBoxButtons = document.querySelector('#text-area textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
 
     sendButton.removeEventListener('click', handleClick) //Remove if already exists, otherwise do nothing 
@@ -25,7 +25,7 @@ function stopButtonOn(handleClick, toggleHover){
 
 function stopButtonOff(handleClick,toggleHover){
 
-    const txtBoxButtons = document.querySelector('#text-area textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     const svg = sendButton.querySelector("svg").querySelector("path");
     svg.setAttribute('d', "m16.175 11-5.6-5.6L12 4l8 8-8 8-1.425-1.4 5.6-5.6H4v-2z");
@@ -38,7 +38,7 @@ function handleClick(event) {
 
     console.log("Stop-Click")
 
-    const txtBoxButtons = document.querySelector('#text-area textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
 
     event.preventDefault();
@@ -56,7 +56,7 @@ function handleClick(event) {
 function toggleHover(e) {
 
     //receives only mouseenter & mouseleave events. If enter then bg1 else then bg0
-    const txtBoxButtons = document.querySelector('#text-area textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; //Select last element among textbox buttons
     if (sendButton){
         sendButton.setAttribute("style", e.type === 'mouseenter' ? bgcols[1] : bgcols[0]); 
@@ -67,7 +67,7 @@ function toggleHover(e) {
 
 function stopButtonUpdate(){
     
-    const txtBoxButtons = document.querySelector('#text-area textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
+    const txtBoxButtons = document.querySelector('textarea.resize-none')?.closest("div.relative.flex")?.querySelectorAll("button"); //Select textbox
 
     const sendButton = txtBoxButtons[txtBoxButtons.length - 1]; 
     
@@ -78,7 +78,7 @@ function stopButtonUpdate(){
             bgcols.push(currentStyle)
         }
 
-        const txtBoxArea = document.querySelector('#text-area textarea.resize-none').closest("div.relative.flex");
+        const txtBoxArea = document.querySelector('textarea.resize-none').closest("div.relative.flex");
         const stopList = txtBoxArea.querySelectorAll('path[d="M6 6h12v12H6z"]'); //querying the list of disabled buttons
 
         if (stopList.length > 0){  //if there is a stop button
@@ -97,7 +97,7 @@ let cooloff = false;
 function addTextAreaId (){
 
   if (!document.querySelector("#text-area")){
-    const textArea = document.querySelector('#text-area textarea.resize-none')?.closest("div.relative.flex")
+    const textArea = document.querySelector('textarea.resize-none')?.closest("div.relative.flex")
     if (textArea) {
 
       textArea.id = "text-area"
@@ -113,7 +113,7 @@ function addTextAreaId (){
       });
 
       // Start observing enter for clicks
-      const sendButtonDiv = document.querySelector('#text-area textarea.resize-none')?.closest('div.relative.flex')
+      const sendButtonDiv = document.querySelector('textarea.resize-none')?.closest('div.relative.flex')
         ?.querySelectorAll("button");
       const sendButton = sendButtonDiv?.[sendButtonDiv.length - 1];
       sendButton.addEventListener('click', function() {
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
   const fileInputSelector = 'input#file-upload';
-  const targetSelector = '#text-area textarea.resize-none';
+  const targetSelector = 'textarea.resize-none';
   pastedContent = [];
 
   const getInput = () => document.querySelector(fileInputSelector);

@@ -86,7 +86,7 @@ function errorMessageHandler(){
     setTimeout(function(){ //waits 50ms for the "error message" to load
     var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
     if (errBox){
-        const txtBox = document.querySelector('#studio-root textarea.resize-none');
+        const txtBox = document.querySelector('textarea.resize-none');
         if (txtBox) {  //Inserts last request back into input
                 const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
                     window.HTMLTextAreaElement.prototype,
@@ -439,7 +439,7 @@ function stopStream() {
  
     }
 
-    const txtBox = document.querySelector('#studio-root textarea.resize-none');
+    const txtBox = document.querySelector('textarea.resize-none');
     if (txtBox) {  //Inserts last request back into input
             
             const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
@@ -520,7 +520,7 @@ function addEditButton() {
           if (!markdownDiv) return;
 
         const text = markdownDiv.innerText.trim();
-        const txtBox = document.querySelector('#studio-root textarea.resize-none');
+        const txtBox = document.querySelector('textarea.resize-none');
 
         if (txtBox) {
             const setter = Object.getOwnPropertyDescriptor(
