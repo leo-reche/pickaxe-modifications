@@ -510,55 +510,54 @@ function checkPricingRedirect() {
   
   
   function stopStream() {
-      if (currentAbortController) { //stops the stream
-          currentAbortController.abort();
-   
-      }
-  
-      const txtBox = document.querySelector('textarea[placeholder="Ready when you are!"]');          
-      if (txtBox) {  //Inserts last request back into input
-              
-              const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
-                  window.HTMLTextAreaElement.prototype,
-                  'value'
-              ).set;
-              nativeTextareaValueSetter.call(txtBox, latestRequest);
-              const inputEvent = new Event('input', { bubbles: true });
-              txtBox.dispatchEvent(inputEvent);
-      }
-  
-      setTimeout(function(){ //waits 50ms for the "error message" to load
-         
-          var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold'); //gets the "error message"
-          if(errBox){
-          
-              errBox.textContent = "This response was stopped by the user.";
-          }
-          var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
-          var lastMsg = allMsgs[allMsgs.length-1]
-          lastMsg.style.backgroundColor = 'rgba(200, 200, 200, 0.5)';  //makes last message gray
-          
+    if (currentAbortController) {
+        currentAbortController.abort();
+    }
+
+    const txtBox = document.querySelector('textarea[placeholder="Ready when you are!"]');
+    if (txtBox) {
+        const nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(
+            window.HTMLTextAreaElement.prototype,
+            'value'
+        ).set;
+        nativeTextareaValueSetter.call(txtBox, latestRequest);
+        const inputEvent = new Event('input', { bubbles: true });
+        txtBox.dispatchEvent(inputEvent);
+    }
+
+    setTimeout(function() {
+        // 1. Target the error box and last message
+        var errBox = document.querySelector('div.text-\\[14px\\].max-\\[1024px\\]\\:text-\\[14px\\].max-\\[899px\\]\\:text-\\[14px\\].font-semibold');
+        if (errBox) {
+            errBox.textContent = "This response was stopped by the user.";
+        }
+
+        var allMsgs = document.querySelectorAll('div.gap-y-3.text-left');
+        var lastMsg = allMsgs[allMsgs.length - 1];
+        if (!lastMsg) return;
+
+        lastMsg.style.backgroundColor = 'rgba(200, 200, 200, 0.5)';
+
+        // 2. CHECK: Does the lastMsg already have a "Stopped" label?
+        // We look inside lastMsg for any <small> tags containing "Stopped"
+        const alreadyHasLabel = Array.from(lastMsg.querySelectorAll('small'))
+                                     .some(el => el.textContent === 'Stopped');
+
+        // 3. ONLY append if it doesn't exist yet
+        if (!alreadyHasLabel) {
             const p = document.createElement('p');
             p.setAttribute('align', 'right');
-  
-            // small tag for smaller text
-
-        const alreadyStopped = Array.from(p.querySelectorAll('small'))
-                            .some(el => el.textContent === 'Stopped');
-
-        
-       if (!alreadyStopped) {
+            
             const small = document.createElement('small');
             small.textContent = 'Stopped';
             small.style.color = 'grey';
-            p.appendChild(small);
             
-            // Only append 'p' if we actually put something in it
+            p.appendChild(small);
             lastMsg.appendChild(p);
         }
-          
-      }, 100); 
-  }
+
+    }, 100);
+}
   
   
  function addEditButton() {
