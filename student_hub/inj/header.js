@@ -602,6 +602,8 @@ function checkPricingRedirect() {
   
           const text = markdownDiv.innerText.trim();
           const txtBox = document.querySelector('#studio-root textarea.resize-none');
+          console.log(text)
+          console.log(txtBox)
   
           if (txtBox) {
                     console.log("textbox found")
