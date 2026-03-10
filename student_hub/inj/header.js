@@ -96,7 +96,7 @@ function checkPricingRedirect() {
   // syncing with database
   function syncConversation(responseId,formId,studioUserId,pastedContent,url){
   console.log("trying to stream 1");
-  if (url.includes("https://test-core-api.pickaxe.co/stream")) {
+  if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")) {
       try {
       const apiUrl = "https://dashboard-backend-395477780264.europe-west1.run.app";
       const payload = { 
@@ -151,7 +151,7 @@ function checkPricingRedirect() {
     return originalFetch2.call(this, input, init)
       .then(response => {
         // If this request has the SSE URL
-        if (url === 'https://test-core-api.pickaxe.co/stream') {
+        if (url === 'https://core-pickaxe-api.pickaxe.co/stream') {
           const contentType = response.headers.get('content-type');
           
           if (contentType && contentType.includes('text/event-stream')) {
@@ -425,7 +425,7 @@ function checkPricingRedirect() {
       const [url, config] = args;
   
      
-      if (url.includes("https://test-core-api.pickaxe.co/submit")){   //Massive if{} to get the formid,responseid,lastmessage,documents
+      if (url.includes("https://core-pickaxe-api.pickaxe.co/submit")){   //Massive if{} to get the formid,responseid,lastmessage,documents
       console.log("submit")
           try {
               // Extract from request body
@@ -462,7 +462,7 @@ function checkPricingRedirect() {
           }
       }
        
-      if (url.includes("https://test-core-api.pickaxe.co/stream")){
+      if (url.includes("https://core-pickaxe-api.pickaxe.co/stream")){
   
       
           currentAbortController = new AbortController();
@@ -661,7 +661,7 @@ function checkPricingRedirect() {
         let originalResponse = Object.getOwnPropertyDescriptor(originalXHR2.prototype, 'responseText').get.call(this);
         
         // Check if this is from the chat conversation endpoint and we have a response
-        if (requestUrl && requestUrl.startsWith('https://test-core-api.pickaxe.co/conversation') && originalResponse) {
+        if (requestUrl && requestUrl.startsWith('https://core-pickaxe-api.pickaxe.co/conversation') && originalResponse) {
           // Apply all pattern replacements using simple string replacement
           let modifiedResponse = originalResponse;
           for (const [pattern, replacement] of Object.entries(PATTERN_REPLACEMENTS)) {
