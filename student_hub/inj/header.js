@@ -560,6 +560,8 @@ function checkPricingRedirect() {
 
    
       const messageDiv = lastMsg;
+
+      console.log(messageDiv)
   
       // Button container with fade-in animation
       const buttonHTML = `
@@ -596,11 +598,13 @@ function checkPricingRedirect() {
       editButton.addEventListener('click', function () {
           const markdownDiv = messageDiv.querySelector('.pxe-markdown');
             if (!markdownDiv) return;
+        console.log("isMarkdown")
   
           const text = markdownDiv.innerText.trim();
           const txtBox = document.querySelector('#studio-root textarea.resize-none');
   
           if (txtBox) {
+                    console.log("textbox found")
               const setter = Object.getOwnPropertyDescriptor(
                   window.HTMLTextAreaElement.prototype,
                   'value'
