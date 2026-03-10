@@ -542,13 +542,21 @@ function checkPricingRedirect() {
             p.setAttribute('align', 'right');
   
             // small tag for smaller text
+
+        const alreadyStopped = Array.from(p.querySelectorAll('small'))
+                            .some(el => el.textContent === 'Stopped');
+
+        
+       if (!alreadyStopped) {
             const small = document.createElement('small');
             small.textContent = 'Stopped';
             small.style.color = 'grey';
             p.appendChild(small);
-  
-          lastMsg.appendChild(p);
-  
+            
+            // Only append 'p' if we actually put something in it
+            lastMsg.appendChild(p);
+        }
+          
       }, 100); 
   }
   
@@ -561,7 +569,6 @@ function checkPricingRedirect() {
    
       const messageDiv = lastMsg;
 
-      console.log(messageDiv)
   
       // Button container with fade-in animation
       const buttonHTML = `
@@ -598,15 +605,11 @@ function checkPricingRedirect() {
       editButton.addEventListener('click', function () {
           const markdownDiv = messageDiv.querySelector('.pxe-markdown');
             if (!markdownDiv) return;
-        console.log("isMarkdown")
   
           const text = markdownDiv.innerText.trim();
           const txtBox = document.querySelector('textarea[placeholder="Ready when you are!"]');          
-        console.log(text)
-          console.log(txtBox)
   
           if (txtBox) {
-                    console.log("textbox found")
               const setter = Object.getOwnPropertyDescriptor(
                   window.HTMLTextAreaElement.prototype,
                   'value'
